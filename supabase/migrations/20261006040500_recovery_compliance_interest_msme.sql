@@ -76,7 +76,7 @@ as $$
     select
       c.id,
       coalesce(c.balance, c.outstanding, 0)::numeric as outstanding_amount,
-      coalesce(c.due_date, c.invoice_due_date, c.created_at::date) as due_on,
+      coalesce(c.due_date, c.created_at::date) as due_on,
       coalesce(c.interest_rate_pa, s.default_interest_rate_pa, 18.00) as rate_pa,
       coalesce(c.msme_45_day_start, c.created_at::date) as msme_start_on,
       c.demand_notice_count,
