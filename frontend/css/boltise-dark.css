@@ -518,3 +518,194 @@ tbody tr:hover td {
     margin-top: 10px;
   }
 }
+
+/* Rc desktop navigation polish: dark page bands, hover-expand rail, mobile-only menu */
+.rx-dark-shell body,
+.rx-dark-shell .wrapper,
+.rx-dark-shell .main-content {
+  background-color: var(--rx-bg) !important;
+}
+
+.rx-dark-shell .topbar,
+.rx-dark-shell .content-header,
+.rx-dark-shell .page-header,
+.rx-dark-shell .page-hero,
+.rx-dark-shell .hero,
+.rx-dark-shell .hero-section,
+.rx-dark-shell .section-header,
+.rx-dark-shell .summary-bar,
+.rx-dark-shell .license-header,
+.rx-dark-shell .subscription-header,
+.rx-dark-shell .subscription-hero,
+.rx-dark-shell .admin-hero,
+.rx-dark-shell .settings-header,
+.rx-dark-shell [class*="hero"],
+.rx-dark-shell [class*="banner"]:not(.rx-ad-slot):not(#recountixAdSlot) {
+  background:
+    linear-gradient(135deg, rgba(17, 24, 39, .96), rgba(15, 23, 42, .9)) !important;
+  border: 1px solid rgba(51, 65, 85, .72) !important;
+  border-radius: 16px !important;
+  color: var(--rx-text) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045), 0 22px 60px rgba(0, 0, 0, .24) !important;
+  backdrop-filter: blur(16px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.12) !important;
+}
+
+.rx-dark-shell .topbar *,
+.rx-dark-shell .content-header *,
+.rx-dark-shell .page-header *,
+.rx-dark-shell .page-hero *,
+.rx-dark-shell .hero *,
+.rx-dark-shell .hero-section *,
+.rx-dark-shell .section-header *,
+.rx-dark-shell .summary-bar *,
+.rx-dark-shell .license-header *,
+.rx-dark-shell .subscription-header *,
+.rx-dark-shell .subscription-hero *,
+.rx-dark-shell .admin-hero *,
+.rx-dark-shell .settings-header * {
+  color: inherit;
+}
+
+.rx-dark-shell .topbar p,
+.rx-dark-shell .content-header p,
+.rx-dark-shell .page-header p,
+.rx-dark-shell .page-hero p,
+.rx-dark-shell .hero p,
+.rx-dark-shell .hero-section p,
+.rx-dark-shell .section-header p,
+.rx-dark-shell .summary-bar span,
+.rx-dark-shell .license-header p,
+.rx-dark-shell .subscription-header p,
+.rx-dark-shell .subscription-hero p,
+.rx-dark-shell .admin-hero p,
+.rx-dark-shell .settings-header p {
+  color: var(--rx-muted) !important;
+}
+
+.rx-dark-shell .topbar::before,
+.rx-dark-shell .content-header::before,
+.rx-dark-shell .page-header::before,
+.rx-dark-shell .page-hero::before,
+.rx-dark-shell .hero::before,
+.rx-dark-shell .hero-section::before,
+.rx-dark-shell [class*="hero"]::before,
+.rx-dark-shell [class*="banner"]::before {
+  background:
+    radial-gradient(circle at 14% 20%, rgba(124, 58, 237, .18), transparent 28rem),
+    radial-gradient(circle at 88% 30%, rgba(99, 102, 241, .14), transparent 24rem) !important;
+  opacity: 1 !important;
+}
+
+@media (min-width: 901px) {
+  .rx-dark-shell {
+    --rx-sidebar-rail: 76px;
+  }
+
+  .rx-dark-shell .menu-toggle,
+  .rx-dark-shell button.menu-toggle,
+  .rx-dark-shell .hamburger,
+  .rx-dark-shell .mobile-menu-toggle {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .rx-dark-shell .sidebar-overlay,
+  .rx-dark-shell .sidebar-overlay.show {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .rx-dark-shell .sidebar {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: var(--rx-sidebar-rail) !important;
+    min-width: var(--rx-sidebar-rail) !important;
+    max-width: var(--rx-sidebar-rail) !important;
+    transform: none !important;
+    overflow-x: hidden !important;
+    z-index: 1000 !important;
+    transition: width .24s ease, min-width .24s ease, max-width .24s ease, box-shadow .24s ease !important;
+  }
+
+  .rx-dark-shell .sidebar:hover,
+  .rx-dark-shell .sidebar:focus-within {
+    width: var(--sidebar-w, 260px) !important;
+    min-width: var(--sidebar-w, 260px) !important;
+    max-width: var(--sidebar-w, 260px) !important;
+    box-shadow: 26px 0 78px rgba(0, 0, 0, .42), 0 0 42px rgba(124, 58, 237, .08) !important;
+  }
+
+  .rx-dark-shell .main-content {
+    margin-left: var(--rx-sidebar-rail) !important;
+    width: calc(100% - var(--rx-sidebar-rail)) !important;
+    transition: margin-left .24s ease, width .24s ease !important;
+  }
+
+  .rx-dark-shell .sidebar .logo {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .rx-dark-shell .sidebar .logo h2,
+  .rx-dark-shell .sidebar .logo p,
+  .rx-dark-shell .sidebar .menu a span,
+  .rx-dark-shell .sidebar .menu a b,
+  .rx-dark-shell .sidebar .menu a small {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    white-space: nowrap !important;
+    transition: opacity .14s ease .04s !important;
+  }
+
+  .rx-dark-shell .sidebar:hover .logo h2,
+  .rx-dark-shell .sidebar:hover .logo p,
+  .rx-dark-shell .sidebar:hover .menu a span,
+  .rx-dark-shell .sidebar:hover .menu a b,
+  .rx-dark-shell .sidebar:hover .menu a small,
+  .rx-dark-shell .sidebar:focus-within .logo h2,
+  .rx-dark-shell .sidebar:focus-within .logo p,
+  .rx-dark-shell .sidebar:focus-within .menu a span,
+  .rx-dark-shell .sidebar:focus-within .menu a b,
+  .rx-dark-shell .sidebar:focus-within .menu a small {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .rx-dark-shell .sidebar .menu a {
+    justify-content: center !important;
+    gap: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .rx-dark-shell .sidebar:hover .menu a,
+  .rx-dark-shell .sidebar:focus-within .menu a {
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .rx-dark-shell .sidebar .menu a i {
+    flex: 0 0 22px !important;
+    margin: 0 !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .rx-dark-shell .menu-toggle,
+  .rx-dark-shell button.menu-toggle {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .rx-dark-shell .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
