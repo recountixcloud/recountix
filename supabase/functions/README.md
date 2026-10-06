@@ -18,23 +18,21 @@ supabase functions deploy payment-webhook
 supabase secrets set RAZORPAY_WEBHOOK_SECRET=...
 ```
 
-## reminder-dispatcher
+## reminder-queue
 
-Processes pending rows from `reminder_queue`.
+Creates due reminder jobs inside Supabase `reminder_queue`. This function does not send customer data to WhatsApp/email providers. External sending should be added only after the exact provider endpoint and data-sharing approval are confirmed.
 
 Required secrets:
 
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 
-Optional secrets:
+Optional secret:
 
 - `RECOUNTIX_CRON_SECRET`
-- `REMINDER_PROVIDER_ENDPOINT`
-- `REMINDER_PROVIDER_TOKEN`
 
 Deploy:
 
 ```bash
-supabase functions deploy reminder-dispatcher
+supabase functions deploy reminder-queue
 ```
