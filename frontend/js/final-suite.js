@@ -8,7 +8,7 @@ function once(id,tag,attrs){
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
   document.head.appendChild(el);
 }
-once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=command-center-7'});
+once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=command-center-8'});
 once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
 var meta=document.querySelector('meta[name="theme-color"]');
 if(meta) meta.setAttribute('content','#0B0F17');
