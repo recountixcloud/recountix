@@ -23,9 +23,9 @@ Deno.serve(async (req) => {
   }
 
   const supabaseUrl = (Deno.env.get("SUPABASE_URL") || "").trim();
-  const serviceKey = (Deno.env.get("SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim();
-  if (!supabaseUrl || !serviceKey) {
-    return new Response(JSON.stringify({ error: "server_not_configured" }), { status: 500, headers: corsHeaders });
+  const serviceKey = (Deno.env.get("SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim().replace(/[^A-Za-z0-9._-]/g, "");
+  if (!supabaseUrl || !serviceKey || !serviceKey.startsWith("eyJ")) {
+    return new Response(JSON.stringify({ error: "server_not_configured_or_invalid_service_key" }), { status: 500, headers: corsHeaders });
   }
 
   const body = await req.json().catch(() => ({}));
