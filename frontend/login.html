@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0D1B2A" />
   <meta name="description" content="Recountix — smart recovery and receivables management." />
@@ -15,8 +14,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-<link rel="stylesheet" href="css/recountix-2027.css?v=login-wave-1">
-
 
   <style>
     /* =====================================================
@@ -63,28 +60,22 @@
     }
     .font-display{ font-family:'Outfit', sans-serif; }
 
-
-    /* Full-page static wave background */
+    /* soft decorative corner shapes — echoes the ribbon/floral reference art */
     body::before, body::after{
       content:"";
       position:fixed;
-      inset:0;
+      border-radius:50%;
+      filter:blur(2px);
       pointer-events:none;
+      opacity:.5;
     }
     body::before{
-      z-index:0;
-      opacity:.52;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='720' viewBox='0 0 1440 720' fill='none'%3E%3Cg opacity='.95' stroke='%231F8FD1' stroke-width='1.15'%3E%3Cpath d='M-60 492C116 326 294 266 474 312C663 360 796 514 984 514C1163 514 1282 384 1500 298'/%3E%3Cpath d='M-60 506C118 340 296 282 476 326C665 372 802 526 986 526C1165 526 1288 394 1500 312'/%3E%3Cpath d='M-60 520C120 354 298 298 478 340C667 384 808 538 988 538C1167 538 1294 404 1500 326'/%3E%3Cpath d='M-60 534C122 368 300 314 480 354C669 396 814 550 990 550C1169 550 1300 414 1500 340'/%3E%3Cpath d='M-60 548C124 382 302 330 482 368C671 408 820 562 992 562C1171 562 1306 424 1500 354'/%3E%3Cpath d='M-60 562C126 396 304 346 484 382C673 420 826 574 994 574C1173 574 1312 434 1500 368'/%3E%3Cpath d='M-60 576C128 410 306 362 486 396C675 432 832 586 996 586C1175 586 1318 444 1500 382'/%3E%3Cpath d='M-60 590C130 424 308 378 488 410C677 444 838 598 998 598C1177 598 1324 454 1500 396'/%3E%3Cpath d='M-60 604C132 438 310 394 490 424C679 456 844 610 1000 610C1179 610 1330 464 1500 410'/%3E%3Cpath d='M-60 618C134 452 312 410 492 438C681 468 850 622 1002 622C1181 622 1336 474 1500 424'/%3E%3Cpath d='M-60 632C136 466 314 426 494 452C683 480 856 634 1004 634C1183 634 1342 484 1500 438'/%3E%3Cpath d='M-60 646C138 480 316 442 496 466C685 492 862 646 1006 646C1185 646 1348 494 1500 452'/%3E%3C/g%3E%3Cg opacity='.55' stroke='%239FE4FF' stroke-width='1'%3E%3Cpath d='M-80 348C128 492 296 540 454 492C640 436 744 270 934 270C1126 270 1272 430 1508 492'/%3E%3Cpath d='M-80 364C130 506 298 554 456 506C642 450 750 284 936 284C1128 284 1278 444 1508 506'/%3E%3Cpath d='M-80 380C132 520 300 568 458 520C644 464 756 298 938 298C1130 298 1284 458 1508 520'/%3E%3Cpath d='M-80 396C134 534 302 582 460 534C646 478 762 312 940 312C1132 312 1290 472 1508 534'/%3E%3Cpath d='M-80 412C136 548 304 596 462 548C648 492 768 326 942 326C1134 326 1296 486 1508 548'/%3E%3C/g%3E%3C/svg%3E");
-      background-repeat:no-repeat;
-      background-size:cover;
-      background-position:center bottom;
+      width:340px; height:340px; top:-120px; left:-120px;
+      background: radial-gradient(circle at 30% 30%, var(--soft-300), transparent 70%);
     }
     body::after{
-      z-index:0;
-      opacity:.35;
-      background:
-        radial-gradient(740px 360px at 8% 12%, rgba(255,255,255,.78), transparent 68%),
-        radial-gradient(640px 340px at 94% 88%, rgba(15,118,110,.22), transparent 66%);
+      width:380px; height:380px; bottom:-140px; right:-140px;
+      background: radial-gradient(circle at 70% 70%, var(--dusty-400), transparent 70%);
     }
 
     .login-wrap{ position:relative; z-index:2; width:100%; max-width:428px; }
@@ -113,38 +104,12 @@
     }
 
     .card{
-      position:relative;
-      overflow:hidden;
-      background:linear-gradient(145deg, rgba(255,255,255,.58), rgba(255,255,255,.22));
+      background:var(--card);
       border-radius:24px;
-      box-shadow:0 26px 70px rgba(13,27,42,.16), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(120,146,139,.24);
-      border:1px solid rgba(255,255,255,.86);
-      -webkit-backdrop-filter:blur(32px) saturate(1.62);
-      backdrop-filter:blur(32px) saturate(1.62);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(168,197,224,.45);
       padding:38px 34px 30px;
     }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:radial-gradient(circle at 18% 0%, rgba(255,255,255,.98), transparent 34%), linear-gradient(150deg, rgba(255,255,255,.55), rgba(255,255,255,.05) 46%, rgba(18,167,122,.06));
-    }
-
-    .card::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      opacity:.32;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='360' viewBox='0 0 760 360' fill='none'%3E%3Cg opacity='.75' stroke='%231F8FD1' stroke-width='1'%3E%3Cpath d='M-40 258C76 158 194 122 314 150C440 180 528 274 654 274C748 274 810 218 850 184'/%3E%3Cpath d='M-40 272C78 172 196 138 316 164C442 192 532 286 656 286C750 286 814 228 850 198'/%3E%3Cpath d='M-40 286C80 186 198 154 318 178C444 204 536 298 658 298C752 298 818 238 850 212'/%3E%3Cpath d='M-40 300C82 200 200 170 320 192C446 216 540 310 660 310C754 310 822 248 850 226'/%3E%3Cpath d='M-40 314C84 214 202 186 322 206C448 228 544 322 662 322C756 322 826 258 850 240'/%3E%3C/g%3E%3C/svg%3E");
-      background-repeat:no-repeat;
-      background-size:cover;
-      background-position:center bottom;
-      mask-image:linear-gradient(to top, rgba(0,0,0,.9), rgba(0,0,0,.42) 58%, transparent 100%);
-      -webkit-mask-image:linear-gradient(to top, rgba(0,0,0,.9), rgba(0,0,0,.42) 58%, transparent 100%);
-    }
-    .card > *{ position:relative; z-index:1; }
 
     .icon-badge{
       width:44px; height:44px; border-radius:14px;
@@ -264,32 +229,15 @@
     .btn-primary{background:linear-gradient(135deg,#0B5D4F,#12A77A);box-shadow:0 14px 30px rgba(11,93,79,.25);}
     .btn-primary:hover{box-shadow:0 18px 38px rgba(11,93,79,.34);}
     .remember input{accent-color:#0B5D4F;}
-    body{background:radial-gradient(1100px 500px at 12% -8%,rgba(167,227,211,.62),transparent 60%),radial-gradient(900px 500px at 105% 108%,rgba(15,118,110,.36),transparent 55%),radial-gradient(520px 420px at 8% 88%,rgba(139,156,166,.24),transparent 60%),linear-gradient(160deg,#F0FBF7 0%,#CBEDE3 58%,#9EDCCB 100%);}
-    @media (prefers-reduced-motion:reduce){body::before,.card::after{animation:none;}}
-  
-    /* Mobile login hardening v5 */
-    @media (max-width:760px), (max-height:700px){
-      body{overflow-y:auto;align-items:flex-start;padding:16px;}
-      .login-wrap{margin:auto;}
-      .card{width:100%;padding:28px 20px 24px;}
-      input{font-size:16px;min-height:48px;}
-      .remember,.forgot-link{min-height:44px;display:inline-flex;align-items:center;}
-      .forgot-link{padding:8px 4px;}
-      .btn-primary{min-height:49px;touch-action:manipulation;}
-    }
-  </style><style>
-/* Keep the brand visible even on short mobile screens. */
-body {height:auto!important;min-height:100svh!important;overflow-y:auto!important;}
-.login-wrap {flex-shrink:0;margin:auto;}
-body .login-wrap .recountix-login-brand {display:flex!important;visibility:visible!important;opacity:1!important;justify-content:center;margin:0 0 20px!important;}
-body .login-wrap .recountix-login-brand img {display:block!important;visibility:visible!important;opacity:1!important;width:min(100%,300px)!important;height:auto!important;max-height:116px;object-fit:contain;}
-</style><link rel="stylesheet" href="css/final-suite.css?v=professional-v3">
+    body{background:radial-gradient(1100px 500px at 12% -8%,rgba(167,227,211,.55),transparent 60%),radial-gradient(900px 500px at 105% 108%,rgba(15,118,110,.28),transparent 55%),linear-gradient(160deg,#F0FBF7 0%,#D5F2EA 58%,#A7E3D3 100%);}
+  </style>
+<link rel="stylesheet" href="css/final-suite.css?v=professional-v31">
 </head>
 <body>
 
   <div class="login-wrap">
     <div class="brand-row recountix-login-brand">
-      <img src="assets/recountix-logo.png?v=login-logo-20261003" loading="eager" decoding="async" alt="Recountix — Beyond What’s Due." />
+      <img src="assets/recountix-logo.png" alt="Recountix — Beyond What’s Due." />
     </div>
 
     <div class="card login-card">
@@ -341,21 +289,43 @@ body .login-wrap .recountix-login-brand img {display:block!important;visibility:
         </button>
         <div class="icon-badge"><i class="fa-solid fa-key"></i></div>
         <h1 class="title">Reset password</h1>
-        <p class="subtitle">Contact your Business Administrator or Super Admin to reset your password securely.</p>
-        <p class="subtitle">Self-service recovery will be available after email verification is configured.</p>
+        <p class="subtitle">Verify your account and set a new password.</p>
+
+        <div>
+          <label>Username *</label>
+          <div class="field-wrap"><i class="fa-regular fa-user leading"></i>
+            <input id="forgotUsername" type="text" autocomplete="username" placeholder="e.g. admin" /></div>
+        </div>
+        <div>
+          <label>Recovery Email *</label>
+          <div class="field-wrap"><i class="fa-regular fa-envelope leading"></i>
+            <input id="forgotEmail" type="email" autocomplete="email" placeholder="Registered recovery email" /></div>
+        </div>
+        <div>
+          <label>New Password *</label>
+          <div class="field-wrap"><i class="fa-solid fa-lock leading"></i>
+            <input id="forgotNewPass" type="password" autocomplete="new-password" placeholder="New password" /></div>
+        </div>
+        <div>
+          <label>Confirm Password *</label>
+          <div class="field-wrap"><i class="fa-solid fa-lock leading"></i>
+            <input id="forgotConfirmPass" type="password" autocomplete="new-password" placeholder="Confirm new password" /></div>
+        </div>
+        <button type="button" onclick="submitForgotPassword()" class="btn-primary" style="margin-top:6px;">
+          Reset Password
+        </button>
       </div>
 
     </div>
 
-    <div class="footer-note"><a href="customer-portal.html" style="color:#0B5D4F;font-weight:800;text-decoration:none;">Customer Portal</a></div>
     <div class="footer-note">© 2026 Recountix · Beyond What’s Due.</div>
   </div>
 
-  <script src="js/vendor/supabase-2.117.2.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
-  <script src="js/utils.js?v=preferences-1"></script>
-  <script src="js/db.js?v=preferences-1"></script>
-  <script src="js/auth.js?v=password-reset-1"></script><script src="js/preferences.js?v=preferences-1"></script>
+  <script src="js/utils.js?v=11-final"></script>
+  <script src="js/db.js?v=11-final"></script>
+  <script src="js/auth.js?v=rc005-ads2"></script>
   <script>
     const passwordInput = document.getElementById('password');
     const togglePassword = document.getElementById('togglePassword');
@@ -370,8 +340,8 @@ body .login-wrap .recountix-login-brand img {display:block!important;visibility:
       document.getElementById('loginView').style.display = 'none';
       const panel = document.getElementById('forgotModal');
       panel.classList.add('show');
-      
-      document.querySelector('#forgotModal .back-link').focus();
+      ['forgotUsername','forgotEmail','forgotNewPass','forgotConfirmPass'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('forgotUsername').focus();
     };
     window.closeForgotPassword = function () {
       const panel = document.getElementById('forgotModal');
@@ -382,8 +352,6 @@ body .login-wrap .recountix-login-brand img {display:block!important;visibility:
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   </script>
-<script src="js/final-suite.js?v=preferences-1"></script>
-<script src="js/i18n.js?v=2"></script>
+<script src="js/final-suite.js?v=11-final"></script>
 </body>
 </html>
-

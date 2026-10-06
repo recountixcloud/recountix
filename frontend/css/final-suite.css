@@ -59,14 +59,14 @@
 .rx-ad-media{display:none;position:absolute;inset:0;overflow:hidden;background:#eef5f2}
 .rx-ad-image{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
 .rx-ad-overlay-label{position:absolute;left:14px;top:14px;z-index:4;padding:5px 9px;border-radius:999px;background:rgba(9,49,39,.78);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,0,0,.12)}
-.rx-ad-card.image-ready{display:block;aspect-ratio:32/3;min-height:0;background:#eef5f2}
+.rx-ad-card.image-ready{display:block;aspect-ratio:8/1;min-height:0;background:#eef5f2}
 .rx-ad-card.image-ready .rx-ad-media{display:block}
 .rx-ad-card.image-ready .rx-ad-copy,.rx-ad-card.image-ready .rx-ad-cta{display:none}
 .rx-ad-card.image-ready:hover .rx-ad-image{transform:scale(1.006)}
 .rx-ad-image{transition:transform .28s ease}
 .rx-ad-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.rx-ad-admin-grid .full{grid-column:1/-1}.rx-ad-admin-grid input,.rx-ad-admin-grid select,.rx-ad-admin-grid textarea{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dce7e2;border-radius:10px;font:inherit;background:#fff}.rx-ad-admin-grid label{font-size:12px;font-weight:700;color:#52665f;display:block;margin-bottom:5px}.rx-ad-image-note{display:block;margin-top:6px;color:#81908b;font-size:11px;line-height:1.45}
-@media(max-width:900px){.rx-ad-card.image-ready{aspect-ratio:32/3}.rx-ad-copy{padding:19px 21px}.rx-ad-title{font-size:18px}.rx-ad-cta{margin-right:12px}}
-@media(max-width:700px){.rx-ad-card.image-ready{aspect-ratio:32/3;border-radius:14px}.rx-ad-overlay-label{left:9px;top:9px;font-size:8px;padding:4px 7px}.rx-ad-admin-grid{grid-template-columns:1fr}.rx-ad-admin-grid .full{grid-column:auto}}
+@media(max-width:900px){.rx-ad-card.image-ready{aspect-ratio:8/1}.rx-ad-copy{padding:19px 21px}.rx-ad-title{font-size:18px}.rx-ad-cta{margin-right:12px}}
+@media(max-width:700px){.rx-ad-card.image-ready{aspect-ratio:8/1;border-radius:14px}.rx-ad-overlay-label{left:9px;top:9px;font-size:8px;padding:4px 7px}.rx-ad-admin-grid{grid-template-columns:1fr}.rx-ad-admin-grid .full{grid-column:auto}}
 
 
 
@@ -245,24 +245,116 @@ body::after{
   body::after{opacity:.78!important;}
 }
 
-
-/* Generic multi-business platform UI */
-.rx-business-type{
-  display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;
-  background:linear-gradient(135deg,rgba(14,143,131,.10),rgba(79,110,247,.09));
-  border:1px solid rgba(14,143,131,.16);color:#145c55;font-size:11px;font-weight:800;
-  white-space:nowrap;
+/* =========================================================
+   Recountix Rc.0.05 — Card Wave Art + Touch Motion
+   Blue line-wave treatment inspired by the supplied reference.
+   Stars/sparkles are disabled so cards stay clean and premium.
+   ========================================================= */
+:root{
+  --rx-card-wave-blue: rgba(18,142,203,.30);
+  --rx-card-wave-blue-strong: rgba(0,110,179,.42);
+  --rx-card-wave-fade: rgba(255,255,255,.92);
 }
-#shopModal .modal-content{max-width:720px!important;}
-#shopModal .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
-#shopBusinessType{background-color:#fff!important;}
-@media(max-width:640px){
-  #shopModal{padding:10px!important;align-items:flex-start!important;}
-  #shopModal .modal-content{margin-top:8px;max-height:calc(100dvh - 20px);padding:20px 16px!important;}
-  #shopModal .form-grid{grid-template-columns:1fr!important;}
-  .summary-bar .add-btn{min-height:44px;touch-action:manipulation;}
+.card,.stat-card,.dashboard-card,.glass-card,.panel,.section-card,
+.content-box,.table-section,.summary-card,.filter-section,.form-section,
+.analytics-panel,.vo-command-strip,.vo-today-panel,.rx-nav-card,.rx-ad-card,
+.vo-final-kpi,.vo-command-btn{
+  position:relative!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+}
+.card::after,.stat-card::after,.dashboard-card::after,.glass-card::after,.panel::after,.section-card::after,
+.content-box::after,.table-section::after,.summary-card::after,.filter-section::after,.form-section::after,
+.analytics-panel::after,.vo-command-strip::after,.vo-today-panel::after,.rx-nav-card::after,.rx-ad-card::after,
+.vo-final-kpi::after,.vo-command-btn::after{
+  content:""!important;
+  position:absolute!important;
+  inset:auto -24% -42% -28%!important;
+  height:118%!important;
+  border-radius:0!important;
+  pointer-events:none!important;
+  z-index:0!important;
+  opacity:.72!important;
+  transform:translate3d(0,0,0) rotate(-2deg)!important;
+  transform-origin:50% 70%!important;
+  background:
+    radial-gradient(ellipse 70% 25% at 18% 48%, transparent 0 61%, var(--rx-card-wave-blue) 61.35% 61.75%, transparent 62.15% 66%, var(--rx-card-wave-blue) 66.35% 66.75%, transparent 67.15% 72%, var(--rx-card-wave-blue) 72.35% 72.72%, transparent 73.05%),
+    radial-gradient(ellipse 72% 24% at 78% 66%, transparent 0 58%, var(--rx-card-wave-blue-strong) 58.35% 58.75%, transparent 59.15% 63%, var(--rx-card-wave-blue-strong) 63.35% 63.75%, transparent 64.15% 68%, var(--rx-card-wave-blue-strong) 68.35% 68.72%, transparent 69.05%),
+    repeating-linear-gradient(176deg, transparent 0 10px, rgba(9,122,188,.135) 10.6px 11.7px, transparent 12.3px 20px),
+    linear-gradient(90deg, var(--rx-card-wave-fade), rgba(255,255,255,.10) 42%, rgba(255,255,255,.72));
+  background-size:145% 120%,145% 120%,220px 100%,100% 100%!important;
+  background-position:-22% 56%,118% 48%,0 0,0 0!important;
+  mix-blend-mode:multiply!important;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), background-position .45s cubic-bezier(.2,.8,.2,1), opacity .25s ease!important;
+}
+.card>*,
+.stat-card>*,
+.dashboard-card>*,
+.glass-card>*,
+.panel>*,
+.section-card>*,
+.content-box>*,
+.table-section>*,
+.summary-card>*,
+.filter-section>*,
+.form-section>*,
+.analytics-panel>*,
+.vo-command-strip>*,
+.vo-today-panel>*,
+.rx-nav-card>*,
+.rx-ad-card>*,
+.vo-final-kpi>*,
+.vo-command-btn>*{
+  position:relative;
+  z-index:2;
+}
+.card::before,.content-box::before,.table-section::before{
+  z-index:3!important;
+}
+@media (hover:hover) and (pointer:fine){
+  .card:hover::after,.stat-card:hover::after,.dashboard-card:hover::after,.glass-card:hover::after,.panel:hover::after,.section-card:hover::after,
+  .content-box:hover::after,.table-section:hover::after,.summary-card:hover::after,.filter-section:hover::after,.form-section:hover::after,
+  .analytics-panel:hover::after,.vo-command-strip:hover::after,.vo-today-panel:hover::after,.rx-nav-card:hover::after,.rx-ad-card:hover::after,
+  .vo-final-kpi:hover::after,.vo-command-btn:hover::after{
+    opacity:.92!important;
+    transform:translate3d(16px,-8px,0) rotate(1.2deg) scale(1.035)!important;
+    background-position:2% 50%,92% 54%,76px 0,0 0!important;
+  }
+}
+.card:active::after,.stat-card:active::after,.dashboard-card:active::after,.glass-card:active::after,.panel:active::after,.section-card:active::after,
+.content-box:active::after,.table-section:active::after,.summary-card:active::after,.filter-section:active::after,.form-section:active::after,
+.analytics-panel:active::after,.vo-command-strip:active::after,.vo-today-panel:active::after,.rx-nav-card:active::after,.rx-ad-card:active::after,
+.vo-final-kpi:active::after,.vo-command-btn:active::after{
+  opacity:.98!important;
+  transform:translate3d(24px,-12px,0) rotate(2deg) scale(1.055)!important;
+  background-position:8% 48%,86% 54%,118px 0,0 0!important;
+  transition-duration:.18s!important;
+}
+.stars,.star,.star-field,.sparkle,.sparkles,.sparkle-layer,.particle-stars,
+.flying-star,.floating-star,.silver-star,.star-particle,.rx-star,.rc-star,.vo-star,
+.rx-sparkle,.rc-sparkle,.vo-sparkle{
+  display:none!important;
+}
+@media(max-width:760px){
+  .card::after,.stat-card::after,.dashboard-card::after,.glass-card::after,.panel::after,.section-card::after,
+  .content-box::after,.table-section::after,.summary-card::after,.filter-section::after,.form-section::after,
+  .analytics-panel::after,.vo-command-strip::after,.vo-today-panel::after,.rx-nav-card::after,.rx-ad-card::after,
+  .vo-final-kpi::after,.vo-command-btn::after{
+    inset:auto -36% -46% -38%!important;
+    height:126%!important;
+    opacity:.62!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .card::after,.stat-card::after,.dashboard-card::after,.glass-card::after,.panel::after,.section-card::after,
+  .content-box::after,.table-section::after,.summary-card::after,.filter-section::after,.form-section::after,
+  .analytics-panel::after,.vo-command-strip::after,.vo-today-panel::after,.rx-nav-card::after,.rx-ad-card::after,
+  .vo-final-kpi::after,.vo-command-btn::after{
+    transition:none!important;
+  }
 }
 
+/* =========================================================
    Recountix Professional V3
    Clean enterprise theme: navy shell, sky-blue accents, quiet
    surfaces. This is the final visual layer loaded on every page.
@@ -908,5 +1000,166 @@ body:has(.login-wrap){
   }
   .rx-live-clock{
     min-width:138px!important;
+  }
+}
+
+/* =========================================================
+   Recountix Professional V3.1 — Mobile Drawer Hotfix
+   Keeps the sidebar above the dim layer and makes every option
+   readable/tappable on Android Chrome and installed PWA views.
+   ========================================================= */
+@media(max-width:900px){
+  :root{--rx3-mobile-drawer:min(286px,88vw);}
+
+  html.sidebar-open,
+  body.sidebar-open{
+    overflow:hidden!important;
+    touch-action:none!important;
+  }
+
+  .sidebar{
+    position:fixed!important;
+    inset:0 auto 0 0!important;
+    width:var(--rx3-mobile-drawer)!important;
+    height:100vh!important;
+    height:100dvh!important;
+    transform:translate3d(-110%,0,0)!important;
+    opacity:1!important;
+    visibility:visible!important;
+    background:linear-gradient(180deg,#07182d 0%,#0b223a 58%,#071526 100%)!important;
+    z-index:2147483000!important;
+    box-shadow:18px 0 48px rgba(3,12,24,.34)!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    pointer-events:auto!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  .sidebar.open,
+  body.sidebar-open .sidebar,
+  html.sidebar-open .sidebar{
+    transform:translate3d(0,0,0)!important;
+  }
+
+  .sidebar,
+  .sidebar *{
+    opacity:1!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+    text-shadow:none!important;
+  }
+
+  .sidebar .logo{
+    background:transparent!important;
+    border-bottom:1px solid rgba(255,255,255,.10)!important;
+  }
+
+  .sidebar .logo img,
+  .sidebar .logo img.shop-brand-logo{
+    background:#fff!important;
+    opacity:1!important;
+  }
+
+  .sidebar .logo h2,
+  .sidebar .logo p{
+    color:#fff!important;
+  }
+
+  .sidebar .menu,
+  .sidebar ul.menu{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:4px!important;
+    padding:8px 0 28px!important;
+    margin:0!important;
+    list-style:none!important;
+  }
+
+  .sidebar .menu li{
+    display:block!important;
+    width:100%!important;
+  }
+
+  .sidebar .menu a,
+  .sidebar a{
+    position:relative!important;
+    z-index:2147483001!important;
+    display:flex!important;
+    align-items:center!important;
+    min-height:46px!important;
+    width:auto!important;
+    gap:12px!important;
+    margin:2px 4px!important;
+    padding:12px 13px!important;
+    border-radius:12px!important;
+    color:#eaf3ff!important;
+    background:transparent!important;
+    border:1px solid transparent!important;
+    font-size:14px!important;
+    font-weight:750!important;
+    letter-spacing:.01em!important;
+    text-decoration:none!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    touch-action:manipulation!important;
+    -webkit-tap-highlight-color:rgba(56,189,248,.28)!important;
+  }
+
+  .sidebar .menu a span,
+  .sidebar a span{
+    color:inherit!important;
+    pointer-events:none!important;
+  }
+
+  .sidebar .menu a i,
+  .sidebar a i{
+    color:#93c5fd!important;
+    opacity:1!important;
+    pointer-events:none!important;
+  }
+
+  .sidebar .menu a:hover,
+  .sidebar .menu a:active,
+  .sidebar .menu a.active,
+  .sidebar a.active{
+    color:#fff!important;
+    background:linear-gradient(90deg,rgba(14,165,233,.32),rgba(56,189,248,.12))!important;
+    border-color:rgba(147,197,253,.22)!important;
+  }
+
+  .sidebar-overlay{
+    position:fixed!important;
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:var(--rx3-mobile-drawer)!important;
+    width:auto!important;
+    background:rgba(8,26,47,.42)!important;
+    z-index:2147482000!important;
+    display:none!important;
+    pointer-events:none!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  .sidebar-overlay.show,
+  body.sidebar-open .sidebar-overlay{
+    display:block!important;
+    pointer-events:auto!important;
+  }
+
+  .menu-toggle{
+    z-index:2147483500!important;
+    pointer-events:auto!important;
+  }
+
+  body.sidebar-open .main-content,
+  html.sidebar-open .main-content{
+    pointer-events:none!important;
   }
 }
