@@ -1475,3 +1475,78 @@ html.rx-dark-shell body:has(.login-wrap) {
     max-height: 92px !important;
   }
 }
+
+/* Rc remove leftover white glows/headers from legacy pseudo layers */
+.rx-dark-shell .card::before,
+.rx-dark-shell .card::after,
+.rx-dark-shell .content-box::before,
+.rx-dark-shell .content-box::after,
+.rx-dark-shell .table-section::before,
+.rx-dark-shell .table-section::after,
+.rx-dark-shell .analytics-panel::before,
+.rx-dark-shell .analytics-panel::after,
+.rx-dark-shell .vo-command-strip::before,
+.rx-dark-shell .vo-command-strip::after,
+.rx-dark-shell .vo-final-kpi::before,
+.rx-dark-shell .vo-final-kpi::after,
+.rx-dark-shell .vo-today-panel::before,
+.rx-dark-shell .vo-today-panel::after,
+.rx-dark-shell .rx-command-panel::before,
+.rx-dark-shell .rx-command-panel::after,
+.rx-dark-shell .rx-risk-panel::before,
+.rx-dark-shell .rx-risk-panel::after,
+.rx-dark-shell .rx-roadmap-panel::before,
+.rx-dark-shell .rx-roadmap-panel::after,
+.rx-dark-shell .rx-module-card::before,
+.rx-dark-shell .rx-module-card::after,
+.rx-dark-shell .backup-panel::before,
+.rx-dark-shell .backup-panel::after,
+.rx-dark-shell .action-card::before,
+.rx-dark-shell .action-card::after,
+.rx-dark-shell .rx-nav-card::before,
+.rx-dark-shell .rx-nav-card::after,
+.rx-dark-shell .summary-bar::before,
+.rx-dark-shell .summary-bar::after,
+.rx-dark-shell .vo-today-head::before,
+.rx-dark-shell .vo-today-head::after,
+.rx-dark-shell .panel::before,
+.rx-dark-shell .panel::after,
+.rx-dark-shell .shell::before,
+.rx-dark-shell .shell::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+.rx-dark-shell .vo-today-head,
+.rx-dark-shell .vo-today-panel > .vo-today-head,
+.rx-dark-shell .content-box > .summary-bar,
+.rx-dark-shell .table-section > .summary-bar,
+.rx-dark-shell .backup-panel > header,
+.rx-dark-shell .backup-panel .summary-bar,
+.rx-dark-shell .backup-panel .panel-head,
+.rx-dark-shell .backup-panel .backup-head {
+  background: linear-gradient(135deg, rgba(17, 24, 39, .96), rgba(15, 23, 42, .9)) !important;
+  border: 0 !important;
+  color: var(--rx-text) !important;
+  box-shadow: none !important;
+}
+
+.rx-dark-shell .vo-today-panel,
+.rx-dark-shell .rx-roadmap-panel,
+.rx-dark-shell .backup-panel,
+.rx-dark-shell .content-box,
+.rx-dark-shell .table-section {
+  background:
+    linear-gradient(180deg, rgba(17, 24, 39, .94), rgba(19, 27, 46, .9)) !important;
+}
+
+.rx-dark-shell ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, .72) !important;
+  border: 3px solid rgba(15, 23, 42, .98) !important;
+}
+
+.rx-dark-shell ::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, .72) !important;
+}
