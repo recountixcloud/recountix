@@ -709,3 +709,39 @@ tbody tr:hover td {
     width: 100% !important;
   }
 }
+
+/* Rc login input contrast fix */
+.rx-dark-shell input,
+.rx-dark-shell select,
+.rx-dark-shell textarea,
+.rx-dark-shell .login-container input,
+.rx-dark-shell .login-card input,
+.rx-dark-shell .auth-card input,
+.rx-dark-shell .form-group input {
+  background-color: rgba(11, 15, 23, .86) !important;
+  background-image: none !important;
+  color: #F8FAFC !important;
+  caret-color: #A78BFA !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+}
+
+.rx-dark-shell input:-webkit-autofill,
+.rx-dark-shell input:-webkit-autofill:hover,
+.rx-dark-shell input:-webkit-autofill:focus,
+.rx-dark-shell input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0B0F17 inset !important;
+  box-shadow: 0 0 0 1000px #0B0F17 inset !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  caret-color: #A78BFA !important;
+  border-color: rgba(124, 58, 237, .72) !important;
+}
+
+.rx-dark-shell input::placeholder,
+.rx-dark-shell textarea::placeholder,
+.rx-dark-shell .login-container input::placeholder,
+.rx-dark-shell .login-card input::placeholder,
+.rx-dark-shell .auth-card input::placeholder {
+  color: #64748B !important;
+  -webkit-text-fill-color: #64748B !important;
+  opacity: 1 !important;
+}
