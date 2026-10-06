@@ -100,21 +100,32 @@ as $$
   cross join lateral public.app_msme_45_day_status(cb.msme_start_on, p_as_of) msme;
 $$;
 
+drop function if exists public.app_mark_demand_notice_sent(uuid, timestamptz);
+
 create or replace function public.app_mark_demand_notice_sent(
+  p_token text,
   p_customer_id uuid,
   p_notice_time timestamptz default now()
 )
 returns void
 language plpgsql
-as $$
+as $
 begin
+  if not exists (
+    select 1
+    from public.app_get_customers(p_token) c
+    where c.id = p_customer_id
+  ) then
+    raise exception 'customer_not_allowed';
+  end if;
+
   update public.customers
   set
     demand_notice_count = coalesce(demand_notice_count, 0) + 1,
     last_demand_notice_at = coalesce(p_notice_time, now())
   where id = p_customer_id;
 end;
-$$;
+$;
 
 comment on function public.app_calculate_delayed_interest(numeric, date, date, numeric)
   is 'Simple pro-rata delayed payment interest calculator for recovery workflows.';
