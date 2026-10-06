@@ -1,0 +1,520 @@
+/* Recountix Boltise-inspired dark command-center theme.
+   Loaded after the legacy unified CSS so existing selectors and JS keep working. */
+:root {
+  --rx-bg: #0B0F17;
+  --rx-surface: #111827;
+  --rx-surface-2: #131B2E;
+  --rx-row: #1E293B;
+  --rx-border: #334155;
+  --rx-border-soft: #1E293B;
+  --rx-text: #F8FAFC;
+  --rx-muted: #94A3B8;
+  --rx-subtle: #64748B;
+  --rx-violet: #7C3AED;
+  --rx-indigo: #6366F1;
+  --rx-emerald: #10B981;
+  --rx-amber: #F59E0B;
+  --rx-rose: #F43F5E;
+
+  --brand-950: var(--rx-bg);
+  --brand-900: #0F172A;
+  --brand-800: #111827;
+  --brand-700: var(--rx-indigo);
+  --brand-600: var(--rx-violet);
+  --brand-500: var(--rx-violet);
+  --brand-400: #A78BFA;
+  --brand-300: #C4B5FD;
+  --brand-100: rgba(124, 58, 237, .14);
+
+  --ink: var(--rx-text);
+  --ink-soft: var(--rx-muted);
+  --ink-faint: var(--rx-subtle);
+  --bg: var(--rx-bg);
+  --surface: var(--rx-surface);
+  --border: var(--rx-border);
+  --border-soft: var(--rx-border-soft);
+
+  --danger: var(--rx-rose);
+  --danger-soft: rgba(244, 63, 94, .14);
+  --warning: var(--rx-amber);
+  --warning-soft: rgba(245, 158, 11, .14);
+  --success: var(--rx-emerald);
+  --success-soft: rgba(16, 185, 129, .14);
+  --info: #818CF8;
+  --info-soft: rgba(99, 102, 241, .14);
+
+  --shadow-sm: 0 12px 34px rgba(0, 0, 0, .28);
+  --shadow: 0 22px 55px rgba(0, 0, 0, .34);
+  --shadow-lg: 0 32px 80px rgba(0, 0, 0, .42);
+}
+
+html,
+body,
+.wrapper {
+  background: var(--rx-bg) !important;
+  color: var(--rx-text) !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(124, 58, 237, .18), transparent 26rem),
+    radial-gradient(circle at 88% 12%, rgba(99, 102, 241, .13), transparent 24rem),
+    radial-gradient(circle at 72% 82%, rgba(16, 185, 129, .08), transparent 24rem),
+    linear-gradient(180deg, #0B0F17 0%, #090D14 100%);
+}
+
+.wrapper,
+.main-content,
+.sidebar,
+.menu-toggle,
+.sidebar-overlay {
+  position: relative;
+}
+
+.main-content {
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, rgba(17, 24, 39, .96), rgba(11, 15, 23, .98)) !important;
+  border-right: 1px solid rgba(51, 65, 85, .72) !important;
+  box-shadow: 20px 0 60px rgba(0, 0, 0, .22) !important;
+}
+
+.sidebar .logo {
+  border-bottom-color: rgba(51, 65, 85, .8) !important;
+}
+
+.sidebar .logo h2::before {
+  background: linear-gradient(135deg, var(--rx-violet), var(--rx-indigo)) !important;
+  box-shadow: 0 0 22px rgba(124, 58, 237, .55) !important;
+}
+
+.sidebar .logo p,
+.sidebar .menu a:hover i,
+.sidebar .menu a.active i {
+  color: #C4B5FD !important;
+}
+
+.sidebar .menu a {
+  color: rgba(248, 250, 252, .64) !important;
+}
+
+.sidebar .menu a:hover,
+.sidebar .menu a.active {
+  background: linear-gradient(90deg, rgba(124, 58, 237, .22), rgba(99, 102, 241, .08)) !important;
+  color: var(--rx-text) !important;
+}
+
+.sidebar .menu a.active {
+  box-shadow: inset 3px 0 var(--rx-violet) !important;
+}
+
+.menu-toggle {
+  background: rgba(17, 24, 39, .92) !important;
+  border: 1px solid rgba(51, 65, 85, .9) !important;
+  color: var(--rx-text) !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .36) !important;
+}
+
+.sidebar-overlay.show {
+  background: rgba(2, 6, 23, .42) !important;
+}
+
+.topbar {
+  padding: 6px 0 22px !important;
+}
+
+.page-title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--rx-text) !important;
+  letter-spacing: 0 !important;
+}
+
+.page-subtitle,
+.summary-bar span,
+.content-box p,
+.analytics-head p,
+.vo-command-title small,
+.card small,
+.rx-nav-card small,
+.footer,
+small {
+  color: var(--rx-muted) !important;
+}
+
+.rx-live-clock,
+.card,
+.content-box,
+.table-section,
+.analytics-panel,
+.vo-command-strip,
+.rx-nav-card,
+.backup-panel,
+.action-card,
+.vo-final-kpi,
+.vo-today-panel,
+.rx-command-panel,
+.rx-risk-panel,
+.rx-roadmap-panel {
+  background: linear-gradient(180deg, rgba(17, 24, 39, .92), rgba(19, 27, 46, .9)) !important;
+  border: 1px solid rgba(51, 65, 85, .78) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255, 255, 255, .035) !important;
+  backdrop-filter: blur(18px) saturate(1.15) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
+}
+
+.card::before,
+.card::after,
+.content-box::before,
+.table-section::before,
+.analytics-panel::before,
+.vo-command-strip::before,
+.rx-nav-card::after,
+.action-card::after,
+.vo-final-kpi::before {
+  display: none !important;
+}
+
+.card:hover,
+.rx-nav-card:hover,
+.vo-command-btn:hover {
+  border-color: rgba(124, 58, 237, .72) !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .36), 0 0 45px rgba(124, 58, 237, .10) !important;
+}
+
+.card > i,
+.rx-nav-card > i:first-child,
+.settings-quick-actions .action-card > i {
+  background: rgba(124, 58, 237, .16) !important;
+  color: #C4B5FD !important;
+}
+
+.card h3,
+.summary-bar h2,
+.analytics-head h2,
+.vo-command-title strong,
+.rx-nav-card b {
+  color: var(--rx-text) !important;
+}
+
+.card h1 {
+  color: var(--rx-text) !important;
+}
+
+.card.blue h1,
+#dsoMeter {
+  color: #A5B4FC !important;
+}
+
+.card.red h1,
+#totalOutstanding,
+#rxCriticalAmount,
+#rxBrokenPtp {
+  color: var(--rx-rose) !important;
+}
+
+.card.orange h1,
+#rxMildRiskAmount,
+#rxMsmeCountdown {
+  color: var(--rx-amber) !important;
+}
+
+.card.green h1,
+#todayRecovery,
+#rxRecoveredMonth,
+#rxProjected30 {
+  color: var(--rx-emerald) !important;
+}
+
+.add-btn,
+button.save-btn,
+.btn-primary,
+button[type="submit"] {
+  background: linear-gradient(135deg, var(--rx-violet), var(--rx-indigo)) !important;
+  box-shadow: 0 16px 34px rgba(99, 102, 241, .26) !important;
+}
+
+.btn-cancel,
+.btn-reset,
+.btn-secondary,
+.cancel-btn,
+.action-btn,
+.vo-command-btn {
+  background: rgba(30, 41, 59, .74) !important;
+  border-color: rgba(51, 65, 85, .84) !important;
+  color: var(--rx-text) !important;
+}
+
+.vo-command-btn i {
+  color: #C4B5FD !important;
+}
+
+input,
+select,
+textarea,
+.search-box,
+.form-control {
+  background: rgba(11, 15, 23, .72) !important;
+  border-color: rgba(51, 65, 85, .88) !important;
+  color: var(--rx-text) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--rx-subtle) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.search-box:focus {
+  border-color: var(--rx-violet) !important;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, .16) !important;
+}
+
+.table-responsive,
+.table-wrap {
+  border-color: rgba(51, 65, 85, .78) !important;
+}
+
+table,
+td {
+  background: rgba(17, 24, 39, .8) !important;
+  color: var(--rx-text) !important;
+}
+
+thead,
+th {
+  background: rgba(30, 41, 59, .92) !important;
+  color: var(--rx-muted) !important;
+  border-bottom-color: rgba(51, 65, 85, .84) !important;
+}
+
+td {
+  border-bottom-color: rgba(30, 41, 59, .86) !important;
+}
+
+tbody tr:hover td {
+  background: rgba(30, 41, 59, .68) !important;
+}
+
+.badge {
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+}
+
+.rx-metric-grid,
+.rx-risk-grid,
+.rx-roadmap-grid,
+.rx-cashflow-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.rx-metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 20px;
+}
+
+.rx-risk-grid {
+  grid-template-columns: 1.25fr .75fr;
+  margin-bottom: 20px;
+}
+
+.rx-roadmap-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.rx-cashflow-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rx-command-panel,
+.rx-risk-panel,
+.rx-roadmap-panel {
+  padding: 20px;
+}
+
+.rx-panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.rx-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #C4B5FD;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.rx-panel-head h2 {
+  margin-top: 4px;
+  font-size: 18px !important;
+}
+
+.rx-panel-head p {
+  margin: 4px 0 0;
+  color: var(--rx-muted);
+  font-size: 12.5px;
+}
+
+.rx-status-pill {
+  border: 1px solid rgba(51, 65, 85, .9);
+  border-radius: 999px;
+  color: var(--rx-muted);
+  background: rgba(30, 41, 59, .62);
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.rx-mini-card {
+  background: rgba(11, 15, 23, .62);
+  border: 1px solid rgba(51, 65, 85, .78);
+  border-radius: 14px;
+  padding: 15px;
+  min-width: 0;
+}
+
+.rx-mini-card span {
+  display: block;
+  color: var(--rx-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.rx-mini-card strong {
+  display: block;
+  color: var(--rx-text);
+  font: 800 24px var(--font-display);
+  margin-top: 7px;
+}
+
+.rx-mini-card small {
+  display: block;
+  margin-top: 4px;
+}
+
+.rx-aging-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(51, 65, 85, .62);
+}
+
+.rx-aging-row:last-child {
+  border-bottom: 0;
+}
+
+.rx-aging-row b {
+  color: var(--rx-text);
+}
+
+.rx-aging-row small {
+  color: var(--rx-muted);
+}
+
+.rx-risk-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.rx-dot-green { background: var(--rx-emerald); box-shadow: 0 0 18px rgba(16, 185, 129, .45); }
+.rx-dot-yellow { background: var(--rx-amber); box-shadow: 0 0 18px rgba(245, 158, 11, .45); }
+.rx-dot-red { background: var(--rx-rose); box-shadow: 0 0 18px rgba(244, 63, 94, .45); }
+
+.rx-module-card {
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(51, 65, 85, .78);
+  border-radius: 16px;
+  padding: 16px;
+  background: rgba(11, 15, 23, .58);
+}
+
+.rx-module-card i {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(124, 58, 237, .16);
+  color: #C4B5FD;
+}
+
+.rx-module-card b {
+  color: var(--rx-text);
+  font-size: 13px;
+}
+
+.rx-module-card p {
+  color: var(--rx-muted);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.rx-module-card a {
+  margin-top: auto;
+  color: #C4B5FD;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.footer {
+  color: var(--rx-subtle) !important;
+}
+
+@media (max-width: 1180px) {
+  .rx-metric-grid,
+  .rx-roadmap-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rx-risk-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .rx-metric-grid,
+  .rx-roadmap-grid,
+  .rx-cashflow-grid {
+    grid-template-columns: 1fr;
+  }
+  .rx-panel-head {
+    display: block;
+  }
+  .rx-status-pill {
+    display: inline-flex;
+    margin-top: 10px;
+  }
+}
