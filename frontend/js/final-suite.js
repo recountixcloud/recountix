@@ -1,3 +1,20 @@
+/* Recountix dark recovery shell bootstrap */
+(function(){
+'use strict';
+function once(id,tag,attrs){
+  if(document.getElementById(id)) return;
+  var el=document.createElement(tag);
+  el.id=id;
+  Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
+  document.head.appendChild(el);
+}
+once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=command-center-2'});
+once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
+var meta=document.querySelector('meta[name="theme-color"]');
+if(meta) meta.setAttribute('content','#0B0F17');
+document.documentElement.classList.add('rx-dark-shell');
+})();
+
 /* Recountix – Final Combined Suite */
 (function(){
 'use strict';
