@@ -1,5 +1,5 @@
 // Bump this on every deploy so old caches get wiped automatically.
-const CACHE = 'bk-rm-v16-sidebar-click-v8';
+const CACHE = 'recountix-professional-v3';
 
 // Only truly static assets that rarely change go here.
 const ASSETS = ['./css/style.css', './assets/logo.png'];
