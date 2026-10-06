@@ -3,9 +3,6 @@
 
 <head>
 <script>
-/* Auth guard: redirect BEFORE the page paints, so an unauthenticated
-   or expired session never sees the sidebar/dashboard flash before
-   bouncing to login.html. */
 (function(){
   try {
     var loggedIn = localStorage.getItem('bk_isLoggedIn') === 'true' ||
@@ -16,254 +13,226 @@
 </script>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1A3D63">
-
+<meta name="theme-color" content="#0B0F17">
 <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Dashboard | Recountix</title><link rel="preconnect" href="https://fonts.googleapis.com" />
+<title>Dashboard | Recountix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script></head>
+<link rel="stylesheet" href="css/boltise-dark.css?v=command-center-1">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
 
 <body>
-
 <button type="button" class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="wrapper">
 
-<!-- =========================
-SIDEBAR START
-========================= -->
-
 <aside class="sidebar">
-
-<div class="logo">
-
-<h2>Recountix</h2>
-
-<p>Beyond What’s Due.</p>
-
-</div>
-
-<ul class="menu">
-<li><a href="dashboard.html" class="active"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
-<li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
-<li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
-<li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
-<li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
-<li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
-<li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
-<li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
-<li><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
-<li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li><li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
-</ul>
-
+  <div class="logo">
+    <h2>Recountix</h2>
+    <p>Beyond What's Due.</p>
+  </div>
+  <ul class="menu">
+    <li><a href="dashboard.html" class="active"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+    <li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
+    <li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
+    <li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
+    <li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
+    <li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
+    <li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
+    <li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
+    <li><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+    <li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li>
+    <li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+  </ul>
 </aside>
 
-<!-- =========================
-SIDEBAR END
-========================= -->
+<main class="main-content">
+  <header class="topbar">
+    <div>
+      <span class="rx-eyebrow"><i class="fa-solid fa-terminal"></i> Recovery Command Center</span>
+      <h1 class="page-title">Recountix Dashboard</h1>
+      <p class="page-subtitle">B2B payment recovery, debtor risk, PTP commitments and cashflow control.</p>
+    </div>
+    <div class="rx-live-clock" aria-label="Current date and time">
+      <span class="rx-clock-glow" aria-hidden="true"></span>
+      <div class="rx-clock-date" id="rxClockDate">-</div>
+      <div class="rx-clock-time" id="rxClockTime">--:--:--</div>
+    </div>
+  </header>
 
-<!-- =========================
-MAIN CONTENT START
-========================= -->
+  <section id="recountixAdSlot" class="rx-ad-slot" hidden aria-label="Sponsored promotion"></section>
 
-<main class="main-content"><!-- =========================
-TOPBAR START
-========================= -->
-
-<header class="topbar">
-
-<div>
-
-<h1 class="page-title">
-
-Dashboard
-
-</h1>
-
-<p class="page-subtitle">
-
-Welcome to Recountix
-
-</p>
-
-</div>
-
-<div class="rx-live-clock" aria-label="Current date and time">
-  <span class="rx-clock-glow" aria-hidden="true"></span>
-  <div class="rx-clock-date" id="rxClockDate">—</div>
-  <div class="rx-clock-time" id="rxClockTime">--:--:--</div>
-</div>
-
-</header>
-
-<!-- =========================
-TOPBAR END
-========================= -->
-
-<section id="recountixAdSlot" class="rx-ad-slot" hidden aria-label="Sponsored promotion"></section>
-
-<!-- =========================
-DASHBOARD CARDS START
-========================= -->
-
-<div class="dashboard-grid">
-
-<!-- Total Customers -->
-
-<div class="card blue">
-
-<i class="fa-solid fa-users"></i>
-
-<h3>Total Customers</h3>
-
-<h1 id="totalCustomers">0</h1>
-
-<small>Total Registered Customers</small>
-
-</div>
-
-<!-- Outstanding -->
-
-<div class="card red">
-
-<i class="fa-solid fa-wallet"></i>
-
-<h3>Total Outstanding</h3>
-
-<h1 id="totalOutstanding">
-
-₹0
-
-</h1>
-
-<small>Pending Collection</small>
-
-</div>
-
-<!-- Today's Follow-up -->
-
-<div class="card orange">
-
-<i class="fa-solid fa-calendar-check"></i>
-
-<h3>Today's Follow-up</h3>
-
-<h1 id="todayFollowup">
-
-0
-
-</h1>
-
-<small>Customers to Contact</small>
-
-</div>
-
-<!-- Today's Recovery -->
-
-<div class="card green">
-
-<i class="fa-solid fa-indian-rupee-sign"></i>
-
-<h3>Today's Recovery</h3>
-
-<h1 id="todayRecovery">
-
-₹0
-
-</h1>
-
-<small>Today's Collection</small>
-
-</div>
-
-</div>
-
-<!-- =========================
-DASHBOARD CARDS END
-========================= -->
-
-<!-- =========================
-PART 1 ANALYTICS — VISUAL ONLY
-========================= -->
-<section class="dashboard-analytics fade" aria-label="Recovery analytics">
-  <article class="analytics-panel analytics-trend">
-    <div class="analytics-head"><div><span class="eyebrow">PERFORMANCE</span><h2>Recovery Trend</h2><p>Last 30 days collection performance</p></div><i class="fa-solid fa-chart-line"></i></div>
-    <div class="chart-wrap"><canvas id="recoveryTrendChart"></canvas></div>
-  </article>
-  <article class="analytics-panel analytics-status">
-    <div class="analytics-head"><div><span class="eyebrow">PORTFOLIO</span><h2>Outstanding Mix</h2><p>Current account distribution</p></div><i class="fa-solid fa-chart-pie"></i></div>
-    <div class="chart-wrap doughnut-wrap"><canvas id="portfolioStatusChart"></canvas></div>
-  </article>
-</section>
-
-<!-- =========================
-PREMIUM COMMAND CENTER
-========================= -->
-<section class="vo-command-strip" aria-label="Quick actions">
-  <div class="vo-command-title">
-    <span><i class="fa-solid fa-bolt"></i> QUICK ACTIONS</span>
-    <strong>Recovery Command Center</strong>
-    <small>Fast access to your daily collection work.</small>
+  <div class="dashboard-grid">
+    <div class="card blue">
+      <i class="fa-solid fa-users"></i>
+      <h3>Total Customers</h3>
+      <h1 id="totalCustomers">0</h1>
+      <small>Total registered accounts</small>
+    </div>
+    <div class="card red">
+      <i class="fa-solid fa-wallet"></i>
+      <h3>Total Outstanding</h3>
+      <h1 id="totalOutstanding">₹0</h1>
+      <small>Pending collection</small>
+    </div>
+    <div class="card orange">
+      <i class="fa-solid fa-calendar-check"></i>
+      <h3>Today's Follow-up</h3>
+      <h1 id="todayFollowup">0</h1>
+      <small>Customers to contact</small>
+    </div>
+    <div class="card green">
+      <i class="fa-solid fa-indian-rupee-sign"></i>
+      <h3>Today's Recovery</h3>
+      <h1 id="todayRecovery">₹0</h1>
+      <small>Today's collection</small>
+    </div>
   </div>
-  <div class="vo-command-grid">
-    <a class="vo-command-btn" href="customers.html"><i class="fa-solid fa-user-plus"></i><span><b>Add Customer</b><small>New account</small></span></a>
-    <a class="vo-command-btn" href="recovery.html"><i class="fa-solid fa-indian-rupee-sign"></i><span><b>Record Recovery</b><small>Collect payment</small></span></a>
-    <a class="vo-command-btn" href="ptp.html"><i class="fa-solid fa-handshake"></i><span><b>Promise to Pay</b><small>Commitments</small></span></a>
-    <a class="vo-command-btn" href="reports.html"><i class="fa-solid fa-chart-line"></i><span><b>Reports</b><small>Insights</small></span></a>
-    <a class="vo-command-btn" href="escalations.html"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Escalations</b><small>High risk</small></span></a>
-  </div>
-</section>
 
+  <section class="rx-metric-grid fade" aria-label="Executive recovery metrics">
+    <article class="rx-mini-card">
+      <span>DSO Meter</span>
+      <strong id="dsoMeter">0 Days</strong>
+      <small>Approx. outstanding / monthly recovery cycle</small>
+    </article>
+    <article class="rx-mini-card">
+      <span>Recovered This Month</span>
+      <strong id="rxRecoveredMonth">₹0</strong>
+      <small>Current month confirmed recoveries</small>
+    </article>
+    <article class="rx-mini-card">
+      <span>7 Day PTP Inflow</span>
+      <strong id="rxProjected7">₹0</strong>
+      <small>Expected from active commitments</small>
+    </article>
+    <article class="rx-mini-card">
+      <span>MSME 45-Day Watch</span>
+      <strong id="rxMsmeCountdown">0</strong>
+      <small>Accounts approaching statutory urgency</small>
+    </article>
+  </section>
 
+  <section class="rx-risk-grid fade" aria-label="Aging buckets and risk scoring">
+    <article class="rx-risk-panel">
+      <div class="rx-panel-head">
+        <div>
+          <span class="rx-eyebrow"><i class="fa-solid fa-shield-halved"></i> Aging Buckets</span>
+          <h2>Overdue Portfolio Risk</h2>
+          <p>Automatic 0-30, 31-60, 61-90 and 90+ day grouping from due/follow-up dates.</p>
+        </div>
+        <span class="rx-status-pill" id="rxRiskScore">Risk: Green</span>
+      </div>
+      <div class="rx-aging-row">
+        <div><b><span class="rx-risk-dot rx-dot-green"></span>0-30 Days</b><br><small>Normal / Follow-up</small></div>
+        <small id="rxAgingCount0">0 accounts</small>
+        <b id="rxAgingAmount0">₹0</b>
+      </div>
+      <div class="rx-aging-row">
+        <div><b><span class="rx-risk-dot rx-dot-yellow"></span>31-60 Days</b><br><small>Mild Risk</small></div>
+        <small id="rxAgingCount31">0 accounts</small>
+        <b id="rxMildRiskAmount">₹0</b>
+      </div>
+      <div class="rx-aging-row">
+        <div><b><span class="rx-risk-dot rx-dot-yellow"></span>61-90 Days</b><br><small>Moderate Risk / Escalation</small></div>
+        <small id="rxAgingCount61">0 accounts</small>
+        <b id="rxAgingAmount61">₹0</b>
+      </div>
+      <div class="rx-aging-row">
+        <div><b><span class="rx-risk-dot rx-dot-red"></span>90+ Days</b><br><small>Critical / Legal Alert</small></div>
+        <small id="rxAgingCount90">0 accounts</small>
+        <b id="rxCriticalAmount">₹0</b>
+      </div>
+    </article>
 
-<!-- Detailed aging and overdue data belongs on the Customers page. -->
+    <article class="rx-command-panel">
+      <div class="rx-panel-head">
+        <div>
+          <span class="rx-eyebrow"><i class="fa-solid fa-handshake"></i> PTP Queue</span>
+          <h2>Promise to Pay</h2>
+          <p>Track honored and broken promises with due-date task queues.</p>
+        </div>
+      </div>
+      <div class="rx-cashflow-grid">
+        <div class="rx-mini-card"><span>Next 7 Days</span><strong id="rxCash7">₹0</strong><small>PTP cashflow</small></div>
+        <div class="rx-mini-card"><span>Next 15 Days</span><strong id="rxCash15">₹0</strong><small>PTP cashflow</small></div>
+        <div class="rx-mini-card"><span>Next 30 Days</span><strong id="rxProjected30">₹0</strong><small>PTP cashflow</small></div>
+      </div>
+      <div class="rx-aging-row">
+        <div><b>Broken Promises</b><br><small>Needs escalation / legal follow-up</small></div>
+        <small id="rxBrokenPtpCount">0 accounts</small>
+        <b id="rxBrokenPtp">₹0</b>
+      </div>
+    </article>
+  </section>
 
+  <section class="dashboard-analytics fade" aria-label="Recovery analytics">
+    <article class="analytics-panel analytics-trend">
+      <div class="analytics-head">
+        <div><span class="eyebrow">PERFORMANCE</span><h2>Recovery Trend</h2><p>Last 30 days collection performance</p></div>
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+      <div class="chart-wrap"><canvas id="recoveryTrendChart"></canvas></div>
+    </article>
+    <article class="analytics-panel analytics-status">
+      <div class="analytics-head">
+        <div><span class="eyebrow">PORTFOLIO</span><h2>Outstanding Mix</h2><p>Current account distribution</p></div>
+        <i class="fa-solid fa-chart-pie"></i>
+      </div>
+      <div class="chart-wrap doughnut-wrap"><canvas id="portfolioStatusChart"></canvas></div>
+    </article>
+  </section>
 
-<!-- Detailed customer, follow-up and recovery lists are intentionally kept off the dashboard.
-     Use Customers, Promise to Pay and Recovery pages for full records. -->
-<section class="rx-dashboard-nav fade" aria-label="Detailed records">
-  <a href="customers.html" class="rx-nav-card"><i class="fa-solid fa-users"></i><span><b>Customers</b><small>Customer records &amp; aging</small></span><i class="fa-solid fa-arrow-right"></i></a>
-  <a href="ptp.html" class="rx-nav-card"><i class="fa-solid fa-calendar-check"></i><span><b>Follow-ups</b><small>Promises &amp; schedules</small></span><i class="fa-solid fa-arrow-right"></i></a>
-  <a href="recovery.html" class="rx-nav-card"><i class="fa-solid fa-indian-rupee-sign"></i><span><b>Recovery History</b><small>Payments &amp; collections</small></span><i class="fa-solid fa-arrow-right"></i></a>
-</section>
-<!-- =========================
-FOOTER START
-========================= -->
+  <section class="vo-command-strip" aria-label="Quick actions">
+    <div class="vo-command-title">
+      <span><i class="fa-solid fa-bolt"></i> QUICK ACTIONS</span>
+      <strong>Recovery Command Center</strong>
+      <small>Fast access to daily collection work.</small>
+    </div>
+    <div class="vo-command-grid">
+      <a class="vo-command-btn" href="customers.html"><i class="fa-solid fa-user-plus"></i><span><b>Add Customer</b><small>New debtor account</small></span></a>
+      <a class="vo-command-btn" href="recovery.html"><i class="fa-solid fa-indian-rupee-sign"></i><span><b>Record Recovery</b><small>Collect payment</small></span></a>
+      <a class="vo-command-btn" href="ptp.html"><i class="fa-solid fa-handshake"></i><span><b>Promise to Pay</b><small>Commitments</small></span></a>
+      <a class="vo-command-btn" href="reports.html"><i class="fa-solid fa-chart-line"></i><span><b>Reports</b><small>DSO and recovery</small></span></a>
+      <a class="vo-command-btn" href="escalations.html"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Escalations</b><small>High risk</small></span></a>
+    </div>
+  </section>
 
-<footer class="footer">
+  <section class="rx-roadmap-panel fade" aria-label="Recovery feature roadmap">
+    <div class="rx-panel-head">
+      <div>
+        <span class="rx-eyebrow"><i class="fa-solid fa-code-branch"></i> Recovery Roadmap</span>
+        <h2>Payment Recovery Modules</h2>
+        <p>Focused on debt recovery, compliance, reminders and executive cashflow visibility.</p>
+      </div>
+      <span class="rx-status-pill">Supabase-backed rollout</span>
+    </div>
+    <div class="rx-roadmap-grid">
+      <div class="rx-module-card"><i class="fa-solid fa-layer-group"></i><b>Aging & Risk</b><p>Bucket overdue accounts and show Green / Yellow / Red debtor risk.</p><a href="customers.html">Open customers</a></div>
+      <div class="rx-module-card"><i class="fa-solid fa-headset"></i><b>PTP Task Manager</b><p>Call notes, dispositions, due reminders, honored vs broken promises.</p><a href="ptp.html">Open PTP</a></div>
+      <div class="rx-module-card"><i class="fa-solid fa-link"></i><b>Reminder Links</b><p>WhatsApp/email templates with UPI or payment gateway link support.</p><a href="recovery.html">Collect payment</a></div>
+      <div class="rx-module-card"><i class="fa-solid fa-scale-balanced"></i><b>MSME + Interest</b><p>45-day statutory countdown, delayed-payment interest and notice PDFs.</p><a href="reports.html">View reports</a></div>
+      <div class="rx-module-card"><i class="fa-solid fa-gauge-high"></i><b>Executive Metrics</b><p>DSO, total outstanding, month recovery and projected cash inflows.</p><a href="dashboard.html">Refresh dashboard</a></div>
+    </div>
+  </section>
 
-© 2026 BK Design Hub | Recountix |
-Powered by <strong>BK Design Hub</strong>
+  <section class="rx-dashboard-nav fade" aria-label="Detailed records">
+    <a href="customers.html" class="rx-nav-card"><i class="fa-solid fa-users"></i><span><b>Customers</b><small>Customer records & aging</small></span><i class="fa-solid fa-arrow-right"></i></a>
+    <a href="ptp.html" class="rx-nav-card"><i class="fa-solid fa-calendar-check"></i><span><b>Follow-ups</b><small>Promises & schedules</small></span><i class="fa-solid fa-arrow-right"></i></a>
+    <a href="recovery.html" class="rx-nav-card"><i class="fa-solid fa-indian-rupee-sign"></i><span><b>Recovery History</b><small>Payments & collections</small></span><i class="fa-solid fa-arrow-right"></i></a>
+  </section>
 
-</footer><!-- =========================
-MAIN CONTENT END
-========================= -->
-
+  <footer class="footer">© 2026 BK Design Hub | Recountix | Powered by <strong>BK Design Hub</strong></footer>
 </main>
-
-<!-- =========================
-WRAPPER END
-========================= -->
-
 </div>
-
-<!-- =========================
-JAVASCRIPT
-========================= -->
-
-
-
 
 <script src="js/vendor/supabase-2.117.2.js"></script>
 <script src="js/supabase.js"></script>
@@ -274,10 +243,6 @@ JAVASCRIPT
 <script src="js/app.js?v=preferences-1"></script>
 <script src="js/company.js?v=star-wave-3"></script>
 <script src="js/excel-import.js"></script>
-
-
-
-
 
 <script>
 (function(){
@@ -305,16 +270,91 @@ JAVASCRIPT
       timeEl.textContent=fallbackTime(now);
     }
   }
-  function startClock(){
-    updateRecountixClock();
-    window.setInterval(updateRecountixClock,1000);
-  }
+  function startClock(){ updateRecountixClock(); window.setInterval(updateRecountixClock,1000); }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',startClock,{once:true});}
   else{startClock();}
   window.addEventListener('pageshow',updateRecountixClock);
   document.addEventListener('visibilitychange',function(){if(!document.hidden) updateRecountixClock();});
 })();
 </script>
+
+<script>
+(function(){
+  function money(n){ return '₹' + Number(n || 0).toLocaleString('en-IN'); }
+  function dateOnly(v){ return (v || '').toString().slice(0, 10); }
+  function daysBetween(a, b){
+    var d1 = new Date(dateOnly(a));
+    var d2 = new Date(dateOnly(b));
+    if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return null;
+    d1.setHours(0,0,0,0); d2.setHours(0,0,0,0);
+    return Math.floor((d2 - d1) / 86400000);
+  }
+  function setText(id, value){ var el = document.getElementById(id); if (el) el.textContent = value; }
+  function getAmount(row){ return Number(row && (row.amount || row.recoveryAmount || row.promised_amount || row.ptpAmount || 0)) || 0; }
+  function getRecoveryDate(row){ return dateOnly(row && (row.date || row.recovery_date || row.created_at)); }
+  function getCustomerPtp(c){
+    var date = dateOnly(c && (c.ptpDate || c.ptp_date));
+    var amount = Number(c && (c.ptpAmount || c.ptp_amount || 0)) || 0;
+    return { date: date, amount: amount };
+  }
+  function refreshRecoveryCommandCenter(){
+    var list = Array.isArray(window.customers) ? window.customers : (typeof customers !== 'undefined' ? customers : []);
+    var recs = Array.isArray(window.recoveries) ? window.recoveries : (typeof recoveries !== 'undefined' ? recoveries : []);
+    var today = new Date();
+    var todayISO = today.toISOString().slice(0, 10);
+    var monthPrefix = todayISO.slice(0, 7);
+    var summary = (typeof buildClientAgingSummary === 'function') ? buildClientAgingSummary(list) : null;
+    var recoveredMonth = recs.reduce(function(sum, r){ return getRecoveryDate(r).slice(0,7) === monthPrefix ? sum + getAmount(r) : sum; }, 0);
+    var totalOutstanding = summary ? summary.total_outstanding : list.reduce(function(sum, c){ return sum + Number(c.outstanding || 0); }, 0);
+    var dso = recoveredMonth > 0 ? Math.round((totalOutstanding / recoveredMonth) * today.getDate()) : 0;
+    var ptp7 = 0, ptp15 = 0, ptp30 = 0, brokenPtp = 0, brokenCount = 0, msmeWatch = 0;
+    list.forEach(function(c){
+      var p = getCustomerPtp(c);
+      var diff = p.date ? daysBetween(todayISO, p.date) : null;
+      if (diff !== null && diff >= 0 && diff <= 30 && p.amount > 0) {
+        if (diff <= 7) ptp7 += p.amount;
+        if (diff <= 15) ptp15 += p.amount;
+        ptp30 += p.amount;
+      }
+      if (diff !== null && diff < 0 && p.amount > 0) { brokenPtp += p.amount; brokenCount++; }
+      var due = dateOnly(c.dueDate || c.due_date || c.followup);
+      var dueAge = due ? daysBetween(due, todayISO) : null;
+      if (dueAge !== null && dueAge >= 38 && dueAge <= 45 && Number(c.outstanding || 0) > 0) msmeWatch++;
+    });
+    var count0 = summary ? summary.count_0_30 : 0;
+    var count31 = summary ? summary.count_31_60 : 0;
+    var count61 = summary ? summary.count_61_90 : 0;
+    var count90 = summary ? summary.count_90 : 0;
+    var risk = count90 > 0 || (summary && summary.bucket_90_plus > totalOutstanding * .25) ? 'Red' : (count61 > 0 || count31 > 2 ? 'Yellow' : 'Green');
+    setText('dsoMeter', dso + ' Days');
+    setText('rxRecoveredMonth', money(recoveredMonth));
+    setText('rxProjected7', money(ptp7));
+    setText('rxCash7', money(ptp7));
+    setText('rxCash15', money(ptp15));
+    setText('rxProjected30', money(ptp30));
+    setText('rxMsmeCountdown', String(msmeWatch));
+    setText('rxRiskScore', 'Risk: ' + risk);
+    setText('rxAgingCount0', count0 + ' accounts');
+    setText('rxAgingAmount0', money(summary ? summary.bucket_0_30 : 0));
+    setText('rxAgingCount31', count31 + ' accounts');
+    setText('rxMildRiskAmount', money(summary ? summary.bucket_31_60 : 0));
+    setText('rxAgingCount61', count61 + ' accounts');
+    setText('rxAgingAmount61', money(summary ? summary.bucket_61_90 : 0));
+    setText('rxAgingCount90', count90 + ' accounts');
+    setText('rxCriticalAmount', money(summary ? summary.bucket_90_plus : 0));
+    setText('rxBrokenPtpCount', brokenCount + ' accounts');
+    setText('rxBrokenPtp', money(brokenPtp));
+  }
+  window.refreshRecoveryCommandCenter = refreshRecoveryCommandCenter;
+  document.addEventListener('DOMContentLoaded', function(){
+    refreshRecoveryCommandCenter();
+    window.setTimeout(refreshRecoveryCommandCenter, 1200);
+    window.setTimeout(refreshRecoveryCommandCenter, 3000);
+  });
+  window.addEventListener('load', function(){ window.setTimeout(refreshRecoveryCommandCenter, 800); });
+})();
+</script>
+
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 </script>
@@ -322,5 +362,4 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 <script src="js/final-suite.js?v=preferences-1"></script>
 <script src="js/offline-backup.js?v=preferences-1"></script><script src="js/i18n.js?v=2"></script>
 </body>
-
 </html>
