@@ -1,6 +1,6 @@
 // Recountix reminder queue materializer.
 // This function only creates internal reminder_queue rows inside Supabase.
-// It does not send customer/debt data to any external provider.
+// It requires a cron secret and a single shop_id; it does not send customer/debt data externally.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
@@ -15,7 +15,10 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
 
   const cronSecret = Deno.env.get("RECOUNTIX_CRON_SECRET") || "";
-  if (cronSecret && req.headers.get("x-recountix-cron-secret") !== cronSecret) {
+  if (!cronSecret) {
+    return new Response(JSON.stringify({ error: "cron_secret_not_configured" }), { status: 500, headers: corsHeaders });
+  }
+  if (req.headers.get("x-recountix-cron-secret") !== cronSecret) {
     return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: corsHeaders });
   }
 
@@ -26,29 +29,24 @@ Deno.serve(async (req) => {
   }
 
   const body = await req.json().catch(() => ({}));
-  const channel = body.channel || "whatsapp";
-  const shopId = body.shop_id || null;
+  const shopId = String(body.shop_id || "").trim();
+  if (!shopId) {
+    return new Response(JSON.stringify({ error: "shop_id_required" }), { status: 400, headers: corsHeaders });
+  }
+
+  const channel = String(body.channel || "whatsapp").trim() || "whatsapp";
   const supabase = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
 
-  const shopQuery = supabase.from("shops").select("id").eq("is_active", true);
-  const { data: shops, error: shopError } = shopId
-    ? await shopQuery.eq("id", shopId)
-    : await shopQuery;
+  const { data, error } = await supabase.rpc("app_enqueue_due_reminders", {
+    p_shop_id: shopId,
+    p_channel: channel
+  });
 
-  if (shopError) {
-    return new Response(JSON.stringify({ error: shopError.message }), { status: 500, headers: corsHeaders });
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
   }
 
-  const results = [];
-  for (const shop of shops || []) {
-    const { data, error } = await supabase.rpc("app_enqueue_due_reminders", {
-      p_shop_id: shop.id,
-      p_channel: channel
-    });
-    results.push({ shop_id: shop.id, queued: Number(data || 0), error: error?.message || null });
-  }
-
-  return new Response(JSON.stringify({ ok: true, channel, results }), {
+  return new Response(JSON.stringify({ ok: true, shop_id: shopId, channel, queued: Number(data || 0) }), {
     headers: { ...corsHeaders, "Content-Type": "application/json" }
   });
 });
