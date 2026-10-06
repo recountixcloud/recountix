@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
 
   const supabaseUrl = (Deno.env.get("PROJECT_URL") || Deno.env.get("SUPABASE_URL") || "https://niroqvhpyrwulzwiyctl.supabase.co").trim();
   const serviceKey = (Deno.env.get("SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim().replace(/[^A-Za-z0-9._-]/g, "");
-  if (!supabaseUrl || !serviceKey || !serviceKey.startsWith("eyJ")) {
+  if (!supabaseUrl || !serviceKey || !(serviceKey.startsWith("eyJ") || serviceKey.startsWith("sb_secret_"))) {
     return new Response(JSON.stringify({ error: "server_not_configured_or_invalid_service_key" }), { status: 500, headers: corsHeaders });
   }
 
