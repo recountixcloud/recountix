@@ -109,7 +109,7 @@ create or replace function public.app_mark_demand_notice_sent(
 )
 returns void
 language plpgsql
-as $
+as $$
 begin
   if not exists (
     select 1
@@ -125,7 +125,7 @@ begin
     last_demand_notice_at = coalesce(p_notice_time, now())
   where id = p_customer_id;
 end;
-$;
+$$;
 
 comment on function public.app_calculate_delayed_interest(numeric, date, date, numeric)
   is 'Simple pro-rata delayed payment interest calculator for recovery workflows.';
