@@ -604,7 +604,7 @@ async function sbGetRecoveryExecMetrics(){
 }
 async function sbMarkDemandNoticeSent(customerId){
     const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
-    const {data,error}=await getSupabase().rpc("app_mark_demand_notice_sent",{p_customer_id:customerId});
+    const {data,error}=await getSupabase().rpc("app_mark_demand_notice_sent",{p_token:token,p_customer_id:customerId});
     if(error)throw error;return data;
 }
 window.sbGetRecoveryExecMetrics=sbGetRecoveryExecMetrics;
