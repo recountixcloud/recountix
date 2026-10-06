@@ -745,3 +745,163 @@ tbody tr:hover td {
   -webkit-text-fill-color: #64748B !important;
   opacity: 1 !important;
 }
+
+/* Rc full-app dark cleanup: remove leftover white strips and fit dense admin UI */
+.rx-dark-shell main,
+.rx-dark-shell section,
+.rx-dark-shell article,
+.rx-dark-shell header,
+.rx-dark-shell footer,
+.rx-dark-shell nav,
+.rx-dark-shell aside,
+.rx-dark-shell .container,
+.rx-dark-shell .dashboard,
+.rx-dark-shell .dashboard-container,
+.rx-dark-shell .page,
+.rx-dark-shell .page-content,
+.rx-dark-shell .content,
+.rx-dark-shell .module,
+.rx-dark-shell .box,
+.rx-dark-shell .panel,
+.rx-dark-shell .form-section,
+.rx-dark-shell .form-card,
+.rx-dark-shell .admin-card,
+.rx-dark-shell .ad-card,
+.rx-dark-shell .campaign-card,
+.rx-dark-shell .rx-ad-admin-grid {
+  color: var(--rx-text) !important;
+}
+
+.rx-dark-shell .topbar,
+.rx-dark-shell .page-title-wrap,
+.rx-dark-shell .header-card,
+.rx-dark-shell .heading-card,
+.rx-dark-shell .module-header,
+.rx-dark-shell .card-header,
+.rx-dark-shell .table-header,
+.rx-dark-shell .list-header,
+.rx-dark-shell .filters,
+.rx-dark-shell .filter-bar,
+.rx-dark-shell .toolbar,
+.rx-dark-shell .rx-ad-admin-grid,
+.rx-dark-shell [class*="header"],
+.rx-dark-shell [class*="Header"],
+.rx-dark-shell [class*="toolbar"],
+.rx-dark-shell [class*="Toolbar"] {
+  background:
+    linear-gradient(135deg, rgba(17, 24, 39, .97), rgba(19, 27, 46, .92)) !important;
+  border-color: rgba(51, 65, 85, .76) !important;
+  color: var(--rx-text) !important;
+}
+
+.rx-dark-shell .content-box,
+.rx-dark-shell .table-section,
+.rx-dark-shell .rx-ad-admin-grid,
+.rx-dark-shell form,
+.rx-dark-shell fieldset {
+  max-width: 100% !important;
+}
+
+.rx-dark-shell .rx-ad-admin-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  border-radius: 0 0 16px 16px !important;
+}
+
+.rx-dark-shell .rx-ad-admin-grid > div {
+  min-width: 0 !important;
+}
+
+.rx-dark-shell .rx-ad-admin-grid .full {
+  grid-column: 1 / -1 !important;
+}
+
+.rx-dark-shell label,
+.rx-dark-shell .form-label,
+.rx-dark-shell th {
+  color: var(--rx-muted) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: .04em !important;
+}
+
+.rx-dark-shell p,
+.rx-dark-shell span,
+.rx-dark-shell td,
+.rx-dark-shell small,
+.rx-dark-shell .muted,
+.rx-dark-shell .description {
+  overflow-wrap: anywhere !important;
+}
+
+.rx-dark-shell .content-box,
+.rx-dark-shell .table-section,
+.rx-dark-shell .analytics-panel,
+.rx-dark-shell .card,
+.rx-dark-shell .rx-nav-card,
+.rx-dark-shell .action-card {
+  overflow: hidden !important;
+}
+
+.rx-dark-shell table {
+  table-layout: fixed !important;
+  width: 100% !important;
+}
+
+.rx-dark-shell th,
+.rx-dark-shell td {
+  vertical-align: middle !important;
+  line-height: 1.35 !important;
+}
+
+.rx-dark-shell td strong,
+.rx-dark-shell .card h1,
+.rx-dark-shell .card h2,
+.rx-dark-shell .summary-bar h2,
+.rx-dark-shell .page-title {
+  overflow-wrap: anywhere !important;
+  line-height: 1.05 !important;
+}
+
+.rx-dark-shell .add-btn,
+.rx-dark-shell .btn-primary,
+.rx-dark-shell button,
+.rx-dark-shell a.add-btn {
+  max-width: 100% !important;
+  min-height: 40px !important;
+  white-space: normal !important;
+  line-height: 1.15 !important;
+}
+
+.rx-dark-shell .table-section .add-btn {
+  padding: 9px 12px !important;
+  font-size: 12px !important;
+}
+
+.rx-dark-shell .rx-ad-image-note {
+  display: block !important;
+  margin-top: 7px !important;
+  color: var(--rx-subtle) !important;
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 900px) {
+  .rx-dark-shell .rx-ad-admin-grid {
+    grid-template-columns: 1fr !important;
+    padding: 16px !important;
+  }
+
+  .rx-dark-shell .table-section {
+    overflow-x: auto !important;
+  }
+
+  .rx-dark-shell table {
+    min-width: 760px !important;
+  }
+
+  .rx-dark-shell .page-title {
+    font-size: clamp(26px, 8vw, 44px) !important;
+  }
+}
