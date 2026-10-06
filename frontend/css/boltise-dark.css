@@ -1172,3 +1172,118 @@ tbody tr:hover td {
     font-size: clamp(20px, 6.6vw, 28px) !important;
   }
 }
+
+/* Rc standalone pages polish: backup, check-in, portal, login, maintenance */
+.rx-dark-shell .wrap,
+.rx-dark-shell .shell,
+.rx-dark-shell .panel,
+.rx-dark-shell .result,
+.rx-dark-shell .brand,
+.rx-dark-shell .login-wrap,
+.rx-dark-shell .login-card,
+.rx-dark-shell .backup-panel,
+.rx-dark-shell .portal-card,
+.rx-dark-shell .profile-card {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.rx-dark-shell .wrap {
+  width: min(100%, 980px) !important;
+}
+
+.rx-dark-shell .shell {
+  background: linear-gradient(180deg, rgba(17, 24, 39, .95), rgba(19, 27, 46, .9)) !important;
+  border: 1px solid rgba(51, 65, 85, .78) !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .34) !important;
+}
+
+.rx-dark-shell .panel,
+.rx-dark-shell .result,
+.rx-dark-shell .backup-panel,
+.rx-dark-shell .portal-card,
+.rx-dark-shell .profile-card,
+.rx-dark-shell body > .card,
+.rx-dark-shell .wrap > .card {
+  background: linear-gradient(180deg, rgba(17, 24, 39, .94), rgba(19, 27, 46, .9)) !important;
+  border: 1px solid rgba(51, 65, 85, .78) !important;
+  color: var(--rx-text) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .32) !important;
+}
+
+.rx-dark-shell .lang button,
+.rx-dark-shell .delete-btn {
+  background: rgba(15, 23, 42, .88) !important;
+  border: 1px solid rgba(51, 65, 85, .82) !important;
+  color: var(--rx-text) !important;
+}
+
+.rx-dark-shell .delete-btn:hover {
+  border-color: rgba(244, 63, 94, .75) !important;
+  color: #FDA4AF !important;
+  background: rgba(244, 63, 94, .12) !important;
+}
+
+.rx-dark-shell .backup-status,
+.rx-dark-shell .auto-backup-state,
+.rx-dark-shell .error {
+  border: 1px solid rgba(51, 65, 85, .76) !important;
+  color: var(--rx-text) !important;
+}
+
+.rx-dark-shell .backup-status.success,
+.rx-dark-shell .auto-backup-state.done {
+  background: rgba(16, 185, 129, .14) !important;
+  color: #6EE7B7 !important;
+}
+
+.rx-dark-shell .backup-status.error,
+.rx-dark-shell .error.show {
+  background: rgba(244, 63, 94, .12) !important;
+  color: #FDA4AF !important;
+}
+
+.rx-dark-shell .auto-backup-state.waiting,
+.rx-dark-shell .auto-backup-state.pending {
+  background: rgba(245, 158, 11, .14) !important;
+  color: #FCD34D !important;
+}
+
+.rx-dark-shell .auto-backup-state.running {
+  background: rgba(99, 102, 241, .16) !important;
+  color: #C4B5FD !important;
+}
+
+.rx-dark-shell img,
+.rx-dark-shell svg,
+.rx-dark-shell canvas {
+  max-width: 100% !important;
+}
+
+.rx-dark-shell .brand img {
+  width: min(180px, 80%) !important;
+  height: auto !important;
+}
+
+@media (max-width: 900px) {
+  .rx-dark-shell .shell {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .rx-dark-shell .panel,
+  .rx-dark-shell .result {
+    padding: 22px !important;
+  }
+
+  .rx-dark-shell .wrap {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .rx-dark-shell .backup-actions {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
