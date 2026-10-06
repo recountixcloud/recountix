@@ -1287,3 +1287,191 @@ tbody tr:hover td {
     width: 100% !important;
   }
 }
+
+/* Rc login auth fit lock: prevent global dark rules from oversizing mobile login */
+html.rx-dark-shell,
+html.rx-dark-shell body {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  overflow-x: hidden !important;
+}
+
+html.rx-dark-shell body:has(.login-wrap) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100svh !important;
+  padding: 18px !important;
+}
+
+.rx-dark-shell .login-wrap {
+  width: min(100%, 428px) !important;
+  max-width: 428px !important;
+  margin: auto !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+.rx-dark-shell .login-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 28px 24px 24px !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+}
+
+.rx-dark-shell .login-card .icon-badge {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  margin-bottom: 16px !important;
+  font-size: 17px !important;
+}
+
+.rx-dark-shell .login-card h1.title {
+  font-size: 26px !important;
+  line-height: 1.1 !important;
+  margin: 0 0 6px !important;
+}
+
+.rx-dark-shell .login-card p.subtitle {
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  margin: 0 0 24px !important;
+}
+
+.rx-dark-shell .login-card label:not(.remember) {
+  display: block !important;
+  margin: 0 0 7px !important;
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+.rx-dark-shell .login-card .field-wrap {
+  position: relative !important;
+  margin: 0 0 18px !important;
+}
+
+.rx-dark-shell .login-card .field-wrap i.leading {
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 14px !important;
+  line-height: 16px !important;
+  z-index: 2 !important;
+}
+
+.rx-dark-shell .login-card .field-wrap input {
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  padding: 0 44px 0 42px !important;
+  border-radius: 14px !important;
+  font-size: 15px !important;
+  line-height: 48px !important;
+  transform: none !important;
+}
+
+.rx-dark-shell .login-card .field-wrap input::placeholder {
+  font-size: 15px !important;
+  line-height: 48px !important;
+}
+
+.rx-dark-shell .login-card .field-wrap button.eye-btn {
+  position: absolute !important;
+  right: 7px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+}
+
+.rx-dark-shell .login-card .row-between {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin: -4px 0 20px !important;
+}
+
+.rx-dark-shell .login-card .remember {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 24px !important;
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+
+.rx-dark-shell .login-card .remember input {
+  width: 15px !important;
+  height: 15px !important;
+  min-height: 15px !important;
+  flex: 0 0 15px !important;
+  padding: 0 !important;
+  border-radius: 4px !important;
+}
+
+.rx-dark-shell .login-card .forgot-link {
+  min-height: 24px !important;
+  padding: 0 !important;
+  font-size: 12.5px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+.rx-dark-shell .login-card .btn-primary {
+  width: 100% !important;
+  height: 49px !important;
+  min-height: 49px !important;
+  padding: 0 16px !important;
+  border-radius: 14px !important;
+  font-size: 14.5px !important;
+  line-height: 1 !important;
+}
+
+.rx-dark-shell .login-card .secure-note,
+.rx-dark-shell .footer-note {
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 420px) {
+  html.rx-dark-shell body:has(.login-wrap) {
+    padding: 14px !important;
+    align-items: flex-start !important;
+  }
+
+  .rx-dark-shell .login-wrap {
+    max-width: 100% !important;
+  }
+
+  .rx-dark-shell .login-card {
+    padding: 24px 18px 22px !important;
+    border-radius: 20px !important;
+  }
+
+  .rx-dark-shell .login-card h1.title {
+    font-size: 23px !important;
+  }
+
+  .rx-dark-shell .login-card .row-between {
+    flex-wrap: wrap !important;
+  }
+
+  .rx-dark-shell .recountix-login-brand img {
+    max-height: 92px !important;
+  }
+}
