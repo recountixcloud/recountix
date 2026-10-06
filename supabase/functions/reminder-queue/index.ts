@@ -22,8 +22,8 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: corsHeaders });
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
-  const serviceKey = Deno.env.get("SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  const supabaseUrl = (Deno.env.get("SUPABASE_URL") || "").trim();
+  const serviceKey = (Deno.env.get("SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim();
   if (!supabaseUrl || !serviceKey) {
     return new Response(JSON.stringify({ error: "server_not_configured" }), { status: 500, headers: corsHeaders });
   }
