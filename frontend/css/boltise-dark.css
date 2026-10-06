@@ -905,3 +905,270 @@ tbody tr:hover td {
     font-size: clamp(26px, 8vw, 44px) !important;
   }
 }
+
+/* Rc professional fit pass: consistent cards, forms, and mobile typography */
+.rx-dark-shell *,
+.rx-dark-shell *::before,
+.rx-dark-shell *::after {
+  box-sizing: border-box !important;
+}
+
+.rx-dark-shell .main-content {
+  min-width: 0 !important;
+}
+
+.rx-dark-shell .topbar {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 22px 24px !important;
+  margin: 0 0 24px !important;
+  overflow: hidden !important;
+}
+
+.rx-dark-shell .topbar > div,
+.rx-dark-shell .summary-bar > div,
+.rx-dark-shell .card,
+.rx-dark-shell .content-box,
+.rx-dark-shell .table-section {
+  min-width: 0 !important;
+}
+
+.rx-dark-shell .page-title,
+.rx-dark-shell h1 {
+  max-width: 100% !important;
+  font-size: clamp(30px, 5.5vw, 48px) !important;
+  line-height: 1.05 !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+
+.rx-dark-shell .page-subtitle,
+.rx-dark-shell .summary-bar span {
+  max-width: 100% !important;
+  font-size: clamp(14px, 3.7vw, 18px) !important;
+  line-height: 1.35 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.rx-dark-shell .content-box > .summary-bar,
+.rx-dark-shell .table-section > .summary-bar,
+.rx-dark-shell .analytics-panel > .summary-bar,
+.rx-dark-shell .vo-today-panel > .summary-bar {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 22px 24px 8px !important;
+  margin: 0 !important;
+}
+
+.rx-dark-shell .summary-bar {
+  align-items: flex-start !important;
+  gap: 14px !important;
+}
+
+.rx-dark-shell .summary-bar h2,
+.rx-dark-shell .summary-bar h3,
+.rx-dark-shell .content-box h2,
+.rx-dark-shell .table-section h2 {
+  font-size: clamp(22px, 4.8vw, 31px) !important;
+  line-height: 1.08 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  overflow-wrap: anywhere !important;
+}
+
+.rx-dark-shell .content-box,
+.rx-dark-shell .table-section,
+.rx-dark-shell .analytics-panel,
+.rx-dark-shell .backup-panel,
+.rx-dark-shell .action-card,
+.rx-dark-shell .card,
+.rx-dark-shell .rx-nav-card,
+.rx-dark-shell .rx-command-panel,
+.rx-dark-shell .rx-risk-panel,
+.rx-dark-shell .rx-roadmap-panel {
+  border-radius: 18px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.rx-dark-shell form,
+.rx-dark-shell fieldset,
+.rx-dark-shell .rx-ad-admin-grid,
+.rx-dark-shell .form-grid,
+.rx-dark-shell .settings-grid,
+.rx-dark-shell .backup-grid,
+.rx-dark-shell .dashboard-grid,
+.rx-dark-shell .cards-grid {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.rx-dark-shell input,
+.rx-dark-shell select,
+.rx-dark-shell textarea,
+.rx-dark-shell .form-control,
+.rx-dark-shell .search-box {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 46px !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+
+.rx-dark-shell textarea {
+  min-height: 120px !important;
+  resize: vertical !important;
+}
+
+.rx-dark-shell label,
+.rx-dark-shell .form-label {
+  display: block !important;
+  margin: 0 0 8px !important;
+  line-height: 1.25 !important;
+}
+
+.rx-dark-shell button,
+.rx-dark-shell .add-btn,
+.rx-dark-shell .btn-primary,
+.rx-dark-shell .btn-secondary,
+.rx-dark-shell .action-btn,
+.rx-dark-shell .vo-mini-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border-radius: 12px !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.rx-dark-shell .card h1,
+.rx-dark-shell .card h2,
+.rx-dark-shell .card h3,
+.rx-dark-shell .rx-nav-card b,
+.rx-dark-shell .action-card h3 {
+  line-height: 1.1 !important;
+  margin-bottom: 8px !important;
+  overflow-wrap: anywhere !important;
+}
+
+.rx-dark-shell .card p,
+.rx-dark-shell .card small,
+.rx-dark-shell .rx-nav-card small,
+.rx-dark-shell .action-card p {
+  line-height: 1.42 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.rx-dark-shell .table-responsive,
+.rx-dark-shell .table-wrap,
+.rx-dark-shell .table-section {
+  max-width: 100% !important;
+}
+
+.rx-dark-shell td,
+.rx-dark-shell th {
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+
+@media (min-width: 901px) {
+  .rx-dark-shell .content-box,
+  .rx-dark-shell .table-section,
+  .rx-dark-shell .analytics-panel {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .rx-dark-shell .main-content {
+    padding: 88px 22px 28px !important;
+    overflow-x: hidden !important;
+  }
+
+  .rx-dark-shell .topbar {
+    padding: 18px 20px !important;
+    border-radius: 18px !important;
+  }
+
+  .rx-dark-shell .page-title,
+  .rx-dark-shell h1 {
+    font-size: clamp(32px, 10vw, 42px) !important;
+    letter-spacing: 0 !important;
+  }
+
+  .rx-dark-shell .content-box > .summary-bar,
+  .rx-dark-shell .table-section > .summary-bar,
+  .rx-dark-shell .analytics-panel > .summary-bar {
+    padding: 20px 20px 6px !important;
+  }
+
+  .rx-dark-shell .rx-ad-admin-grid,
+  .rx-dark-shell .form-grid,
+  .rx-dark-shell .settings-grid,
+  .rx-dark-shell .backup-grid,
+  .rx-dark-shell .dashboard-grid,
+  .rx-dark-shell .cards-grid,
+  .rx-dark-shell .rx-metric-grid,
+  .rx-dark-shell .rx-roadmap-grid,
+  .rx-dark-shell .rx-cashflow-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .rx-dark-shell .rx-ad-admin-grid {
+    padding: 18px 20px 22px !important;
+  }
+
+  .rx-dark-shell input,
+  .rx-dark-shell select,
+  .rx-dark-shell textarea,
+  .rx-dark-shell .form-control,
+  .rx-dark-shell .search-box {
+    font-size: 16px !important;
+  }
+
+  .rx-dark-shell .content-box,
+  .rx-dark-shell .table-section,
+  .rx-dark-shell .analytics-panel,
+  .rx-dark-shell .card,
+  .rx-dark-shell .rx-nav-card,
+  .rx-dark-shell .action-card {
+    border-radius: 18px !important;
+  }
+
+  .rx-dark-shell .table-section {
+    padding-bottom: 4px !important;
+  }
+
+  .rx-dark-shell .table-section table {
+    min-width: 720px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .rx-dark-shell .main-content {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .rx-dark-shell .page-title,
+  .rx-dark-shell h1 {
+    font-size: clamp(30px, 9.2vw, 38px) !important;
+  }
+
+  .rx-dark-shell .summary-bar h2,
+  .rx-dark-shell .summary-bar h3,
+  .rx-dark-shell .content-box h2,
+  .rx-dark-shell .table-section h2 {
+    font-size: clamp(20px, 6.6vw, 28px) !important;
+  }
+}
