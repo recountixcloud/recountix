@@ -1163,3 +1163,302 @@ body:has(.login-wrap){
     pointer-events:none!important;
   }
 }
+
+/* =========================================================
+   Recountix Professional V4 — Fresh Blue Business UI
+   Removes the older green/washed look and gives the app a
+   sharper SaaS-style finish across desktop and mobile.
+   ========================================================= */
+:root{
+  --rx4-bg:#eef6ff;
+  --rx4-bg-deep:#dbeafe;
+  --rx4-panel:#ffffff;
+  --rx4-panel-2:#f8fbff;
+  --rx4-ink:#071827;
+  --rx4-muted:#52677d;
+  --rx4-line:#d7e6f5;
+  --rx4-navy:#06162a;
+  --rx4-navy-2:#0b2340;
+  --rx4-blue:#0b74de;
+  --rx4-sky:#19b5ff;
+  --rx4-cyan:#22d3ee;
+  --rx4-success:#10b981;
+  --rx4-warning:#f59e0b;
+  --rx4-danger:#ef4444;
+  --rx4-shadow:0 18px 45px rgba(8,33,58,.10);
+  --rx4-shadow-soft:0 10px 28px rgba(8,33,58,.075);
+}
+
+html,
+body{
+  background:
+    radial-gradient(circle at 12% -12%, rgba(25,181,255,.30), transparent 34%),
+    radial-gradient(circle at 105% 6%, rgba(11,116,222,.20), transparent 30%),
+    linear-gradient(180deg,#f8fcff 0%,var(--rx4-bg) 48%,#f7fbff 100%)!important;
+  color:var(--rx4-ink)!important;
+}
+
+.wrapper,
+.main-content,
+.content,
+.page-content{
+  background:transparent!important;
+}
+
+.sidebar{
+  background:
+    radial-gradient(circle at 20% -8%, rgba(25,181,255,.28), transparent 34%),
+    linear-gradient(180deg,var(--rx4-navy) 0%,var(--rx4-navy-2) 55%,#030b16 100%)!important;
+  border-right:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:14px 0 40px rgba(6,22,42,.24)!important;
+}
+
+.sidebar .logo h2{
+  color:#ffffff!important;
+}
+
+.sidebar .logo p{
+  color:#7dd3fc!important;
+}
+
+.sidebar .menu a,
+.sidebar a{
+  color:#d9edff!important;
+}
+
+.sidebar .menu a i,
+.sidebar a i{
+  color:#7dd3fc!important;
+}
+
+.sidebar .menu a:hover{
+  background:rgba(25,181,255,.12)!important;
+  border-color:rgba(125,211,252,.18)!important;
+}
+
+.sidebar .menu a.active,
+.sidebar a.active,
+.sidebar a[aria-current="page"]{
+  background:linear-gradient(90deg,rgba(25,181,255,.30),rgba(34,211,238,.12))!important;
+  border-color:rgba(125,211,252,.28)!important;
+  box-shadow:inset 3px 0 0 var(--rx4-cyan),0 10px 26px rgba(25,181,255,.12)!important;
+}
+
+.topbar,
+.header-bar,
+.page-header{
+  background:rgba(255,255,255,.94)!important;
+  border-bottom:1px solid var(--rx4-line)!important;
+  box-shadow:0 10px 28px rgba(8,33,58,.055)!important;
+}
+
+.page-title,
+.topbar h1,
+.header-bar h1,
+.page-header h1{
+  color:var(--rx4-ink)!important;
+}
+
+.page-subtitle,
+.topbar p,
+.topbar span,
+.header-bar p,
+.page-header p{
+  color:var(--rx4-muted)!important;
+}
+
+.content-box,
+.table-section,
+.card,
+.stat-card,
+.dashboard-card,
+.summary-card,
+.filter-section,
+.form-section,
+.analytics-panel,
+.vo-command-strip,
+.vo-today-panel,
+.rx-nav-card,
+.rx-ad-card,
+.vo-final-kpi,
+.vo-command-btn{
+  background:linear-gradient(180deg,#ffffff 0%,var(--rx4-panel-2) 100%)!important;
+  border:1px solid var(--rx4-line)!important;
+  border-radius:16px!important;
+  box-shadow:var(--rx4-shadow-soft)!important;
+}
+
+.content-box:hover,
+.table-section:hover,
+.card:hover,
+.analytics-panel:hover,
+.vo-command-btn:hover,
+.rx-nav-card:hover{
+  border-color:#93c5fd!important;
+  box-shadow:var(--rx4-shadow)!important;
+}
+
+.dashboard-grid .card,
+.dashboard-cards .card{
+  min-height:136px!important;
+  overflow:hidden!important;
+}
+
+.dashboard-grid .card::before,
+.dashboard-cards .card::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  height:auto!important;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(25,181,255,.18), transparent 26%),
+    linear-gradient(90deg,rgba(25,181,255,.10),transparent 48%)!important;
+  opacity:1!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+
+.dashboard-grid .card>*,
+.dashboard-cards .card>*{
+  position:relative!important;
+  z-index:2!important;
+}
+
+.dashboard-grid .card i,
+.dashboard-cards .card i,
+.analytics-head>i,
+.rx-nav-card>i:first-child,
+.vo-command-btn>i{
+  background:linear-gradient(135deg,#e0f2fe,#f0f9ff)!important;
+  border:1px solid #bae6fd!important;
+  color:var(--rx4-blue)!important;
+}
+
+.card h3{
+  color:#42566b!important;
+}
+
+.card h1,
+.vo-final-kpi strong{
+  color:var(--rx4-ink)!important;
+}
+
+.card small{
+  color:#647d96!important;
+}
+
+.card.green i,.card.green h1{color:var(--rx4-success)!important}
+.card.red i,.card.red h1{color:var(--rx4-danger)!important}
+.card.orange i,.card.orange h1{color:var(--rx4-warning)!important}
+.card.blue i,.card.blue h1{color:var(--rx4-blue)!important}
+
+.add-btn,
+.btn-primary,
+.save-btn,
+.search-btn,
+button[type=submit],
+button.primary,
+.primary-btn,
+.rc-view-details{
+  background:linear-gradient(135deg,var(--rx4-blue),var(--rx4-sky))!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  box-shadow:0 12px 26px rgba(11,116,222,.22)!important;
+}
+
+.add-btn:hover,
+.btn-primary:hover,
+.save-btn:hover,
+.search-btn:hover,
+button[type=submit]:hover,
+.primary-btn:hover{
+  box-shadow:0 16px 34px rgba(11,116,222,.30)!important;
+}
+
+input,
+select,
+textarea,
+.form-control{
+  border-color:var(--rx4-line)!important;
+  background:#fff!important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus{
+  border-color:var(--rx4-blue)!important;
+  box-shadow:0 0 0 4px rgba(25,181,255,.14)!important;
+}
+
+thead,
+table thead th,
+.vo-today-table thead th{
+  background:#f0f7ff!important;
+}
+
+th{
+  color:#496178!important;
+}
+
+td{
+  color:#24384c!important;
+}
+
+tbody tr:hover td{
+  background:#f7fbff!important;
+}
+
+.rx-live-clock{
+  border-color:#bae6fd!important;
+  background:linear-gradient(180deg,#fff,#f5fbff)!important;
+}
+
+.rx-clock-time{
+  color:var(--rx4-blue)!important;
+}
+
+.menu-toggle{
+  background:linear-gradient(135deg,var(--rx4-navy),var(--rx4-blue))!important;
+}
+
+body:has(.login-wrap){
+  background:
+    radial-gradient(circle at 16% 10%, rgba(25,181,255,.34), transparent 32%),
+    radial-gradient(circle at 92% 88%, rgba(11,116,222,.24), transparent 32%),
+    linear-gradient(145deg,#f8fcff 0%,#e7f4ff 100%)!important;
+}
+
+.login-card,
+.login-wrap .card{
+  background:rgba(255,255,255,.97)!important;
+  border:1px solid #d7e6f5!important;
+  box-shadow:0 32px 90px rgba(6,22,42,.16)!important;
+}
+
+.login-wrap .btn-primary{
+  background:linear-gradient(135deg,var(--rx4-blue),var(--rx4-sky))!important;
+}
+
+.forgot-link,
+.login-wrap .field-wrap i.leading,
+.login-wrap .eye-btn{
+  color:var(--rx4-blue)!important;
+}
+
+@media(max-width:900px){
+  .sidebar{
+    background:
+      radial-gradient(circle at 18% -6%, rgba(25,181,255,.30), transparent 34%),
+      linear-gradient(180deg,var(--rx4-navy) 0%,var(--rx4-navy-2) 58%,#030b16 100%)!important;
+  }
+
+  .sidebar-overlay{
+    background:rgba(6,22,42,.38)!important;
+  }
+
+  .sidebar .menu a,
+  .sidebar a{
+    color:#f1f8ff!important;
+  }
+}

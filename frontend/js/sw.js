@@ -1,5 +1,5 @@
 // Bump this on every deploy so old caches get wiped automatically.
-const CACHE = 'recountix-professional-v31';
+const CACHE = 'recountix-professional-v4';
 
 // Only truly static assets that rarely change go here.
 const ASSETS = ['./css/style.css', './assets/logo.png'];
