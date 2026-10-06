@@ -12,7 +12,7 @@
     var loggedIn = store.getItem('bk_isLoggedIn') === 'true';
     if (!loggedIn) { window.location.replace('login.html'); return; }
     var role = store.getItem('bk_role') || 'user';
-    if (role !== 'admin' && role !== 'super_admin') { window.location.replace('dashboard.html'); }
+    // Business settings permission is verified by the server after the scripts load.
   } catch (e) {}
 })();
 </script>
@@ -21,21 +21,19 @@
 <meta name="theme-color" content="#1A3D63">
 
 <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Settings | Recountix</title>
-
-<link rel="stylesheet" href="css/style.css?v=enterprise5">
-
+<title>Settings | Recountix</title><link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<link rel="stylesheet" href="css/saas-2026.css?v=2026c">
-<link rel="stylesheet" href="css/redesign-2026.css?v=11-final">
-<link rel="stylesheet" href="css/final-suite.css?v=professional-v5">
+<link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
 </head>
 
 <body>
@@ -68,7 +66,7 @@ SIDEBAR START
 <li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
 <li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
 <li><a href="settings.html" class="active"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
-<li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+<li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li><li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
 </ul>
 
 </aside>
@@ -193,7 +191,7 @@ placeholder="Enter Contact Number">
 
 
 <div>
-<label>Shop UPI ID <small>(Payment links)</small></label>
+<label>Business UPI ID <small>(Payment links)</small></label>
 <input type="text" id="upiId" placeholder="shop@oksbi / shop@paytm">
 </div>
 <div>
@@ -438,7 +436,7 @@ PART 3B - USER MANAGEMENT
 
 <section class="table-section fade" id="executiveManagementSection">
     <h2><i class="fa-solid fa-user-tie"></i> Sales / Recovery Executives</h2>
-    <p style="color:#9CA6B8;margin-bottom:16px;">This list will appear in the Customer and Recovery form dropdowns. Shop Admins can add or remove entries.</p>
+    <p style="color:#9CA6B8;margin-bottom:16px;">This list will appear in the Customer and Recovery form dropdowns. Business Admins can add or remove entries.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
         <input type="text" id="newExecutiveName" class="form-control" placeholder="Executive name (e.g. Ramesh)" style="max-width:280px;">
         <button type="button" class="add-btn" onclick="addExecutive()"><i class="fa-solid fa-plus"></i> Add Executive</button>
@@ -456,7 +454,7 @@ PART 3B - USER MANAGEMENT
     </table>
 </section>
 
-<section class="table-section fade" id="userManagementSection">
+<section class="table-section fade" id="userManagementSection" data-rc-compact="1">
 
 <div class="summary-bar">
 
@@ -467,7 +465,7 @@ User Management
 </h2>
 
 <span>
-Add Or Remove Staff Logins
+Add, modify, delete and set individual user rights
 </span>
 
 </div>
@@ -477,20 +475,27 @@ Add Or Remove Staff Logins
 <div class="form-grid">
 
 <div>
-<label>New Username</label>
+<label>New Username <small>(new users start with View only)</small></label>
 <input type="text" id="newUserUsername" placeholder="Username">
 </div>
 
 <div>
 <label>New Password</label>
-<input type="password" id="newUserPassword" placeholder="Password">
+<input type="password" id="newUserPassword" minlength="8" autocomplete="new-password" placeholder="Minimum 8 characters">
 </div>
 
 <div>
 <label>Role</label>
 <select id="newUserRole">
-<option value="User">User (Add/Edit Only)</option>
+<option value="User">User (Custom Rights)</option>
 <option value="Admin">Admin (Full Access)</option>
+</select>
+</div>
+
+<div id="newUserShopWrap" style="display:none;">
+<label>Business</label>
+<select id="newUserShopId">
+<option value="">Select Business</option>
 </select>
 </div>
 
@@ -555,38 +560,20 @@ Backup & Restore Project Data
 
 <div class="card blue">
 <i class="fa-solid fa-download"></i>
-<h3>Export Backup</h3>
-<p>Download secure backup file</p>
+<h3>Offline Backup</h3>
+<p>Create or download an encrypted business backup</p>
 <br>
 <button type="button" class="add-btn" onclick="backupData()">
-Download Backup
-</button>
-</div>
-
-<div class="card green">
-<i class="fa-solid fa-cloud-arrow-up"></i>
-<h3>Cloud Backup</h3>
-<p>Save to secure cloud</p>
-<br>
-☁ Cloud Backup
-</button>
-</div>
-
-<div class="card orange">
-<i class="fa-solid fa-cloud-arrow-down"></i>
-<h3>Cloud Restore</h3>
-<p>Restore from secure cloud</p>
-<br>
-☁ Cloud Restore
+Open Offline Backup
 </button>
 </div>
 
 <div class="card blue">
 <i class="fa-solid fa-upload"></i>
 <h3>Restore Backup</h3>
-<p>Import backup file</p>
+<p>Restore missing records from an encrypted backup file</p>
 <br>
-<input type="file" id="restoreFile" accept=".json" onchange="restoreData(event)">
+<a class="add-btn" href="backup.html">Open Backup &amp; Restore</a>
 </div>
 
 <div class="card orange">
@@ -600,13 +587,11 @@ Export Data
 </div>
 
 <div class="card red">
-<i class="fa-solid fa-trash"></i>
-<h3>Clear All Data</h3>
-<p>Delete all records (permanent)</p>
+<i class="fa-solid fa-users"></i>
+<h3>Manage Records</h3>
+<p>Review customers and delete individual records with the required permission.</p>
 <br>
-<button type="button" class="add-btn" style="background:#dc2626;" onclick="clearAllData()">
-Delete Data
-</button>
+<a class="add-btn" href="customers.html">Open Customers</a>
 </div>
 
 </div>
@@ -619,7 +604,7 @@ Delete Data
 </div>
 </div>
 <p><strong>Database:</strong> <span id="dbStatusBadge" class="badge badge-warning">Secure Cloud</span></p>
-<p><strong>Last Cloud Backup:</strong> <span id="lastBackupDate">-</span></p>
+<p><strong>Last Device Backup:</strong> <span id="lastBackupDate">-</span></p>
 <p style="margin-top:10px;color:#9CA6B8;font-size:14px;">
 All data is stored on encrypted cloud servers.<code>customers</code>, <code>recoveries</code>, <code>users</code>, <code>settings</code>, <code>backups</code>
 </p>
@@ -773,6 +758,8 @@ System Security Options
 
 </div>
 
+<p style="margin-top:15px;color:#64748b">Auto Logout applies after inactivity. Session Timeout limits the total sign-in duration. Notifications controls the daily recovery summary. Automatic encrypted backups run on this device while the app is open.</p>
+<button type="button" id="savePreferencesButton" class="add-btn" onclick="savePreferences()">Save Preferences</button>
 </section>
 
 <!-- =========================
@@ -945,7 +932,7 @@ PART 7
 QUICK ACTIONS START
 ========================= --></div>
 
-<div class="quick-actions">
+<div class="quick-actions settings-quick-actions">
 
 <a href="dashboard.html" class="action-card">
 
@@ -1132,13 +1119,14 @@ JAVASCRIPT
 ========================= -->
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/vendor/supabase-2.117.2.js"></script>
 <script src="js/supabase.js"></script>
-<script src="js/utils.js?v=11-final"></script>
-<script src="js/db.js?v=11-final"></script>
-<script src="js/auth.js?v=rc005-ads2"></script>
-<script src="js/app.js?v=11-final"></script>
-<script src="js/company.js"></script>
+<script src="js/permissions.js?v=password-reset-1"></script>
+<script src="js/utils.js?v=preferences-1"></script>
+<script src="js/db.js?v=preferences-1"></script>
+<script src="js/auth.js?v=password-reset-1"></script><script src="js/preferences.js?v=preferences-1"></script>
+<script src="js/app.js?v=preferences-1"></script>
+<script src="js/company.js?v=star-wave-3"></script>
 <script src="js/excel-import.js"></script>
 
 <script>
@@ -1200,7 +1188,9 @@ setInterval(function(){
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 </script>
 
-<script src="js/final-suite.js?v=11-final"></script>
+<script src="js/final-suite.js?v=preferences-1"></script>
+<script src="js/offline-backup.js?v=preferences-1"></script><script src="js/i18n.js?v=2"></script>
 </body>
 
 </html>
+

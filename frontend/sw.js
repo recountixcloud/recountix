@@ -1,32 +1,42 @@
-// Bump this on every deploy so old caches get wiped automatically.
-const CACHE = 'recountix-professional-v5';
+const CACHE_NAME = 'recountix-preferences-20261002';
+const CORE = [
+  './backup.html','./css/recountix-2027.css','./css/style.css','./css/final-suite.css','./css/business-pro.css',
+  './js/supabase.js','./js/permissions.js','./js/utils.js','./js/db.js','./js/auth.js',
+  './js/preferences.js','./js/offline-backup.js','./js/backup.js','./assets/logo.png'
+];
 
-// Only truly static assets that rarely change go here.
-const ASSETS = ['./css/style.css', './assets/logo.png'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE_NAME).then(cache =>
+    Promise.allSettled(CORE.map(url => cache.add(new Request(url, { cache: 'reload' }))))
+  ).then(() => self.skipWaiting()));
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+self.addEventListener('activate', event => {
+  event.waitUntil(caches.keys().then(keys =>
+    Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
+  ).then(() => self.clients.claim()));
 });
 
-// Network-first for HTML and JS: always try to get the latest app logic.
-// Falls back to cache only when offline. Static assets stay cache-first.
-self.addEventListener('fetch', e => {
-  const url = e.request.url;
-  const isAppCode = url.includes('.html') || url.includes('.js') || url.includes('.css');
-  if (isAppCode) {
-    // Always use the deployed code. Never serve stale maintenance/auth logic.
-    e.respondWith(fetch(e.request, { cache: 'no-store' }));
-    return;
-  }
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
-});
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
 
-// v11 final suite: HTML/JS/CSS use network-first/no stale UI.
+  event.respondWith(fetch(event.request, { cache: 'no-store' }).then(response => {
+    if (response.ok) {
+      const copy = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+    }
+    return response;
+  }).catch(async () => {
+    const cached = await caches.match(event.request, { ignoreSearch: true });
+    if (cached) return cached;
+    if (event.request.mode === 'navigate') {
+      return (await caches.match('./backup.html')) ||
+        new Response('Offline. Open Offline Backup after one successful online visit.', {
+          status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+        });
+    }
+    return new Response('', { status: 503, statusText: 'Offline' });
+  }));
+});
