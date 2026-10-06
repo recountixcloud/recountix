@@ -345,13 +345,44 @@
     setText('rxBrokenPtpCount', brokenCount + ' accounts');
     setText('rxBrokenPtp', money(brokenPtp));
   }
+  function applyLiveMetrics(m){
+    if(!m) return;
+    var a=m.aging||{};
+    var risk=(a.count_90>0||a.bucket_90_plus>(a.total_outstanding||0)*0.25)?'Red':(a.count_61_90>0||a.count_31_60>2?'Yellow':'Green');
+    setText('dsoMeter', m.dso ? (m.dso + ' Days') : '0 Days');
+    setText('rxRecoveredMonth', money(m.recoveredThisMonth||0));
+    setText('rxProjected7', money(m.ptp7||0));
+    setText('rxCash7', money(m.ptp7||0));
+    setText('rxCash15', money(m.ptp15||0));
+    setText('rxProjected30', money(m.ptp30||0));
+    setText('rxMsmeCountdown', String(a.msme_watch||0));
+    setText('rxRiskScore', 'Risk: ' + risk);
+    setText('rxAgingCount0', (a.count_0_30||0) + ' accounts');
+    setText('rxAgingAmount0', money(a.bucket_0_30||0));
+    setText('rxAgingCount31', (a.count_31_60||0) + ' accounts');
+    setText('rxMildRiskAmount', money(a.bucket_31_60||0));
+    setText('rxAgingCount61', (a.count_61_90||0) + ' accounts');
+    setText('rxAgingAmount61', money(a.bucket_61_90||0));
+    setText('rxAgingCount90', (a.count_90||0) + ' accounts');
+    setText('rxCriticalAmount', money(a.bucket_90_plus||0));
+    setText('rxBrokenPtpCount', (m.brokenPtpCount||0) + ' accounts');
+    setText('rxBrokenPtp', money(m.brokenPtp||0));
+  }
+  async function refreshLiveRecoveryMetrics(){
+    try{
+      if(typeof sbGetRecoveryExecMetrics!=='function') return;
+      applyLiveMetrics(await sbGetRecoveryExecMetrics());
+    }catch(e){ console.warn('Recovery metrics unavailable', e); }
+  }
   window.refreshRecoveryCommandCenter = refreshRecoveryCommandCenter;
+  window.refreshLiveRecoveryMetrics = refreshLiveRecoveryMetrics;
   document.addEventListener('DOMContentLoaded', function(){
     refreshRecoveryCommandCenter();
-    window.setTimeout(refreshRecoveryCommandCenter, 1200);
-    window.setTimeout(refreshRecoveryCommandCenter, 3000);
+    refreshLiveRecoveryMetrics();
+    window.setTimeout(function(){refreshRecoveryCommandCenter();refreshLiveRecoveryMetrics();}, 1200);
+    window.setTimeout(function(){refreshRecoveryCommandCenter();refreshLiveRecoveryMetrics();}, 3000);
   });
-  window.addEventListener('load', function(){ window.setTimeout(refreshRecoveryCommandCenter, 800); });
+  window.addEventListener('load', function(){ window.setTimeout(function(){refreshRecoveryCommandCenter();refreshLiveRecoveryMetrics();}, 800); });
 })();
 </script>
 
