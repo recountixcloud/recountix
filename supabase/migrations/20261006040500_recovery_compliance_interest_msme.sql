@@ -208,3 +208,77 @@ comment on function public.app_projected_ptp_inflows(uuid, date)
 
 comment on function public.app_recovery_exec_metrics(uuid, date)
   is 'Executive recovery dashboard metrics: outstanding, month recovery, approximate DSO, and PTP inflows.';
+
+create table if not exists public.payment_webhook_events (
+  id uuid primary key default uuid_generate_v4(),
+  gateway text not null,
+  event_id text not null,
+  event_name text not null,
+  signature_valid boolean not null default false,
+  payload jsonb not null default '{}'::jsonb,
+  processed_at timestamptz default now(),
+  created_at timestamptz default now(),
+  unique (gateway, event_id)
+);
+
+create index if not exists idx_payment_webhook_events_gateway_created
+  on public.payment_webhook_events(gateway, created_at desc);
+
+create or replace function public.app_enqueue_due_reminders(
+  p_shop_id uuid,
+  p_channel text default 'whatsapp',
+  p_as_of timestamptz default now()
+)
+returns integer
+language plpgsql
+as $$
+declare
+  inserted_count integer := 0;
+begin
+  insert into public.reminder_queue (
+    shop_id,
+    customer_id,
+    channel,
+    template_key,
+    scheduled_at,
+    payload
+  )
+  select
+    c.shop_id,
+    c.id,
+    coalesce(nullif(p_channel, ''), 'whatsapp'),
+    case
+      when coalesce(c.due_date, c.followup, current_date) < current_date then 'overdue_payment_reminder'
+      else 'pre_due_payment_reminder'
+    end,
+    coalesce(p_as_of, now()),
+    jsonb_build_object(
+      'customer_name', c.name,
+      'mobile', c.mobile,
+      'outstanding', coalesce(c.balance, c.outstanding, 0),
+      'due_date', coalesce(c.due_date, c.followup),
+      'upi_note', 'Recountix payment recovery'
+    )
+  from public.customers c
+  where c.shop_id = p_shop_id
+    and coalesce(c.auto_reminder, true) = true
+    and coalesce(c.balance, c.outstanding, 0) > 0
+    and coalesce(c.next_reminder_date, c.followup, c.due_date, current_date) <= current_date
+    and not exists (
+      select 1
+      from public.reminder_queue rq
+      where rq.customer_id = c.id
+        and rq.status = 'pending'
+        and rq.channel = coalesce(nullif(p_channel, ''), 'whatsapp')
+    );
+
+  get diagnostics inserted_count = row_count;
+  return inserted_count;
+end;
+$$;
+
+comment on table public.payment_webhook_events
+  is 'Idempotent payment webhook event log for gateway callbacks.';
+
+comment on function public.app_enqueue_due_reminders(uuid, text, timestamptz)
+  is 'Queues pre-due and overdue payment reminder jobs for due customers in one shop.';
