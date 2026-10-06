@@ -76,7 +76,10 @@ function mapCustomerToDb(c, shopId) {
         auto_reminder: c.autoReminder !== false,
         reminder_interval_days: Number(c.reminderInterval || 3),
         next_reminder_date: c.nextReminderDate || c.followup || null,
-        due_date: (c.dueDate !== undefined && c.dueDate !== null && String(c.dueDate).trim() !== "") ? String(c.dueDate).slice(0, 10) : (c.followup ? String(c.followup).slice(0, 10) : null)
+        due_date: (c.dueDate !== undefined && c.dueDate !== null && String(c.dueDate).trim() !== "") ? String(c.dueDate).slice(0, 10) : (c.followup ? String(c.followup).slice(0, 10) : null),
+        interest_rate_pa: c.interestRatePa ? Number(c.interestRatePa) : null,
+        msme_45_day_start: c.msme45DayStart || null,
+        msme_45_day_due: c.msme45DayDue || null
     };
 }
 
@@ -540,3 +543,70 @@ async function sbModifyRecovery(id, expectedAmount, payload) {
 
 async function sbSetCustomerPortalPin(customerId,pin){const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");const{data,error}=await getSupabase().rpc("app_set_customer_portal_pin",{p_token:token,p_customer_id:customerId,p_pin:pin||""});if(error)throw error;return data;}window.sbSetCustomerPortalPin=sbSetCustomerPortalPin;
 
+
+
+/* ---------- RECOVERY COMMAND CENTER LIVE METRICS ---------- */
+function __rxDateOnly(value){return (value||"").toString().slice(0,10);}
+function __rxDaysBetween(from,to){
+    const a=new Date(__rxDateOnly(from)), b=new Date(__rxDateOnly(to));
+    if(Number.isNaN(a.getTime())||Number.isNaN(b.getTime()))return null;
+    a.setHours(0,0,0,0);b.setHours(0,0,0,0);
+    return Math.floor((b-a)/86400000);
+}
+function __rxAgingSummary(customers){
+    const today=new Date().toISOString().slice(0,10);
+    const out={total_customers:0,total_outstanding:0,bucket_0_30:0,bucket_31_60:0,bucket_61_90:0,bucket_90_plus:0,count_0_30:0,count_31_60:0,count_61_90:0,count_90:0,msme_watch:0};
+    (customers||[]).forEach(c=>{
+        const amount=Number(c.outstanding||c.balance||0);
+        if(amount<=0)return;
+        out.total_customers+=1;out.total_outstanding+=amount;
+        const due=__rxDateOnly(c.dueDate||c.due_date||c.followup||c.created_at);
+        const days=due?Math.max(0,__rxDaysBetween(due,today)||0):0;
+        if(days<=30){out.bucket_0_30+=amount;out.count_0_30+=1;}
+        else if(days<=60){out.bucket_31_60+=amount;out.count_31_60+=1;}
+        else if(days<=90){out.bucket_61_90+=amount;out.count_61_90+=1;}
+        else{out.bucket_90_plus+=amount;out.count_90+=1;}
+        const msmeStart=__rxDateOnly(c.msme45DayStart||c.msme_45_day_start||due);
+        const msmeDays=msmeStart?(__rxDaysBetween(msmeStart,today)||0):0;
+        if(msmeDays>=35&&msmeDays<=45)out.msme_watch+=1;
+    });
+    return out;
+}
+async function sbGetRecoveryExecMetrics(){
+    const today=new Date();
+    const todayISO=today.toISOString().slice(0,10);
+    const monthPrefix=todayISO.slice(0,7);
+    const [customers,recoveries,ptpRows]=await Promise.all([
+        sbGetCustomers().catch(()=>[]),
+        sbGetRecoveries().catch(()=>[]),
+        (typeof sbGetPtp==="function"?sbGetPtp(null,"open"):Promise.resolve([])).catch(()=>[])
+    ]);
+    const aging=__rxAgingSummary(customers);
+    const recoveredThisMonth=(recoveries||[]).reduce((sum,r)=>{
+        const d=__rxDateOnly(r.date||r.recovery_date||r.created_at);
+        return d.slice(0,7)===monthPrefix?sum+Number(r.amount||0):sum;
+    },0);
+    let ptp7=0,ptp15=0,ptp30=0,brokenPtp=0,brokenPtpCount=0;
+    (ptpRows||[]).forEach(p=>{
+        const date=__rxDateOnly(p.promised_date||p.ptp_date||p.date);
+        const amount=Number(p.promised_amount||p.ptp_amount||p.amount||0);
+        const diff=date?__rxDaysBetween(todayISO,date):null;
+        if(diff!==null&&diff>=0&&amount>0){
+            if(diff<=7)ptp7+=amount;
+            if(diff<=15)ptp15+=amount;
+            if(diff<=30)ptp30+=amount;
+        }
+        if(diff!==null&&diff<0&&amount>0){brokenPtp+=amount;brokenPtpCount+=1;}
+    });
+    const elapsed=Math.max(1,today.getDate());
+    const dso=recoveredThisMonth>0?Math.round((aging.total_outstanding/(recoveredThisMonth/elapsed))*10)/10:null;
+    return {aging,recoveredThisMonth,dso,ptp7,ptp15,ptp30,brokenPtp,brokenPtpCount};
+}
+async function sbMarkDemandNoticeSent(customerId){
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_mark_demand_notice_sent",{p_customer_id:customerId});
+    if(error)throw error;return data;
+}
+window.sbGetRecoveryExecMetrics=sbGetRecoveryExecMetrics;
+window.sbMarkDemandNoticeSent=sbMarkDemandNoticeSent;
+window.__rxAgingSummary=__rxAgingSummary;
