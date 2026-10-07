@@ -1,32 +1,89 @@
-// Bump this on every deploy so old caches get wiped automatically.
-const CACHE = 'recountix-professional-v3';
+// Recountix service worker - fast cache with safe app updates.
+const CACHE = 'recountix-fast-v4';
+const CORE_ASSETS = [
+  './css/style.css',
+  './css/final-suite.css',
+  './css/redesign-2026.css',
+  './css/saas-2026.css',
+  './js/supabase.js',
+  './js/utils.js',
+  './js/db.js',
+  './js/auth.js',
+  './js/app.js',
+  './js/final-suite.js',
+  './assets/logo.png',
+  './assets/recountix-logo.png'
+];
 
-// Only truly static assets that rarely change go here.
-const ASSETS = ['./css/style.css', './assets/logo.png'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(CORE_ASSETS.map(url => new Request(url, { cache: 'reload' }))).catch(() => null))
+      .then(() => self.skipWaiting())
+  );
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
-// Network-first for HTML and JS: always try to get the latest app logic.
-// Falls back to cache only when offline. Static assets stay cache-first.
-self.addEventListener('fetch', e => {
-  const url = e.request.url;
-  const isAppCode = url.includes('.html') || url.includes('.js') || url.includes('.css');
-  if (isAppCode) {
-    // Always use the deployed code. Never serve stale maintenance/auth logic.
-    e.respondWith(fetch(e.request, { cache: 'no-store' }));
+function isHtmlRequest(request) {
+  return request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html');
+}
+
+function isAppAsset(url) {
+  return /\.(css|js)(\?|$)/.test(url.pathname);
+}
+
+function isStaticAsset(url) {
+  return /\.(png|jpg|jpeg|webp|gif|svg|ico|woff2?)(\?|$)/.test(url.pathname);
+}
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  if (isHtmlRequest(request)) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then(cached => cached || caches.match('./login.html')))
+    );
     return;
   }
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
-});
 
-// v11 final suite: HTML/JS/CSS use network-first/no stale UI.
+  if (isAppAsset(url)) {
+    event.respondWith(
+      caches.match(request).then(cached => {
+        const refresh = fetch(request).then(response => {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(request, copy));
+          return response;
+        }).catch(() => cached);
+        return cached || refresh;
+      })
+    );
+    return;
+  }
+
+  if (isStaticAsset(url)) {
+    event.respondWith(
+      caches.match(request).then(cached => cached || fetch(request).then(response => {
+        const copy = response.clone();
+        caches.open(CACHE).then(cache => cache.put(request, copy));
+        return response;
+      }))
+    );
+  }
+});
