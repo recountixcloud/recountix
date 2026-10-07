@@ -1744,9 +1744,9 @@ async function reloadAllData() {
         if (document.getElementById("customerBody")) { applyHashAgingFilter(); loadCustomers(); }
         if (document.getElementById("totalCustomers")) {
             updateDashboard();
-            loadRecentCustomers();
-            loadDashboardFollowups();
-            loadDashboardRecentRecovery();
+            if (document.getElementById("recentCustomerBody")) loadRecentCustomers();
+            if (document.getElementById("dashboardFollowupBody")) loadDashboardFollowups();
+            if (document.getElementById("dashboardRecoveryBody")) loadDashboardRecentRecovery();
         }
         if (document.getElementById("recoveryBody")) {
             loadRecoveryTable();
