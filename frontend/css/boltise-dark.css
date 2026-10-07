@@ -1625,3 +1625,43 @@ html.rx-dark-shell body:has(.login-wrap) {
     transition-duration: .001ms !important;
   }
 }
+
+
+/* Dark header glare fix */
+.topbar {
+  background: linear-gradient(180deg, rgba(17, 24, 39, .92), rgba(19, 27, 46, .9)) !important;
+  border: 1px solid rgba(51, 65, 85, .78) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255, 255, 255, .035) !important;
+  overflow: hidden !important;
+  padding: 18px 20px !important;
+  margin: 0 0 14px !important;
+}
+.topbar::before,
+.topbar::after,
+.summary-bar::before,
+.summary-bar::after,
+.page-hero::before,
+.page-hero::after {
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+.topbar .page-title,
+.topbar h1 {
+  color: var(--rx-text) !important;
+  text-shadow: none !important;
+}
+.topbar .page-subtitle,
+.topbar p {
+  color: var(--rx-muted) !important;
+  text-shadow: none !important;
+}
+@media (max-width: 640px) {
+  .topbar {
+    background: linear-gradient(180deg, rgba(17, 24, 39, .94), rgba(19, 27, 46, .92)) !important;
+    border-color: rgba(51, 65, 85, .82) !important;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .035) !important;
+  }
+}
