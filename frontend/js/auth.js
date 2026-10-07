@@ -303,7 +303,7 @@ async function enforceMaintenanceGate(options) {
     else setTimeout(run, 0);
     // Re-check when user returns to the tab and periodically while logged in.
     document.addEventListener("visibilitychange", function(){ if (!document.hidden) run(); });
-    setInterval(run, 15000);
+    setInterval(function(){ if (!document.hidden) run(); }, 60000);
 })();
 
 function checkLogin() {
