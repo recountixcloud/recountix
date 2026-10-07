@@ -575,7 +575,7 @@ Open Offline Backup
 <a class="add-btn" href="backup.html">Open Backup &amp; Restore</a>
 </div>
 
-<div class="card green">
+<div class="card green superadmin-only" id="optimizeWebsiteCard" style="display:none;">
 <i class="fa-solid fa-gauge-high"></i>
 <h3>Optimize Website</h3>
 <p>Clear old app cache and reload the faster version</p>
@@ -1202,7 +1202,23 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 <script src="js/offline-backup.js?v=preferences-1"></script><script src="js/i18n.js?v=2"></script>
 
 <script>
+function rxCurrentRole(){
+  try{
+    var store=(localStorage.getItem('bk_isLoggedIn')==='true')?localStorage:sessionStorage;
+    return String(store.getItem('bk_role')||store.getItem('role')||'').toLowerCase();
+  }catch(e){return '';}
+}
+function rxApplySuperAdminTools(){
+  var card=document.getElementById('optimizeWebsiteCard');
+  if(card) card.style.display = rxCurrentRole()==='super_admin' ? '' : 'none';
+}
+window.addEventListener('load', rxApplySuperAdminTools);
+
 async function optimizeWebsite(){
+  if(rxCurrentRole()!=='super_admin'){
+    alert('Only Super Admin can optimize website cache.');
+    return;
+  }
   const btn=document.getElementById('optimizeWebsiteBtn');
   const old=btn?btn.innerHTML:'';
   try{
