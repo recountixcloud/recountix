@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recountix-fast-20261007-2';
+const CACHE_NAME = 'recountix-fast-20261007-3';
 const CORE = [
   './',
   './index.html',
