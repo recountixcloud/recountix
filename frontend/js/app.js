@@ -10,6 +10,11 @@ let settings = {};
 let editIndex = -1;
 let editCustomerId = null;
 
+// Escape all database/user text before inserting it into HTML templates.
+function appEscape(value) {
+    return escapeHtml(value == null ? "" : String(value));
+}
+
 // ================================
 // Login
 // ================================
@@ -31,10 +36,11 @@ let editCustomerId = null;
 // Customer Modal
 // ================================
 function openModal() {
+    if (!rxRequire(editIndex >= 0 ? "modify" : "add")) return;
     const modal = document.getElementById("customerModal");
     if (modal) {
         modal.classList.add("vo-modal-open");
-        modal.style.display = "flex";
+        RecountixModal.open("customerModal");
     }
 }
 
@@ -42,7 +48,7 @@ function closeModal() {
     const modal = document.getElementById("customerModal");
     if (modal) {
         modal.classList.remove("vo-modal-open");
-        modal.style.display = "none";
+        RecountixModal.close("customerModal");
     }
     const form = document.getElementById("customerForm");
     if (form) form.reset();
@@ -70,7 +76,10 @@ if (billInput && downInput) {
 function calculateOutstanding() {
     const bill = parseFloat(document.getElementById("billAmount")?.value) || 0;
     const down = parseFloat(document.getElementById("downPayment")?.value) || 0;
-    let outstanding = Math.max(0, bill - down);
+    const original = editIndex >= 0 ? customers[editIndex] : null;
+    let outstanding = Math.max(0, original
+      ? Number(original.outstanding)+(bill-Number(original.bill))-(down-Number(original.down))
+      : bill-down);
     const outBox = document.getElementById("outstanding");
     if (outBox) outBox.value = outstanding;
 }
@@ -99,6 +108,10 @@ function validateCustomerForm() {
         alert("Please Enter Bill Amount");
         billAmount.focus();
         return false;
+    }
+    const bill=Number(billAmount?.value||0),down=Number(document.getElementById("downPayment")?.value||0);
+    if(!Number.isFinite(bill)||!Number.isFinite(down)||bill<0||down<0||down>bill){
+      alert("Enter valid bill and down payment amounts. Down payment cannot exceed the bill.");return false;
     }
     return true;
 }
@@ -131,6 +144,7 @@ function getCustomerData() {
 // Save Customer
 // ================================
 async function saveCustomer() {
+    if (!rxRequire(editIndex >= 0 ? "modify" : "add")) return;
     if (!validateCustomerForm()) return;
 
     const customer = getCustomerData();
@@ -144,12 +158,12 @@ async function saveCustomer() {
     if (finalShopId) customer.shop_id = finalShopId;
 
     if (!finalShopId && !isSuperAdmin()) {
-        alert("No shop assigned. Contact Super Admin.");
+        alert("No business assigned. Contact Super Admin.");
         return;
     }
 
     if (isSuperAdmin() && !finalShopId) {
-        alert("Super Admin: login as a shop admin to add customers for a specific shop, or set shop context.");
+        alert("Super Admin: login as a Business Admin to manage customers for a specific business.");
         return;
     }
 
@@ -319,7 +333,7 @@ function loadCustomers() {
         }
 
         rowNum++;
-        const deleteButton = (role === "admin" || role === "super_admin")
+        const deleteButton = rxCan("delete")
             ? `<button onclick="deleteCustomer(${index})" title="Delete">🗑️</button>`
             : "";
         const hasMobile = !!(customer.mobile && String(customer.mobile).replace(/\D/g, "").length >= 10);
@@ -338,16 +352,17 @@ function loadCustomers() {
         tbody.innerHTML += `
         <tr>
             <td>${rowNum}</td>
-            <td>${customer.name}</td>
-            <td>${customer.mobile || "-"}</td>
-            <td>${customer.village || ""}</td>
+            <td>${appEscape(customer.name)}</td>
+            <td>${appEscape(customer.mobile || "-")}</td>
+            <td>${appEscape(customer.village || "")}</td>
             <td>₹${Number(customer.outstanding || 0).toLocaleString("en-IN")}</td>
             <td>${agingBadgeHtml(bucket, getCustomerDaysOverdue(customer))}</td>
-            <td>${dueShow}${customer.autoReminder === false ? " 🔕" : ""}</td>
+            <td>${appEscape(dueShow)}${customer.autoReminder === false ? " 🔕" : ""}</td>
             <td style="white-space:nowrap;">
                 <button onclick="viewCustomer(${index})" title="View">👁</button>
                 <button onclick="editCustomer(${index})" title="Edit">✏️</button>
                 ${waBtn}
+                <button type="button" onclick="setCustomerPortalPin(${index})" title="Set Customer Portal PIN" style="display:inline-flex;align-items:center;gap:4px;background:#0B5D4F;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">🔐 PIN</button>
                 <button type="button" onclick="openPaymentLinkForCustomer(${index})" title="UPI / Payment link"
                   style="display:inline-flex;align-items:center;gap:4px;background:#1A3D63;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">₹ Pay</button>
                 <button type="button" onclick="openLegalNoticeForCustomer(${index})" title="Legal / reminder letter"
@@ -372,6 +387,7 @@ window.applyHashAgingFilter = applyHashAgingFilter;
 // Edit / Delete / Search / View
 // ================================
 function editCustomer(index) {
+    if (!rxRequire("modify")) return;
     editIndex = index;
     const c = customers[index];
     editCustomerId = c.id;
@@ -396,10 +412,12 @@ function editCustomer(index) {
     openModal();
 }
 
+async function setCustomerPortalPin(index){if(!rxRequire("modify"))return;const customer=customers[index];if(!customer||!customer.id){alert("Customer not found.");return;}const pin=prompt("Set customer portal PIN for "+(customer.name||"this customer")+" (minimum 4 characters):");if(pin===null)return;if(String(pin).trim().length<4){alert("PIN must be at least 4 characters.");return;}const confirmPin=prompt("Confirm portal PIN:");if(confirmPin===null)return;if(pin!==confirmPin){alert("PIN does not match.");return;}try{await sbSetCustomerPortalPin(customer.id,pin.trim());alert("Portal PIN saved. Share Business Code + Mobile + PIN with the customer.");}catch(e){console.error(e);alert("PIN save failed: "+(e.message||e));}}
+
 async function deleteCustomer(index) {
     const session = getSession();
-    if (session.role !== "admin" && session.role !== "super_admin") {
-        alert("Only Admin Can Delete Records.");
+    if (!rxCan("delete")) {
+        alert("Your Administrator has not granted Delete permission.");
         return;
     }
     if (!confirm("Delete this customer permanently?")) return;
@@ -469,7 +487,7 @@ function buildWhatsAppReminderMessage(customer) {
     const session = (typeof getSession === "function") ? getSession() : {};
     const shopName = (session.shopName)
         || (typeof settings !== "undefined" && settings.company)
-        || "Jewellery Shop";
+        || "Business";
     const name = customer.name || "Customer";
     const outstanding = Number(customer.outstanding || 0).toLocaleString("en-IN");
     const bill = Number(customer.bill || 0).toLocaleString("en-IN");
@@ -485,7 +503,7 @@ function buildWhatsAppReminderMessage(customer) {
         "💰 *Pending Dues: ₹" + outstanding + "*",
         "",
         "Please make payment soon to clear your account.",
-        "After payment, contact the shop for receipt / update.",
+        "After payment, contact the business for receipt or account update.",
         phone ? ("📞 " + phone) : "",
         "",
         "Thank you,",
@@ -553,6 +571,7 @@ function getDueReminderCustomers() {
 }
 
 async function processWhatsAppReminders(autoOpen) {
+    if (!rxRequire("modify")) return;
     const list = getDueReminderCustomers();
     if (!list.length) {
         alert("No auto-reminders pending today.\n\n• Outstanding > 0\n• Auto Reminder ON\n• Follow-up / Due date today or past");
@@ -685,9 +704,9 @@ function loadRecentCustomers() {
         tbody.innerHTML += `
         <tr>
             <td>${index + 1}</td>
-            <td>${customer.name}</td>
-            <td>${customer.mobile}</td>
-            <td>${customer.village}</td>
+            <td>${appEscape(customer.name)}</td>
+            <td>${appEscape(customer.mobile)}</td>
+            <td>${appEscape(customer.village)}</td>
             <td>₹${Number(customer.outstanding || 0).toLocaleString("en-IN")}</td>
             <td><span class="badge badge-success">Active</span></td>
         </tr>`;
@@ -703,11 +722,11 @@ function loadDashboardFollowups() {
         tbody.innerHTML += `
         <tr>
             <td>${index + 1}</td>
-            <td>${customer.name}</td>
-            <td>${customer.mobile}</td>
-            <td>${customer.village}</td>
+            <td>${appEscape(customer.name)}</td>
+            <td>${appEscape(customer.mobile)}</td>
+            <td>${appEscape(customer.village)}</td>
             <td>₹${Number(customer.outstanding || 0).toLocaleString("en-IN")}</td>
-            <td>${customer.followup}</td>
+            <td>${appEscape(customer.followup)}</td>
         </tr>`;
     });
 }
@@ -721,10 +740,10 @@ function loadDashboardRecentRecovery() {
         tbody.innerHTML += `
         <tr>
             <td>${index + 1}</td>
-            <td>${customer ? customer.name : "-"}</td>
+            <td>${appEscape(customer ? customer.name : "-")}</td>
             <td>₹${Number(item.amount || 0).toLocaleString("en-IN")}</td>
-            <td>${item.date}</td>
-            <td>${item.remarks || "-"}</td>
+            <td>${appEscape(item.date)}</td>
+            <td>${appEscape(item.remarks || "-")}</td>
         </tr>`;
     });
 }
@@ -733,6 +752,8 @@ function loadDashboardRecentRecovery() {
 // Recovery Module
 // ================================
 async function saveRecovery() {
+    if (!rxRequire("add")) return;
+    if (saveRecovery.__saving) return;
     const customerId = document.getElementById("recoveryCustomer");
     const amount = document.getElementById("recoveryAmount");
     const date = document.getElementById("recoveryDate");
@@ -771,7 +792,7 @@ async function saveRecovery() {
     if (isSuperAdmin() && cust) finalShopId = cust.shop_id;
 
     if (!finalShopId) {
-        alert("No shop context.");
+        alert("No business context.");
         return;
     }
 
@@ -782,26 +803,15 @@ async function saveRecovery() {
         paymentMode: paymentMode ? paymentMode.value : "Cash",
         receiptNo: receiptNo ? receiptNo.value : "",
         collectedBy: collectedBy ? collectedBy.value : "",
-        remarks: remarks ? remarks.value : ""
+        remarks: remarks ? remarks.value : "",
+        requestKey: (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2)
     };
 
     try {
-        await sbSaveRecovery(recovery, finalShopId);
+        saveRecovery.__saving = true;
+        const savedRecovery = await sbSaveRecovery(recovery, finalShopId);
 
-        if (cust && Number(amount.value || 0) > 0) {
-            const newOut = Math.max(0, Number(cust.outstanding || 0) - Number(amount.value));
-            await sbUpdateCustomerOutstanding(cust.id, newOut);
-        }
-        // Also append call note to customer remarks when amount is 0
-        if (cust && Number(amount.value || 0) === 0 && remarks && remarks.value.trim()) {
-            try {
-                const note = "[" + (date.value || "") + "] " + remarks.value.trim();
-                const prev = (cust.remarks || "").trim();
-                const merged = prev ? (prev + " | " + note) : note;
-                const sb = getSupabase();
-                await sb.from("customers").update({ remarks: merged }).eq("id", cust.id);
-            } catch (e) { console.warn("remarks update", e); }
-        }
+        // Outstanding and zero-payment notes are updated atomically by app_save_recovery.
 
         const paidAmt = Number(amount.value || 0);
         const newOutForReceipt = cust ? Math.max(0, Number(cust.outstanding || 0) - paidAmt) : 0;
@@ -811,7 +821,7 @@ async function saveRecovery() {
             paymentMode: paymentMode ? paymentMode.value : "",
             receiptNo: receiptNo ? receiptNo.value : "",
             remarks: remarks ? remarks.value : "",
-            id: null
+            id: savedRecovery && savedRecovery.id ? savedRecovery.id : null
         };
 
         amount.value = "";
@@ -831,8 +841,18 @@ async function saveRecovery() {
     } catch (e) {
         console.error(e);
         alert("Save failed: " + (e.message || e));
+    } finally {
+        saveRecovery.__saving = false;
     }
 }
+
+function searchRecovery() {
+    const query=(document.getElementById("searchRecovery")?.value||"").trim().toLowerCase();
+    document.querySelectorAll("#recoveryBody tr").forEach(row=>{
+      row.hidden=query!==""&&!row.textContent.toLowerCase().includes(query);
+    });
+}
+window.searchRecovery=searchRecovery;
 
 function loadRecoveryTable() {
     const tbody = document.getElementById("recoveryBody");
@@ -845,42 +865,42 @@ function loadRecoveryTable() {
 
     recoveries.forEach((item, index) => {
         const customer = (customers || []).find(c => String(c.id) === String(item.customerId));
-        const deleteBtn = (role === "admin" || role === "super_admin")
+        const deleteBtn = rxCan("delete")
             ? `<button class="action-btn delete-btn" onclick="deleteRecovery(${index})" title="Delete">🗑️</button>`
             : "";
 
         tbody.innerHTML += `
         <tr>
             <td>${index + 1}</td>
-            <td>${customer ? customer.name : "-"}</td>
+            <td>${appEscape(customer ? customer.name : "-")}</td>
             <td>₹${Number(item.amount || 0).toLocaleString("en-IN")}</td>
-            <td>${item.paymentMode || "-"}</td>
-            <td>${item.receiptNo || "-"}</td>
-            <td>${item.date || "-"}</td>
-            <td>${item.collectedBy || "-"}</td>
-            <td>${item.remarks || "-"}</td>
-            <td>${deleteBtn}</td>
+            <td>${appEscape(item.paymentMode || "-")}</td>
+            <td>${appEscape(item.receiptNo || "-")}</td>
+            <td>${appEscape(item.date || "-")}</td>
+            <td>${appEscape(item.collectedBy || "-")}</td>
+            <td>${appEscape(item.remarks || "-")}</td>
+            <td>
+                ${Number(item.amount || 0) > 0 ? `<button type="button" onclick="printRecoveryFromTable(${index})" title="Print receipt">🧾</button>` : ""}
+                ${Number(item.amount || 0) > 0 ? `<button type="button" onclick="sendRecoveryReceiptWhatsApp(${index})" title="WhatsApp receipt">WA</button>` : ""}
+                ${rxCan("modify") ? `<button type="button" onclick="editRecovery(${index})" title="Modify">✏️</button>` : ""}
+                ${deleteBtn}
+            </td>
         </tr>`;
     });
+    searchRecovery();
 }
 
 async function deleteRecovery(index) {
     const session = getSession();
-    if (session.role !== "admin" && session.role !== "super_admin") {
-        alert("Only Admin Can Delete Records.");
+    if (!rxCan("delete")) {
+        alert("Your Administrator has not granted Delete permission.");
         return;
     }
     if (!confirm("Delete this recovery entry?")) return;
 
     const item = recoveries[index];
     try {
-        if (item) {
-            const customer = (customers || []).find(c => String(c.id) === String(item.customerId));
-            if (customer) {
-                const newOut = Number(customer.outstanding || 0) + Number(item.amount || 0);
-                await sbUpdateCustomerOutstanding(customer.id, newOut);
-            }
-        }
+        // app_delete_recovery restores outstanding in the same database transaction.
         await sbDeleteRecovery(item.id);
         await reloadAllData();
     } catch (e) {
@@ -1005,7 +1025,7 @@ function loadReportCustomers() {
     const current = select.value;
     select.innerHTML = `<option value="">All Customers</option>`;
     customers.forEach(customer => {
-        select.innerHTML += `<option value="${customer.id}">${customer.name}</option>`;
+        select.innerHTML += `<option value="${appEscape(customer.id)}">${appEscape(customer.name)}</option>`;
     });
     if (current) select.value = current;
 }
@@ -1024,13 +1044,13 @@ function renderReportRows(list) {
         tbody.innerHTML += `
         <tr>
             <td>${index + 1}</td>
-            <td>${customer ? customer.name : "-"}</td>
-            <td>${customer ? (customer.mobile || "-") : "-"}</td>
-            <td>${customer ? (customer.village || "-") : "-"}</td>
+            <td>${appEscape(customer ? customer.name : "-")}</td>
+            <td>${appEscape(customer ? (customer.mobile || "-") : "-")}</td>
+            <td>${appEscape(customer ? (customer.village || "-") : "-")}</td>
             <td>₹${Number(item.amount || 0).toLocaleString("en-IN")}</td>
-            <td>${item.paymentMode || "-"}</td>
-            <td>${item.date || "-"}</td>
-            <td>${item.collectedBy || "-"}</td>
+            <td>${appEscape(item.paymentMode || "-")}</td>
+            <td>${appEscape(item.date || "-")}</td>
+            <td>${appEscape(item.collectedBy || "-")}</td>
             <td>${status}</td>
         </tr>`;
     });
@@ -1136,8 +1156,8 @@ function updateReportExtraStats(list) {
     if (topCustomer) {
         if (topId) {
             const c = customers.find(x => x.id == topId);
-            topCustomer.innerHTML = c ? c.name : "-";
-        } else topCustomer.innerHTML = "-";
+            topCustomer.textContent = c ? c.name : "-";
+        } else topCustomer.textContent = "-";
     }
     if (highestCollection) highestCollection.innerHTML = formatCurrency(topAmt);
     if (activeCustomers) {
@@ -1217,16 +1237,12 @@ function formatCurrency(amount) {
 
 function formatDate(date) {
     if (!date) return "-";
-    return new Date(date).toLocaleDateString("en-IN");
+    return window.rxFormatDate ? window.rxFormatDate(date) : new Date(date).toLocaleDateString("en-IN");
 }
 
-function backupData() {
-    alert("Data is stored in Supabase cloud.\\nUse Supabase Dashboard → Table Editor for export if needed.");
-}
+function backupData() { window.location.href="backup.html"; }
 
-function restoreData() {
-    alert("Restore is managed via Supabase. Local JSON restore is disabled.");
-}
+function restoreData() { window.location.href="backup.html"; }
 
 function clearAllData() {
     alert("Clear All is disabled. Manage data from Supabase Dashboard or delete records individually.");
@@ -1239,74 +1255,82 @@ function firebaseFullRestore() { restoreData(); }
 // Settings / Users
 // ================================
 async function saveSettings() {
-    if (typeof readUpiSettingsIntoSettingsObj === 'function') readUpiSettingsIntoSettingsObj();
-    const usernameField = document.getElementById("adminUsername");
-    const currentPasswordField = document.getElementById("currentPassword");
-    const newPasswordField = document.getElementById("newPassword");
-    const confirmPasswordField = document.getElementById("confirmPassword");
-    const recoveryEmailField = document.getElementById("recoveryEmail");
+    if (typeof readUpiSettingsIntoSettingsObj === "function") readUpiSettingsIntoSettingsObj();
+    const usernameField=document.getElementById("adminUsername");
+    const currentPasswordField=document.getElementById("currentPassword");
+    const newPasswordField=document.getElementById("newPassword");
+    const confirmPasswordField=document.getElementById("confirmPassword");
+    const recoveryEmailField=document.getElementById("recoveryEmail");
+    if(!usernameField)return;
 
-    if (!usernameField) return;
+    const session=getSession();
+    const newUsername=usernameField.value.trim();
+    const currentPassword=currentPasswordField?currentPasswordField.value:"";
+    const newPassword=newPasswordField?newPasswordField.value:"";
+    const confirmPassword=confirmPasswordField?confirmPasswordField.value:"";
+    const recoveryEmail=recoveryEmailField?recoveryEmailField.value.trim():"";
 
-    const session = getSession();
-    const newUsername = usernameField.value.trim();
-    if (!newUsername) {
-        alert("Username Cannot Be Empty");
+    if(!newUsername){alert("Username Cannot Be Empty");return;}
+    if(!currentPassword){alert("Enter your current password to save security settings.");return;}
+    if(newPassword!==confirmPassword){alert("New Password And Confirm Password Do Not Match");return;}
+    if(newPassword && newPassword.length<8){alert("New Password Must Be At Least 8 Characters");return;}
+
+    try {
+        await sbUpdateOwnProfile(currentPassword,newUsername,newPassword,recoveryEmail);
+        const activeStore=storage();
+        activeStore.setItem(SESSION_KEYS.username,newUsername);
+
+        if(session.shopId){
+            const s={...settings};
+            s.upiId=(document.getElementById("upiId")?.value||"").trim();
+            s.website=(document.getElementById("companyWebsite")?.value||"").trim();
+            if(window.rxReadPreferences)s.preferences=window.rxReadPreferences();
+            if(recoveryEmailField)s.recoveryEmail=recoveryEmail;
+            await sbSaveSettings(session.shopId,s);
+            settings=s;
+            if(window.rxApplyPreferences)window.rxApplyPreferences(s.preferences);
+        }
+
+        if(currentPasswordField)currentPasswordField.value="";
+        if(newPasswordField)newPasswordField.value="";
+        if(confirmPasswordField)confirmPasswordField.value="";
+        alert("Settings Saved Successfully.");
+        await loadUserList();
+    } catch(e){
+        console.error(e);
+        const message=String(e.message||e).includes("invalid_current_password")
+          ?"Current Password Is Incorrect":(e.message||e);
+        alert("Save failed: "+message);
+    }
+}
+
+async function initUserShopSelector() {
+    const wrap = document.getElementById("newUserShopWrap");
+    const select = document.getElementById("newUserShopId");
+    if (!wrap || !select) return;
+
+    if (!isSuperAdmin()) {
+        wrap.style.display = "none";
         return;
     }
 
+    wrap.style.display = "block";
+    select.disabled = true;
+    select.innerHTML = '<option value="">Loading businesses...</option>';
     try {
-        const currentPassword = currentPasswordField ? currentPasswordField.value.trim() : "";
-        const newPassword = newPasswordField ? newPasswordField.value.trim() : "";
-        const confirmPassword = confirmPasswordField ? confirmPasswordField.value.trim() : "";
-
-        if (newPassword !== "" || confirmPassword !== "") {
-            const check = await sbLogin(session.username, currentPassword);
-            if (!check) {
-                alert("Current Password Is Incorrect");
-                return;
-            }
-            setSession(check.user, check.shop ? { name: check.shop.name } : null);
-
-            if (newPassword.length < 4) {
-                alert("New Password Must Be At Least 4 Characters");
-                return;
-            }
-            if (newPassword !== confirmPassword) {
-                alert("New Password And Confirm Password Do Not Match");
-                return;
-            }
-            await sbUpdateUserPassword(session.userId, newPassword);
-        }
-
-        if (newUsername !== session.username) {
-            await sbUpdateUsername(session.userId, newUsername);
-            sessionStorage.setItem("bk_username", newUsername);
-        }
-
-        // Always save recovery email on the user account (works for Super Admin too)
-        if (recoveryEmailField && session.userId) {
-            const re = recoveryEmailField.value.trim();
-            const sb = getSupabase();
-            await sb.from("users").update({ recovery_email: re || null }).eq("id", session.userId);
-        }
-
-        if (session.shopId) {
-            const s = await sbGetSettings(session.shopId);
-            if (recoveryEmailField) s.recoveryEmail = recoveryEmailField.value.trim();
-            await sbSaveSettings(session.shopId, s);
-            settings = s;
-        }
-
-        if (currentPasswordField) currentPasswordField.value = "";
-        if (newPasswordField) newPasswordField.value = "";
-        if (confirmPasswordField) confirmPasswordField.value = "";
-
-        alert("Settings Saved Successfully.");
-        await loadUserList();
+        const shops = await sbGetShops();
+        select.innerHTML = '<option value="">Select Business</option>' +
+            (shops || []).map((shop) =>
+                '<option value="' + escapeHtml(shop.id) + '">' +
+                escapeHtml(shop.name || shop.code || "Unnamed Business") +
+                (shop.code ? " (" + escapeHtml(shop.code) + ")" : "") +
+                '</option>'
+            ).join("");
     } catch (e) {
-        console.error(e);
-        alert("Save failed: " + (e.message || e));
+        console.error("Unable to load businesses for user creation", e);
+        select.innerHTML = '<option value="">Unable to load businesses</option>';
+    } finally {
+        select.disabled = false;
     }
 }
 
@@ -1323,24 +1347,82 @@ async function addUser() {
     if (role === "User") role = "user";
 
     if (!username) { alert("Please Enter Username"); return; }
-    if (password.length < 4) { alert("Password Must Be At Least 4 Characters"); return; }
+    if (password.length < 8) { alert("Password Must Be At Least 8 Characters"); return; }
+
+    const shopSelect = document.getElementById("newUserShopId");
+    const targetShopId = isSuperAdmin()
+        ? (shopSelect ? shopSelect.value : "")
+        : currentShopId();
+    if (!targetShopId) {
+        alert(isSuperAdmin()
+            ? "Please select a Business before adding the user."
+            : "Business assignment is unavailable. Please log in again.");
+        return;
+    }
 
     try {
         await sbAddUser({
             username,
             password,
             role,
-            shop_id: currentShopId(),
+            shop_id: targetShopId,
             display_name: username
         });
         usernameField.value = "";
         passwordField.value = "";
         roleField.value = "User";
-        alert("User Added Successfully.");
+        alert("User added with View-only access. Select Modify / Rights to grant permissions.");
         await loadUserList();
     } catch (e) {
         console.error(e);
         alert("Add user failed: " + (e.message || e));
+    }
+}
+
+async function resetUserPassword(userId) {
+    const session = getSession();
+    if (!userId) {
+        alert("Invalid user");
+        return;
+    }
+    try {
+        const users = await sbGetUsers(isSuperAdmin() ? null : currentShopId());
+        const target = (users || []).find(u => String(u.id) === String(userId));
+        if (!target) {
+            alert("User not found");
+            return;
+        }
+        if (target.id === session.userId || target.username === session.username) {
+            alert("Use Manage Login Credentials to change your own password.");
+            return;
+        }
+        if (target.role === "super_admin" || target.username === "superadmin") {
+            alert("Super Admin password cannot be reset from this list.");
+            return;
+        }
+        const p1 = prompt("Enter new password for " + (target.username || "this user") + " (minimum 8 characters):");
+        if (p1 === null) return;
+        if (String(p1).length < 8) {
+            alert("Password must be at least 8 characters.");
+            return;
+        }
+        const p2 = prompt("Confirm new password:");
+        if (p2 === null) return;
+        if (p1 !== p2) {
+            alert("Passwords do not match.");
+            return;
+        }
+        if (!confirm("Reset password for " + (target.username || "this user") + "? Existing sessions for that user will be logged out.")) return;
+        await sbResetUserPassword(target.id, p1);
+        alert("Password reset successfully.");
+    } catch (e) {
+        console.error(e);
+        const raw = String(e.message || e);
+        const msg = raw.includes("access_denied") ? "You do not have permission to reset this user."
+            : raw.includes("weak_password") ? "Password must be at least 8 characters."
+            : raw.includes("user_not_found") ? "User not found in your allowed business scope."
+            : raw;
+        alert("Reset failed: " + msg);
     }
 }
 
@@ -1395,33 +1477,12 @@ async function deleteUser(usernameOrId) {
 }
 
 async function loadUserList() {
-    const tbody = document.getElementById("userListBody");
-    if (!tbody) return;
-    const session = getSession();
-
-    try {
-        const shopFilter = isSuperAdmin() ? null : currentShopId();
-        const users = await sbGetUsers(shopFilter);
-        tbody.innerHTML = "";
-        (users || []).forEach(u => {
-            const isSelf = u.id === session.userId || u.username === session.username;
-            const isSA = u.role === "super_admin" || u.username === "superadmin";
-            let action = "—";
-            if (!isSelf && !isSA) {
-                action = `<button type="button" onclick="deleteUser(this.dataset.uid)" data-uid="${u.id}" title="Remove" style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;">🗑️ Remove</button>`;
-            }
-            tbody.innerHTML += `
-            <tr>
-                <td>${u.username || ""}</td>
-                <td>${u.role || ""}</td>
-                <td>${action}</td>
-            </tr>`;
-        });
-    } catch (e) {
-        console.error(e);
-        tbody.innerHTML = `<tr><td colspan="3" style="color:#ef4444;">Failed to load users: ${e.message || e}</td></tr>`;
-    }
+    return RecountixPermissions.loadUsers();
 }
+
+// ================================
+// Company branding
+// ================================
 
 function getCompanyName() {
     return settings.company || getSession().shopName || "Recountix";
@@ -1454,73 +1515,23 @@ function previewCompanyLogo(event) {
 }
 
 async function saveCompanyBranding() {
-    const session = (typeof getSession === "function") ? getSession() : {};
-    const shopId = (typeof currentShopId === "function") ? currentShopId() : (session.shopId || null);
-    const isSA = (typeof isSuperAdmin === "function" && isSuperAdmin())
-        || session.role === "super_admin"
-        || session.role === "Super Admin"
-        || session.username === "superadmin";
-
-    const companyField = document.getElementById("companyName");
-    const phoneField = document.getElementById("companyMobile") || document.getElementById("contactNumber");
-    const emailField = document.getElementById("companyEmail") || document.getElementById("emailAddress");
-    const addressField = document.getElementById("companyAddress");
-    const softwareField = document.getElementById("softwareName");
-
-    if (typeof settings !== "object" || !settings) window.settings = {};
-
-    if (companyField && companyField.value.trim()) settings.company = companyField.value.trim();
-    if (phoneField && phoneField.value.trim()) settings.phone = phoneField.value.trim();
-    if (emailField && emailField.value.trim()) settings.email = emailField.value.trim();
-    if (addressField && addressField.value.trim()) settings.address = addressField.value.trim();
-    if (softwareField && softwareField.value.trim()) settings.softwareName = softwareField.value.trim();
-
-    const emailVal = (emailField && emailField.value.trim()) || (settings.email || "");
-
-    try {
-        // No shop (Super Admin / missing shop): save recovery email on user
-        if (!shopId) {
-            const uid = session.userId || session.user_id || "";
-            if (!uid) {
-                alert("Session expired. Please logout and login again.");
-                return;
-            }
-            if (!emailVal) {
-                alert("Enter recovery email in Email Address, then Save.");
-                return;
-            }
-            const sb = getSupabase();
-            if (!sb) {
-                alert("Cloud connection failed.");
-                return;
-            }
-            const { error } = await sb.from("users").update({ recovery_email: emailVal }).eq("id", uid);
-            if (error) {
-                // try by username
-                const { error: e2 } = await sb.from("users").update({ recovery_email: emailVal }).eq("username", session.username || "superadmin");
-                if (e2) throw e2;
-            }
-            const reField = document.getElementById("recoveryEmail");
-            if (reField) reField.value = emailVal;
-            alert("✅ Recovery email saved: " + emailVal + "\n\nUse Username + this email on Forgot Password.\n\nNote: Company logo/name is saved by Shop Admin login.");
-            return;
-        }
-
-        await sbSaveSettings(shopId, settings);
-        if (emailVal) {
-            try {
-                const sb = getSupabase();
-                await sb.from("shops").update({ email: emailVal }).eq("id", shopId);
-                if (session.userId) {
-                    await sb.from("users").update({ recovery_email: emailVal }).eq("id", session.userId);
-                }
-            } catch (e) { console.warn(e); }
-        }
-        alert("Company branding saved.");
-    } catch (e) {
-        console.error(e);
-        alert("Save failed: " + (e.message || e));
-    }
+    if (!rxRequire("settings")) return;
+    const session=getSession();const shopId=currentShopId();
+    if(!shopId){alert("Super Admin branding is fixed. Use Account Settings for profile changes.");return;}
+    const companyField=document.getElementById("companyName");
+    const phoneField=document.getElementById("companyMobile")||document.getElementById("contactNumber");
+    const emailField=document.getElementById("companyEmail")||document.getElementById("emailAddress");
+    const addressField=document.getElementById("companyAddress");
+    if(typeof settings!=="object"||!settings)window.settings={};
+    if(companyField)settings.company=companyField.value.trim();
+    if(phoneField)settings.phone=phoneField.value.trim();
+    if(emailField)settings.email=emailField.value.trim();
+    if(addressField)settings.address=addressField.value.trim();
+    settings.upiId=(document.getElementById("upiId")?.value||"").trim();
+    settings.website=(document.getElementById("companyWebsite")?.value||"").trim();
+    settings.softwareName="Recountix";
+    try{await sbSaveSettings(shopId,settings);alert("Company branding saved.");}
+    catch(e){console.error(e);alert("Save failed: "+(e.message||e));}
 }
 
 window.saveCompanyBranding = saveCompanyBranding;
@@ -1541,7 +1552,7 @@ function fillExecutiveDropdowns(selected) {
     const opts = ['<option value="">Select Executive</option>']
         .concat(list.map(e => {
             const sel = (selected && String(selected) === String(e)) ? " selected" : "";
-            return `<option value="${String(e).replace(/"/g, "&quot;")}"${sel}>${e}</option>`;
+            return `<option value="${appEscape(e)}"${sel}>${appEscape(e)}</option>`;
         }))
         .join("");
     const execSel = document.getElementById("executive");
@@ -1555,7 +1566,7 @@ function fillExecutiveDropdowns(selected) {
         const cur2 = colSel.value;
         colSel.innerHTML = list.map(e => {
             const sel = (cur2 && String(cur2) === String(e)) ? " selected" : "";
-            return `<option value="${String(e).replace(/"/g, "&quot;")}"${sel}>${e}</option>`;
+            return `<option value="${appEscape(e)}"${sel}>${appEscape(e)}</option>`;
         }).join("") || '<option value="">Select</option>';
         if (cur2) colSel.value = cur2;
     }
@@ -1568,7 +1579,7 @@ function loadExecutiveListUI() {
     tbody.innerHTML = list.map((e, i) => `
         <tr>
             <td>${i + 1}</td>
-            <td>${e}</td>
+            <td>${appEscape(e)}</td>
             <td>
                 <button type="button" onclick="removeExecutive(${i})" title="Remove"
                     style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;">🗑️</button>
@@ -1578,6 +1589,7 @@ function loadExecutiveListUI() {
 }
 
 async function addExecutive() {
+    if (!rxRequire("settings")) return;
     const input = document.getElementById("newExecutiveName");
     if (!input) return;
     const name = input.value.trim();
@@ -1587,7 +1599,7 @@ async function addExecutive() {
     }
     const shopId = (typeof currentShopId === "function") ? currentShopId() : null;
     if (!shopId) {
-        alert("No shop context. Please login as Shop Admin.");
+        alert("No business context. Please login as Business Admin.");
         return;
     }
     if (typeof settings !== "object" || !settings) settings = {};
@@ -1611,10 +1623,11 @@ async function addExecutive() {
 }
 
 async function removeExecutive(index) {
+    if (!rxRequire("settings")) return;
     if (!confirm("Remove this executive?")) return;
     const shopId = (typeof currentShopId === "function") ? currentShopId() : null;
     if (!shopId) {
-        alert("No shop context.");
+        alert("No business context.");
         return;
     }
     if (!Array.isArray(settings.executives)) settings.executives = getExecutivesList();
@@ -1693,7 +1706,7 @@ function applyShopBranding() {
 
     // Reports print header
     const printName = document.getElementById("printCompanyName");
-    if (printName) printName.textContent = company || "Jewellery Shop";
+    if (printName) printName.textContent = company || "Business";
 
     const printLogo = document.querySelector(".print-header img");
     if (printLogo) {
@@ -1723,6 +1736,8 @@ window.applyShopBranding = applyShopBranding;
 // Data reload
 // ================================
 async function reloadAllData() {
+    await window.rxPermissionsReady;
+    if (!rxCan("view")) { customers=[];recoveries=[];return; }
     const session = getSession();
     // Super Admin must NOT see other jewellers' customer/recovery data
     // Only load when a shop context (session.shopId) exists
@@ -1738,15 +1753,16 @@ async function reloadAllData() {
 
         if (session.shopId) {
             settings = await sbGetSettings(session.shopId);
+            if(window.rxApplyPreferences)window.rxApplyPreferences(settings.preferences);
         }
 
         if (typeof enforceSuperAdminDataPrivacy === "function") enforceSuperAdminDataPrivacy();
         if (document.getElementById("customerBody")) { applyHashAgingFilter(); loadCustomers(); }
         if (document.getElementById("totalCustomers")) {
             updateDashboard();
-            if (document.getElementById("recentCustomerBody")) loadRecentCustomers();
-            if (document.getElementById("dashboardFollowupBody")) loadDashboardFollowups();
-            if (document.getElementById("dashboardRecoveryBody")) loadDashboardRecentRecovery();
+            loadRecentCustomers();
+            loadDashboardFollowups();
+            loadDashboardRecentRecovery();
         }
         if (document.getElementById("recoveryBody")) {
             loadRecoveryTable();
@@ -1768,6 +1784,7 @@ window.addEventListener("load", async function () {
         try { await supabaseBoot(); } catch (e) { console.error(e); }
     }
 
+    await window.rxPermissionsReady;
     checkLogin();
 
     // If Super Admin switched maintenance ON, immediately remove normal users
@@ -1787,6 +1804,7 @@ window.addEventListener("load", async function () {
         if (document.getElementById("recoveryEmail") && settings.recoveryEmail) {
             document.getElementById("recoveryEmail").value = settings.recoveryEmail;
         }
+        await initUserShopSelector();
         await loadUserList();
     }
     fillExecutiveDropdowns();
@@ -1795,6 +1813,9 @@ window.addEventListener("load", async function () {
 
     if (document.getElementById("companyName") && settings.company) {
         document.getElementById("companyName").value = settings.company;
+    }
+    for(const [id,key] of Object.entries({companyMobile:"phone",companyEmail:"email",companyAddress:"address",companyWebsite:"website",upiId:"upiId"})){
+      const field=document.getElementById(id);if(field)field.value=settings[key]||"";
     }
     if (document.getElementById("logoPreview") && settings.logoDataUrl) {
         document.getElementById("logoPreview").src = settings.logoDataUrl;
@@ -1847,31 +1868,18 @@ function filterDashboardMetric(type) {
     if (type === "recovery") {
         tb.innerHTML = list.map((r,i) => {
             const cust = (customers||[]).find(c => c.id === r.customerId || c.id === r.customer_id);
-            return `<tr><td>${i+1}</td><td>${(cust&&cust.name)||"-"}</td><td>₹${Number(r.amount||0).toLocaleString("en-IN")}</td><td>${r.date||r.recovery_date||""}</td></tr>`;
+            return `<tr><td>${i+1}</td><td>${appEscape((cust&&cust.name)||"-")}</td><td>₹${Number(r.amount||0).toLocaleString("en-IN")}</td><td>${appEscape(r.date||r.recovery_date||"")}</td></tr>`;
         }).join("") || `<tr><td colspan="4">No records</td></tr>`;
     } else {
         tb.innerHTML = list.map((c,i) =>
-            `<tr><td>${i+1}</td><td>${c.name||""}</td><td>${c.mobile||""}</td><td>₹${Number(c.outstanding||0).toLocaleString("en-IN")}</td><td>${c.followup||""}</td></tr>`
+            `<tr><td>${i+1}</td><td>${appEscape(c.name||"")}</td><td>${appEscape(c.mobile||"")}</td><td>₹${Number(c.outstanding||0).toLocaleString("en-IN")}</td><td>${appEscape(c.followup||"")}</td></tr>`
         ).join("") || `<tr><td colspan="5">No records</td></tr>`;
     }
 }
 window.filterDashboardMetric = filterDashboardMetric;
 
-async function logAudit(action, entityType, entityId, details) {
-    try {
-        const sb = getSupabase();
-        if (!sb) return;
-        const session = getSession();
-        await sb.from("audit_log").insert({
-            shop_id: session.shopId || null,
-            user_id: session.userId || null,
-            username: session.username || "",
-            action: action,
-            entity_type: entityType || "",
-            entity_id: entityId ? String(entityId) : "",
-            details: details || ""
-        });
-    } catch (e) { console.warn("audit", e); }
+async function logAudit(action,entityType,entityId,details) {
+    await sbAddAuditLog(action,entityType,entityId,details);
 }
 window.logAudit = logAudit;
 
@@ -2153,7 +2161,7 @@ async function fillPtpCustomerDropdown() {
             sorted.map(c => {
                 const out = Number(c.outstanding || 0);
                 const label = (c.name || "-") + (out ? " (₹" + out.toLocaleString("en-IN") + ")" : "");
-                return '<option value="' + c.id + '" data-out="' + out + '">' + label + "</option>";
+                return '<option value="' + c.id + '" data-out="' + out + '">' + appEscape(label) + "</option>";
             }).join("");
     } catch (e) {
         console.error(e);
@@ -2172,6 +2180,7 @@ function clearPtpForm() {
 }
 
 async function savePtpForm() {
+    if (!rxRequire("add")) return;
     const customerId = (document.getElementById("ptpCustomer") || {}).value;
     const amount = Number((document.getElementById("ptpAmount") || {}).value || 0);
     const date = (document.getElementById("ptpDate") || {}).value;
@@ -2184,7 +2193,7 @@ async function savePtpForm() {
     const session = (typeof getSession === "function") ? getSession() : {};
     const shopId = session.shopId;
     if (!shopId) {
-        alert("No shop context. Login as shop admin/user.");
+        alert("No business context. Login as Business Admin or User.");
         return;
     }
 
@@ -2255,21 +2264,22 @@ async function loadPtpTable() {
             }
             return '<tr>' +
                 '<td>' + (i + 1) + '</td>' +
-                '<td>' + name + '</td>' +
+                '<td>' + appEscape(name) + '</td>' +
                 '<td>₹' + Number(p.promised_amount || 0).toLocaleString("en-IN") + '</td>' +
                 '<td>' + (p.promised_date || "") + '</td>' +
                 '<td><span class="badge ' + badge + '">' + st + '</span></td>' +
-                '<td>' + (p.notes || "—") + '</td>' +
+                '<td>' + appEscape(p.notes || "—") + '</td>' +
                 '<td>' + actions + '</td>' +
                 '</tr>';
         }).join("");
     } catch (e) {
         console.error(e);
-        tbody.innerHTML = '<tr><td colspan="7">Error: ' + (e.message || e) + '</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7">Error: ' + appEscape(e.message || e) + '</td></tr>';
     }
 }
 
 async function markPtpKept(id) {
+    if (!rxRequire("modify")) return;
     if (!confirm("Mark this promise as KEPT? (Customer paid as promised)")) return;
     try {
         await sbUpdatePtpStatus(id, "kept");
@@ -2281,6 +2291,7 @@ async function markPtpKept(id) {
 }
 
 async function markPtpBroken(id) {
+    if (!rxRequire("modify")) return;
     if (!confirm("Mark as BROKEN? This will create an escalation.")) return;
     try {
         await sbUpdatePtpStatus(id, "broken");
@@ -2293,6 +2304,7 @@ async function markPtpBroken(id) {
 }
 
 async function markPtpCancelled(id) {
+    if (!rxRequire("modify")) return;
     if (!confirm("Cancel this promise?")) return;
     try {
         await sbUpdatePtpStatus(id, "cancelled");
@@ -2303,11 +2315,12 @@ async function markPtpCancelled(id) {
 }
 
 async function runBrokenPtpCheck() {
+    if (!rxRequire("modify")) return;
     if (!confirm("Process all overdue open PTPs as broken (server function)?")) return;
     try {
-        const sb = getSupabase();
-        if (!sb) throw new Error("Supabase not ready");
-        const { data, error } = await sb.rpc("process_broken_ptp", { p_grace_days: 1 });
+        const token = getSession().sessionToken;
+        if (!token) throw new Error("Secure session required");
+        const { data, error } = await getSupabase().rpc("app_aging", { p_token: token, p_action: "broken_ptp" });
         if (error) throw error;
         alert("Processed. Broken count: " + (data ?? 0));
         await loadPtpTable();
@@ -2353,6 +2366,7 @@ function buildUpiPayUrl(upiId, name, amount, note) {
 }
 
 async function openPaymentLinkForCustomer(index) {
+    if (!rxRequire("add")) return;
     const c = customers[index];
     if (!c) return;
     const upi = getShopUpiId();
@@ -2363,7 +2377,7 @@ async function openPaymentLinkForCustomer(index) {
     }
     let upiId = upi;
     if (!upiId) {
-        upiId = prompt("Enter the shop UPI ID (e.g. shop@oksbi):\n\n(You can save it in Settings)", "");
+        upiId = prompt("Enter the business UPI ID (e.g. shop@oksbi):\n\n(You can save it in Settings)", "");
         if (!upiId) return;
         try {
             if (typeof settings === "undefined" || !settings) window.settings = {};
@@ -2379,7 +2393,7 @@ async function openPaymentLinkForCustomer(index) {
     const text =
         "Namaste " + (c.name || "") + ",\n\n" +
         "Your outstanding balance: ₹" + amount.toLocaleString("en-IN") + "\n" +
-        "Shop: " + shopName + "\n" +
+        "Business: " + shopName + "\n" +
         "UPI: " + upiId.trim() + "\n\n" +
         "Please keep the receipt after making the payment.\n" +
         "Thank you.";
@@ -2439,7 +2453,7 @@ function printRecoveryReceipt(opts) {
       <div class="row"><span>Mode</span><strong>${opts.mode || "—"}</strong></div>
       <div class="row"><span>Amount</span><span class="amt">₹${Number(opts.amount || 0).toLocaleString("en-IN")}</span></div>
       <div class="row"><span>Outstanding after</span><strong>₹${Number(opts.outstandingAfter || 0).toLocaleString("en-IN")}</strong></div>
-      ${opts.remarks ? '<div class="row"><span>Notes</span><span>' + opts.remarks + "</span></div>" : ""}
+      ${opts.remarks ? '<div class="row"><span>Notes</span><span>' + appEscape(opts.remarks) + "</span></div>" : ""}
     </div>
     <p class="muted" style="margin-top:16px;">Thank you for your payment.</p>
     <button onclick="window.print()">Print</button>
@@ -2451,6 +2465,67 @@ function printRecoveryReceipt(opts) {
     }
     w.document.write(html);
     w.document.close();
+}
+
+function buildRecoveryReceiptOptions(recovery, customer) {
+    recovery = recovery || {};
+    customer = customer || {};
+    const amount = Number(recovery.amount || 0);
+    const currentOutstanding = Number(customer.outstanding || 0);
+    const outstandingAfter = Number.isFinite(recovery.outstandingAfter)
+        ? Number(recovery.outstandingAfter)
+        : currentOutstanding;
+    return {
+        receiptNo: recovery.receiptNo || recovery.receipt_no || ("R-" + (recovery.id || Date.now())),
+        date: recovery.date || recovery.recovery_date || "",
+        customerName: customer.name || "",
+        mobile: customer.mobile || "",
+        mode: recovery.paymentMode || recovery.payment_mode || "Cash",
+        amount: amount,
+        outstandingAfter: Math.max(0, outstandingAfter),
+        remarks: recovery.remarks || ""
+    };
+}
+
+function printRecoveryFromTable(index) {
+    const recovery = recoveries[index];
+    if (!recovery) return;
+    const customer = (customers || []).find(c => String(c.id) === String(recovery.customerId));
+    printRecoveryReceipt(buildRecoveryReceiptOptions(recovery, customer));
+}
+
+function buildReceiptWhatsAppMessage(opts) {
+    const shop = (typeof getSession === "function" && getSession().shopName) || "Recountix";
+    return [
+        "Payment receipt - " + shop,
+        "",
+        "Receipt No: " + (opts.receiptNo || "-"),
+        "Date: " + (opts.date || "-"),
+        "Customer: " + (opts.customerName || "-"),
+        "Amount paid: ₹" + Number(opts.amount || 0).toLocaleString("en-IN"),
+        "Payment mode: " + (opts.mode || "-"),
+        "Outstanding after payment: ₹" + Number(opts.outstandingAfter || 0).toLocaleString("en-IN"),
+        opts.remarks ? ("Notes: " + opts.remarks) : "",
+        "",
+        "Thank you."
+    ].filter(Boolean).join("\n");
+}
+
+function sendRecoveryReceiptWhatsApp(index) {
+    const recovery = recoveries[index];
+    if (!recovery) return;
+    const customer = (customers || []).find(c => String(c.id) === String(recovery.customerId));
+    if (!customer) {
+        alert("Customer not found for this recovery.");
+        return;
+    }
+    const phone = normalizeWhatsAppNumber(customer.mobile);
+    if (!phone) {
+        alert("Valid mobile number not found. Enter a 10-digit mobile on the customer.");
+        return;
+    }
+    const text = buildReceiptWhatsAppMessage(buildRecoveryReceiptOptions(recovery, customer));
+    window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(text), "_blank");
 }
 
 async function afterRecoveryReceipt(recovery, cust, newOut) {
@@ -2491,6 +2566,8 @@ async function afterRecoveryReceipt(recovery, cust, newOut) {
 
 window.openPaymentLinkForCustomer = openPaymentLinkForCustomer;
 window.printRecoveryReceipt = printRecoveryReceipt;
+window.printRecoveryFromTable = printRecoveryFromTable;
+window.sendRecoveryReceiptWhatsApp = sendRecoveryReceiptWhatsApp;
 window.afterRecoveryReceipt = afterRecoveryReceipt;
 window.getShopUpiId = getShopUpiId;
 
@@ -2524,21 +2601,22 @@ async function loadEscalationsTable() {
             } else actions = "—";
             return `<tr>
               <td>${i + 1}</td>
-              <td>${name}</td>
-              <td>${e.reason || ""}</td>
+              <td>${appEscape(name)}</td>
+              <td>${appEscape(e.reason || "")}</td>
               <td>${e.level || 1}</td>
-              <td>${e.notes || "—"}</td>
-              <td>${e.status || ""}</td>
+              <td>${appEscape(e.notes || "—")}</td>
+              <td>${appEscape(e.status || "")}</td>
               <td style="white-space:nowrap;">${actions}</td>
             </tr>`;
         }).join("");
     } catch (err) {
         console.error(err);
-        tbody.innerHTML = '<tr><td colspan="7">Error: ' + (err.message || err) + "</td></tr>";
+        tbody.innerHTML = '<tr><td colspan="7">Error: ' + appEscape(err.message || err) + "</td></tr>";
     }
 }
 
 async function setEscalationStatus(id, status) {
+    if (!rxRequire("modify")) return;
     try {
         const patch = { status: status };
         if (status === "resolved") {
@@ -2577,6 +2655,7 @@ window.readUpiSettingsIntoSettingsObj = readUpiSettingsIntoSettingsObj;
 // ================================
 
 async function saveActivityForm() {
+    if (!rxRequire("add")) return;
     const customerId = (document.getElementById("actCustomer") || {}).value;
     const type = (document.getElementById("actType") || {}).value || "call";
     const outcome = (document.getElementById("actOutcome") || {}).value || "";
@@ -2584,7 +2663,7 @@ async function saveActivityForm() {
     if (!customerId) { alert("Please select a customer."); return; }
     if (!notes && !outcome) { alert("Please enter notes or an outcome."); return; }
     const session = getSession();
-    if (!session.shopId) { alert("Shop context is unavailable."); return; }
+    if (!session.shopId) { alert("Business context is unavailable."); return; }
 
     let gps_lat = null, gps_lng = null;
     if (document.getElementById("actCaptureGps") && document.getElementById("actCaptureGps").checked) {
@@ -2642,14 +2721,14 @@ async function loadActivityTable() {
             return `<tr>
               <td>${i + 1}</td>
               <td>${when}</td>
-              <td>${name}</td>
+              <td>${appEscape(name)}</td>
               <td>${a.activity_type || ""}</td>
               <td>${(a.outcome || "") + (a.notes ? (" — " + a.notes) : "")}</td>
               <td>${gps}</td>
             </tr>`;
         }).join("");
     } catch (e) {
-        tbody.innerHTML = "<tr><td colspan='6'>Error: " + (e.message || e) + "</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='6'>Error: " + appEscape(e.message || e) + "</td></tr>";
     }
 }
 
@@ -2658,7 +2737,7 @@ async function fillActivityCustomers() {
     if (!sel) return;
     if ((!customers || !customers.length) && typeof reloadAllData === "function") await reloadAllData();
     sel.innerHTML = '<option value="">Select customer</option>' +
-        (customers || []).map(c => `<option value="${c.id}">${c.name || ""} (₹${Number(c.outstanding || 0).toLocaleString("en-IN")})</option>`).join("");
+        (customers || []).map(c => `<option value="${appEscape(c.id)}">${appEscape(c.name || "")} (₹${Number(c.outstanding || 0).toLocaleString("en-IN")})</option>`).join("");
 }
 
 async function initActivityPage() {
@@ -2668,6 +2747,7 @@ async function initActivityPage() {
 }
 
 function openLegalNoticeForCustomer(index) {
+    if (!rxRequire("add")) return;
     const c = customers[index];
     if (!c) return;
     const shop = (getSession().shopName) || "Shop";
@@ -2684,15 +2764,15 @@ function openLegalNoticeForCustomer(index) {
     </style></head><body>
     <div class="meta">${shop}<br>Date: ${today}</div>
     <h1>Payment Reminder / Legal Notice</h1>
-    <p>To,<br><strong>${c.name || ""}</strong><br>
-    ${c.address || c.village || ""}<br>
-    Mobile: ${c.mobile || "—"}</p>
+    <p>To,<br><strong>${appEscape(c.name || "")}</strong><br>
+    ${appEscape(c.address || c.village || "")}<br>
+    Mobile: ${appEscape(c.mobile || "—")}</p>
     <p>Subject: <strong>Outstanding dues – ₹${amt.toLocaleString("en-IN")}</strong></p>
     <div class="box">
       <p>This is to inform you that an amount of <strong>₹${amt.toLocaleString("en-IN")}</strong>
       is outstanding against your account. Due / follow-up reference: <strong>${due}</strong>.</p>
       <p>You are requested to clear the dues within <strong>7 days</strong> of this notice.
-      Failing which, further recovery / legal steps may be initiated as per applicable law and shop policy.</p>
+      Failing which, further recovery / legal steps may be initiated as per applicable law and business policy.</p>
     </div>
     <p>This notice is issued without prejudice to other rights and remedies available.</p>
     <p style="margin-top:40px;">For ${shop}<br><br>__________________<br>Authorized Signatory</p>
@@ -2787,7 +2867,7 @@ function renderAnalyticsOnReports() {
             tbody.innerHTML = "<tr><td colspan='4'>No data</td></tr>";
         } else {
             tbody.innerHTML = s.agents.map((a, i) =>
-                `<tr><td>${i + 1}</td><td>${a.name}</td><td>${a.customers}</td>
+                `<tr><td>${i + 1}</td><td>${appEscape(a.name)}</td><td>${Number(a.customers || 0)}</td>
                  <td>${fmt(a.recovered)}</td><td>${fmt(a.outstanding)}</td></tr>`
             ).join("");
         }
@@ -2971,7 +3051,7 @@ async function loadFieldTracking() {
                 const last = a.lastAt ? a.lastAt.slice(0, 16).replace("T", " ") : "—";
                 return `<tr>
                   <td>${i + 1}</td>
-                  <td><strong>${a.name}</strong><br><small style="color:#64748b">${a.username}</small></td>
+                  <td><strong>${appEscape(a.name)}</strong><br><small style="color:#64748b">${appEscape(a.username)}</small></td>
                   <td>${a.assigned}</td>
                   <td>${a.todayActs}</td>
                   <td>${last}</td>
@@ -3008,22 +3088,23 @@ async function loadFieldTracking() {
         if (sel) {
             sel.innerHTML = '<option value="">Select customer</option>' +
                 (customers || []).slice().sort((a, b) => Number(b.outstanding || 0) - Number(a.outstanding || 0))
-                    .map(c => `<option value="${c.id}">${c.name} (₹${Number(c.outstanding || 0).toLocaleString("en-IN")})</option>`)
+                    .map(c => `<option value="${appEscape(c.id)}">${appEscape(c.name)} (₹${Number(c.outstanding || 0).toLocaleString("en-IN")})</option>`)
                     .join("");
         }
     } catch (e) {
         console.error(e);
-        tbody.innerHTML = "<tr><td colspan='6'>Error: " + (e.message || e) + "</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='6'>Error: " + appEscape(e.message || e) + "</td></tr>";
     }
 }
 
 async function fieldCheckIn() {
+    if (!rxRequire("add")) return;
     const customerId = (document.getElementById("fieldCheckinCustomer") || {}).value;
     const notes = ((document.getElementById("fieldCheckinNotes") || {}).value || "").trim();
     const type = (document.getElementById("fieldCheckinType") || {}).value || "visit";
     if (!customerId) { alert("Please select a customer."); return; }
     const session = getSession();
-    if (!session.shopId) { alert("Shop login is required"); return; }
+    if (!session.shopId) { alert("Business login is required"); return; }
 
     let gps_lat = null, gps_lng = null;
     try {
@@ -3082,13 +3163,13 @@ async function loadEmployeeLinkGenerator() {
     if (!tbody) return;
     const session = getSession();
     if (!session.shopId && session.role !== "super_admin") {
-        tbody.innerHTML = "<tr><td colspan='5'>Shop login required</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='5'>Business login required</td></tr>";
         return;
     }
     tbody.innerHTML = "<tr><td colspan='5'>Loading…</td></tr>";
     try {
         const users = await sbGetUsers(session.shopId);
-        const list = (users || []).filter(u => u.role !== "super_admin");
+        const list = (users || []).filter(u => u.role === "user");
         if (!list.length) {
             tbody.innerHTML = "<tr><td colspan='5'>No users found. Add a user in Settings or Company Management.</td></tr>";
             return;
@@ -3100,7 +3181,7 @@ async function loadEmployeeLinkGenerator() {
             const id = u.id;
             return `<tr>
               <td>${i + 1}</td>
-              <td><strong>${u.display_name || u.username}</strong><br><small>${u.username}</small></td>
+              <td><strong>${appEscape(u.display_name || u.username)}</strong><br><small>${appEscape(u.username)}</small></td>
               <td>
                 <input type="text" id="code_${id}" value="${code.replace(/"/g, "&quot;")}" placeholder="e.g. MUKESH01" style="width:110px;padding:6px;">
               </td>
@@ -3116,31 +3197,23 @@ async function loadEmployeeLinkGenerator() {
         }).join("");
     } catch (e) {
         console.error(e);
-        tbody.innerHTML = "<tr><td colspan='5'>Error: " + (e.message || e) + "</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='5'>Error: " + appEscape(e.message || e) + "</td></tr>";
     }
 }
 
 async function saveAgentCheckinCreds(userId) {
-    const codeEl = document.getElementById("code_" + userId);
-    const pinEl = document.getElementById("pin_" + userId);
-    const code = (codeEl && codeEl.value || "").trim();
-    const pin = (pinEl && pinEl.value || "").trim();
-    if (!code) { alert("Agent code required"); return; }
-    if (!pin || pin.length < 4) { alert("PIN minimum 4 characters"); return; }
-    try {
-        const sb = getSupabase();
-        const { error } = await sb.from("users").update({
-            agent_code: code,
-            field_pin: pin,
-            is_field_agent: true
-        }).eq("id", userId);
-        if (error) throw error;
-        alert("Saved.\n\nLink:\n" + buildEmployeeCheckinLink(code));
-        await loadEmployeeLinkGenerator();
-        if (typeof loadFieldTracking === "function") loadFieldTracking();
-    } catch (e) {
-        alert("Save failed: " + (e.message || e));
-    }
+    const codeEl=document.getElementById("code_"+userId),pinEl=document.getElementById("pin_"+userId);
+    const code=(codeEl&&codeEl.value||"").trim(),pin=(pinEl&&pinEl.value||"").trim();
+    if(!code){alert("Agent code required");return;}
+    if(pin.length<6){alert("PIN minimum 6 characters");return;}
+    try{
+      const token=getSession().sessionToken;
+      const {error}=await getSupabase().rpc("app_set_agent_credentials",{p_token:token,p_user_id:userId,p_code:code,p_pin:pin});
+      if(error)throw error;
+      if(pinEl)pinEl.value="";
+      alert("Saved.\n\nLink:\n"+buildEmployeeCheckinLink(code));
+      await loadEmployeeLinkGenerator();if(typeof loadFieldTracking==="function")loadFieldTracking();
+    }catch(e){alert("Save failed: "+(e.message||e));}
 }
 
 function copyAgentCheckinLink(userId) {
@@ -3313,7 +3386,7 @@ async function showEmployeeMovementHistory(agentKey, agentLabel) {
 
         try { panel.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
     } catch (e) {
-        tbody.innerHTML = "<tr><td colspan='5'>Error: " + (e.message || e) + "</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='5'>Error: " + appEscape(e.message || e) + "</td></tr>";
     }
 }
 
@@ -3340,9 +3413,9 @@ function enforceSuperAdminDataPrivacy() {
         banner = document.createElement("div");
         banner.id = "saPrivacyBanner";
         banner.style.cssText = "margin:12px 16px;padding:14px 16px;background:#fef3c7;border:1px solid #f59e0b;border-radius:12px;color:#92400e;font-size:14px;line-height:1.45;";
-        banner.innerHTML = "<strong>Privacy:</strong> Super Admin cannot view other jewellers' customer / recovery data. " +
-            "Use <a href='super-dashboard.html'>Super Dashboard</a> for shops only. " +
-            "Shop-level data is only for that shop's Admin / Staff login.";
+        banner.innerHTML = "<strong>Privacy:</strong> Super Admin cannot view other businesses' customer / recovery data. " +
+            "Use <a href='super-dashboard.html'>Super Dashboard</a> for businesses only. " +
+            "Shop-level data is only for that business's Admin / Staff login.";
         const main = document.querySelector(".main-content") || document.body;
         main.insertBefore(banner, main.firstChild);
     }
@@ -3351,5 +3424,35 @@ function enforceSuperAdminDataPrivacy() {
 window.enforceSuperAdminDataPrivacy = enforceSuperAdminDataPrivacy;
 
 
+
 window.getCustomerDaysOverdue = getCustomerDaysOverdue;
 window.buildClientAgingSummary = buildClientAgingSummary;
+
+// Existing collections can be corrected without deleting their transaction identity.
+function editRecovery(index) {
+ if(!rxRequire('modify'))return;
+ const row=recoveries[index];if(!row)return;
+ let dialog=document.getElementById('rxEditRecovery');
+ if(!dialog){
+  dialog=document.createElement('dialog');dialog.id='rxEditRecovery';
+  dialog.style.cssText='border:0;border-radius:16px;padding:24px;width:440px;max-width:90vw;max-height:90vh;overflow:auto';
+  dialog.innerHTML='<form><h2>Modify recovery</h2><p>Correcting the amount also updates the customer balance.</p><label>Amount<input name="amount" type="number" min="0" step="0.01" required></label><label>Date<input name="recovery_date" type="date" required></label><label>Payment mode<select name="payment_mode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option><option>Card</option></select></label><label>Receipt number<input name="receipt_no" maxlength="100"></label><label>Collected by<input name="collected_by" maxlength="150"></label><label>Remarks<textarea name="remarks" maxlength="2000"></textarea></label><p role="alert"></p><button type="button">Cancel</button> <button type="submit">Save changes</button></form>';
+  dialog.querySelectorAll('label').forEach(el=>{el.style.cssText='display:block;margin:12px 0';});
+  dialog.querySelectorAll('input,select,textarea').forEach(el=>{el.style.cssText='display:block;width:100%;box-sizing:border-box;padding:9px;margin-top:4px';});
+  document.body.append(dialog);dialog.querySelector('button[type="button"]').onclick=()=>dialog.close();
+ }
+ const form=dialog.querySelector('form');
+ const values={amount:row.amount,recovery_date:row.date,payment_mode:row.paymentMode,receipt_no:row.receiptNo,collected_by:row.collectedBy,remarks:row.remarks};
+ Object.entries(values).forEach(([key,value])=>{form.elements[key].value=value || (key==='amount'?0:'');});
+ form.querySelector('[role="alert"]').textContent='';
+ form.onsubmit=async event=>{
+  event.preventDefault();const button=form.querySelector('[type="submit"]');if(button.disabled)return;button.disabled=true;
+  try{
+   const payload=Object.fromEntries(new FormData(form));payload.amount=Number(payload.amount);
+   await sbModifyRecovery(row.id,row.amount,payload);dialog.close();await reloadAllData();
+  }catch(error){form.querySelector('[role="alert"]').textContent=error.message || 'Unable to modify recovery.';}
+  finally{button.disabled=false;}
+ };
+ dialog.showModal();
+}
+

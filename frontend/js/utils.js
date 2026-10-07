@@ -9,7 +9,7 @@ function formatCurrency(amount) {
 function formatDate(date) {
     if (!date) return "-";
     try {
-        return new Date(date).toLocaleDateString("en-IN");
+        return window.rxFormatDate ? window.rxFormatDate(date) : new Date(date).toLocaleDateString("en-IN");
     } catch (e) {
         return String(date);
     }
@@ -82,7 +82,7 @@ window.escapeHtml = escapeHtml;
 window.showToast = showToast;
 
 
-/* ========== Sidebar drawer V6: desktop + mobile, touch-safe ========== */
+/* ========== Sidebar drawer V7: overlay-safe direct navigation ========== */
 (function () {
   function initDrawerV6() {
     var btn = document.getElementById('menuToggle');
@@ -92,6 +92,8 @@ window.showToast = showToast;
 
     function setOpen(open) {
       sb.classList.toggle('open', open);
+      sb.inert = !open;
+      sb.setAttribute('aria-hidden', open ? 'false' : 'true');
       if (ov) ov.classList.toggle('show', open);
       document.documentElement.classList.toggle('sidebar-open', open);
       document.body.classList.toggle('sidebar-open', open);
@@ -99,6 +101,8 @@ window.showToast = showToast;
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     }
+
+    window.closeRecountixDrawer = function () { setOpen(false); };
 
     // Never inherit a stale open state after navigation/back-cache restore.
     setOpen(false);
@@ -109,19 +113,31 @@ window.showToast = showToast;
       setOpen(!sb.classList.contains('open'));
     }, false);
 
-    if (ov) {
-      ov.addEventListener('click', function (e) {
-        e.preventDefault();
-        setOpen(false);
-      }, false);
-    }
+    // The visual overlay never owns pointer input. Close the drawer on any
+    // outside pointer before the underlying page can react.
+    document.addEventListener('pointerdown', function (e) {
+      if (!sb.classList.contains('open')) return;
+      if (sb.contains(e.target) || btn.contains(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+    }, true);
 
-    // Do NOT prevent default on links: navigation/logout must keep working.
-    sb.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a');
+    // Capture real sidebar links and navigate explicitly. This avoids mobile
+    // WebView/stacking-layer bugs that can swallow the browser's default tap.
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('.sidebar a[href]');
       if (!a) return;
-      window.setTimeout(function(){ setOpen(false); }, 0);
-    }, false);
+      var href = a.getAttribute('href') || '';
+      if (!href || href === '#' || /^javascript:/i.test(href)) {
+        window.setTimeout(function(){ setOpen(false); }, 0);
+        return;
+      }
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      setOpen(false);
+      window.location.assign(a.href);
+    }, true);
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') setOpen(false);
@@ -163,4 +179,78 @@ window.showToast = showToast;
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCursorFx);
   else initCursorFx();
+})();
+
+/* One accessible viewport-bound modal for customer, business and renewal forms. */
+(function () {
+  let active=null, returnFocus=null;
+  const closers={customerModal:'closeModal',shopModal:'closeShopModal',renewModal:'closeRenewModal'};
+  function updateViewport() {
+    const view=window.visualViewport;
+    document.documentElement.style.setProperty('--rx-modal-height',(view?view.height:window.innerHeight)+'px');
+    document.documentElement.style.setProperty('--rx-modal-top',(view?view.offsetTop:0)+'px');
+  }
+  function syncPage(open) {
+    document.body.classList.toggle('rx-modal-active',open);
+    const wrapper=document.querySelector('.wrapper');if(wrapper)wrapper.inert=open;
+    const toggle=document.getElementById('menuToggle');if(toggle)toggle.inert=open;
+  }
+  function open(id) {
+    const modal=document.getElementById(id);if(!modal)return;
+    if(active && active!==modal)close(active.id);
+    returnFocus=document.activeElement;
+    if(window.closeRecountixDrawer)window.closeRecountixDrawer();
+    // A transformed or clipped page ancestor must never position a fixed dialog.
+    if(modal.parentElement!==document.body)document.body.append(modal);
+    active=modal;updateViewport();
+    modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
+    modal.setAttribute('aria-hidden','false');modal.classList.add('rx-modal-open');
+    modal.style.setProperty('display','flex','important');syncPage(true);
+    modal.querySelector('.modal-content')?.scrollTo(0,0);
+    requestAnimationFrame(()=>{
+      if(active!==modal)return;
+      const field=modal.querySelector('input:not([type="hidden"]):not([disabled]),select:not([disabled]),textarea:not([disabled]),button');
+      field?.focus({preventScroll:true});
+    });
+  }
+  function close(id) {
+    const modal=document.getElementById(id);if(!modal)return;
+    modal.classList.remove('rx-modal-open');modal.style.setProperty('display','none','important');modal.setAttribute('aria-hidden','true');
+    if(active===modal){active=null;syncPage(false);if(returnFocus?.isConnected)returnFocus.focus({preventScroll:true});returnFocus=null;}
+  }
+  function dismiss() {if(active){const fn=window[closers[active.id]];if(typeof fn==='function')fn();else close(active.id);}}
+  function init() {
+    Object.keys(closers).forEach(id=>{
+      const modal=document.getElementById(id);if(!modal)return;
+      const heading=modal.querySelector('h2');if(heading){if(!heading.id)heading.id=id+'Heading';modal.setAttribute('aria-labelledby',heading.id);}
+      if(!modal.querySelector('.close,.rx-modal-close')){
+        const button=document.createElement('button');button.type='button';button.className='rx-modal-close';button.textContent='×';button.setAttribute('aria-label','Close dialog');button.onclick=dismiss;
+        modal.querySelector('.modal-content')?.prepend(button);
+      }
+      modal.setAttribute('aria-hidden','true');
+    });
+    // Associate existing labels with their next field without changing saved data.
+    document.querySelectorAll('label:not([for])').forEach(label=>{
+      const next=label.nextElementSibling;
+      if(next?.matches('input,select,textarea') && next.id)label.htmlFor=next.id;
+    });
+    // Enter must not navigate away and discard the filled-in customer/recovery form.
+    [['customerForm','saveCustomer'],['recoveryForm','saveRecovery']].forEach(([id,save])=>{
+      document.getElementById(id)?.addEventListener('submit',event=>{event.preventDefault();window[save]?.();});
+    });
+    document.addEventListener('keydown',event=>{
+      if(!active)return;
+      if(event.key==='Escape'){event.preventDefault();dismiss();return;}
+      if(event.key!=='Tab')return;
+      const fields=[...active.querySelectorAll('button,input,select,textarea,a[href],[tabindex]')].filter(el=>!el.disabled && el.tabIndex>=0 && el.getClientRects().length);
+      const first=fields[0],last=fields[fields.length-1];
+      if(event.shiftKey && document.activeElement===first){event.preventDefault();last?.focus();}
+      else if(!event.shiftKey && document.activeElement===last){event.preventDefault();first?.focus();}
+    });
+    window.visualViewport?.addEventListener('resize',updateViewport);
+    window.visualViewport?.addEventListener('scroll',updateViewport);
+    window.addEventListener('resize',updateViewport);updateViewport();
+  }
+  window.RecountixModal={open,close};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

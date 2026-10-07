@@ -1,0 +1,22 @@
+/* Business preferences and shared idle-session clock. */
+(function(){
+'use strict';
+const choices={autoLogout:['5','10','15','30','60'],sessionTimeout:['30','60','120','240'],currency:['INR'],dateFormat:['dd-mm-yyyy','mm-dd-yyyy','yyyy-mm-dd'],notifications:['on','off'],autoBackup:['daily','weekly','monthly','off']};
+const defaults={autoLogout:'15',sessionTimeout:'60',currency:'INR',dateFormat:'dd-mm-yyyy',notifications:'on',autoBackup:'daily'};
+function normalize(value){const result={};for(const key of Object.keys(choices))result[key]=choices[key].includes(String(value?.[key]))?String(value[key]):defaults[key];return result;}
+window.rxPreferences=normalize({});
+let controlsLoaded=false;window.rxPreferencesLoaded=false;
+window.rxApplyPreferences=function(value){window.rxPreferences=normalize(value);window.rxPreferencesLoaded=true;if(!controlsLoaded){for(const key of Object.keys(choices)){const field=document.getElementById(key);if(field)field.value=window.rxPreferences[key];}controlsLoaded=true;}window.dispatchEvent(new CustomEvent('recountix:preferences'));};
+window.rxReadPreferences=function(){const value={...window.rxPreferences};for(const key of Object.keys(choices)){const field=document.getElementById(key);if(field)value[key]=field.value;}return normalize(value);};
+window.rxFormatDate=function(value){if(!value)return '-';const date=new Date(/^\d{4}-\d{2}-\d{2}$/.test(String(value))?String(value)+"T00:00:00":value);if(!Number.isFinite(date.getTime()))return '-';const dd=String(date.getDate()).padStart(2,'0'),mm=String(date.getMonth()+1).padStart(2,'0'),yyyy=date.getFullYear();return ({'dd-mm-yyyy':`${dd}-${mm}-${yyyy}`,'mm-dd-yyyy':`${mm}-${dd}-${yyyy}`,'yyyy-mm-dd':`${yyyy}-${mm}-${dd}`})[window.rxPreferences.dateFormat];};
+window.savePreferences=async function(){const button=document.getElementById('savePreferencesButton');if(button)button.disabled=true;try{if(!currentShopId())throw new Error('Sign in as a Business Admin to save business preferences.');const value=window.rxReadPreferences();const row=await sbGetSettings();row.preferences=value;await sbSaveSettings(currentShopId(),row);if(typeof settings!=='undefined')settings.preferences=value;window.rxApplyPreferences(value);alert('Preferences saved successfully.');}catch(e){alert('Unable to save preferences: '+(e.message||e));}finally{if(button)button.disabled=false;}};
+let ending=false,lastWrite=0;
+function clockKey(s){return 'rx_session_clock_'+s.userId;}
+function readClock(s){try{const value=JSON.parse(storage().getItem(clockKey(s))||'null');return value&&value.token===s.sessionToken?value:null;}catch(e){return null;}}
+function initializeClock(s){let value=readClock(s);if(!value){value={token:s.sessionToken,started:Date.now(),active:Date.now()};storage().setItem(clockKey(s),JSON.stringify(value));}return value;}
+async function expire(){if(ending)return;ending=true;try{const s=getSession();const pending=getSupabase()?.rpc('app_logout',{p_token:s.sessionToken});if(pending)pending.catch(()=>{});}catch(e){}clearSession();window.location.replace('login.html');}
+function checkClock(){const s=getSession();if(!s.isLoggedIn||!s.sessionToken)return;const c=initializeClock(s),p=window.rxPreferences,now=Date.now();if(now-c.active>=Number(p.autoLogout)*60000||now-c.started>=Number(p.sessionTimeout)*60000)expire();}
+function activity(){checkClock();if(ending||Date.now()-lastWrite<1000)return;const s=getSession();if(!s.isLoggedIn||!s.sessionToken)return;const c=initializeClock(s);c.active=Date.now();storage().setItem(clockKey(s),JSON.stringify(c));lastWrite=Date.now();}
+let resolveReady;window.rxPreferencesReady=new Promise(resolve=>{resolveReady=resolve;});
+window.addEventListener('load',async()=>{try{const s=getSession();if(!s.isLoggedIn||!s.sessionToken)return;if(s.shopId){const row=await sbGetSettings();window.rxApplyPreferences(row.preferences);}else{document.querySelectorAll('#autoLogout,#sessionTimeout,#currency,#dateFormat,#notifications,#autoBackup,#savePreferencesButton').forEach(el=>el.disabled=true);}initializeClock(s);checkClock();for(const type of ['pointerdown','keydown','touchstart','scroll'])document.addEventListener(type,activity,{passive:true});document.addEventListener('visibilitychange',checkClock);window.addEventListener('focus',checkClock);setInterval(checkClock,1000);}catch(e){console.warn('Preferences could not be loaded',e);}finally{resolveReady();}},{once:true});
+})();

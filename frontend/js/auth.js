@@ -1,30 +1,7 @@
 
-/* ========== Password security (SHA-256 + app pepper) ========== */
-const PASSWORD_PEPPER = "VO-RM-v1-";
+/* Password rules are enforced here for UX; hashing is server-side bcrypt only. */
 const MIN_PASSWORD_LEN = 8;
 const MIN_SUPERADMIN_PASSWORD_LEN = 12;
-
-async function hashPassword(plain) {
-    const text = PASSWORD_PEPPER + String(plain || "");
-    if (window.crypto && crypto.subtle) {
-        const data = new TextEncoder().encode(text);
-        const buf = await crypto.subtle.digest("SHA-256", data);
-        return Array.from(new Uint8Array(buf))
-            .map(function (b) { return b.toString(16).padStart(2, "0"); })
-            .join("");
-    }
-    let hash = 0;
-    for (let i = 0; i < text.length; i++) {
-        hash = ((hash << 5) - hash) + text.charCodeAt(i);
-        hash |= 0;
-    }
-    return "fallback_" + Math.abs(hash).toString(16);
-}
-
-function isHashedPassword(stored) {
-    if (!stored || typeof stored !== "string") return false;
-    return /^[a-f0-9]{64}$/i.test(stored.trim());
-}
 
 function validatePasswordStrength(password, role) {
     const p = String(password || "");
@@ -56,8 +33,6 @@ function validatePasswordStrength(password, role) {
     return { ok: true };
 }
 
-window.hashPassword = hashPassword;
-window.isHashedPassword = isHashedPassword;
 window.validatePasswordStrength = validatePasswordStrength;
 
 /* ==========================================================
@@ -78,6 +53,15 @@ async function sbLogin(username, password) {
             p_username: uname,
             p_password: plain
         });
+        if (!rpcErr && rpcData && rpcData.error) {
+            const messages = {
+                invalid_credentials: "Invalid Username or Password",
+                temporarily_locked: "Too many failed attempts. Try again after 15 minutes.",
+                shop_inactive: "This business is deactivated. Please contact Super Admin.",
+                license_expired: "The business license has expired. Contact Super Admin."
+            };
+            return { error: rpcData.error, message: messages[rpcData.error] || "Login failed." };
+        }
         if (!rpcErr && rpcData && rpcData.token) {
             const u = rpcData.user || {};
             let shop = null;
@@ -86,8 +70,7 @@ async function sbLogin(username, password) {
                     const { data: shops } = await sb.rpc("app_get_shops", { p_token: rpcData.token });
                     shop = (shops || []).find(s => String(s.id) === String(u.shop_id)) || (shops && shops[0]) || null;
                 } catch (e) {
-                    const { data: s } = await sb.from("shops").select("*").eq("id", u.shop_id).maybeSingle();
-                    shop = s;
+                    throw new Error("Secure business verification failed");
                 }
             }
 
@@ -95,7 +78,7 @@ async function sbLogin(username, password) {
             // the fallback path below — otherwise a deactivated / expired shop's
             // users could still log in whenever app_login succeeds.
             if (shop && shop.is_active === false && u.role !== "super_admin") {
-                return { error: "shop_inactive", message: "This shop is deactivated. Please contact Super Admin." };
+                return { error: "shop_inactive", message: "This business is deactivated. Please contact Super Admin." };
             }
             if (shop && shop.license_expiry && u.role !== "super_admin") {
                 const st = (typeof computeSubStatus === "function")
@@ -104,7 +87,7 @@ async function sbLogin(username, password) {
                 if (st === "expired") {
                     return {
                         error: "license_expired",
-                        message: "The shop license has expired.\n\nLogin is disabled.\nA Super Admin can renew it from the Subscription page."
+                        message: "The business license has expired.\n\nLogin is disabled.\nA Super Admin can renew it from the Subscription page."
                     };
                 }
             }
@@ -125,63 +108,9 @@ async function sbLogin(username, password) {
         console.warn("app_login RPC not available, fallback", rpcCatch);
     }
 
-    // Fallback: direct users table (before RLS / if RPC missing)
-    const { data, error } = await sb
-        .from("users")
-        .select("id, username, password, role, shop_id, display_name, is_active")
-        .eq("username", uname)
-        .eq("is_active", true)
-        .maybeSingle();
-
-    if (error) throw error;
-    if (!data) return null;
-
-    const stored = String(data.password || "");
-    const hashedInput = await hashPassword(plain);
-    let matched = false;
-
-    if (isHashedPassword(stored)) {
-        matched = (stored.toLowerCase() === hashedInput.toLowerCase());
-    } else {
-        // Legacy plain-text password — verify then upgrade to hash
-        matched = (stored === plain);
-        if (matched) {
-            try {
-                await sb.from("users").update({ password: hashedInput }).eq("id", data.id);
-                data.password = hashedInput;
-            } catch (upErr) {
-                console.warn("password upgrade failed", upErr);
-            }
-        }
-    }
-
-    if (!matched) return null;
-
-    // Do not keep password on session object
-    try { delete data.password; } catch (e) { data.password = undefined; }
-
-    let shop = null;
-    if (data.shop_id) {
-        const { data: s, error: se } = await sb.from("shops").select("*").eq("id", data.shop_id).maybeSingle();
-        if (se) throw se;
-        shop = s;
-        if (shop && shop.is_active === false) {
-            return { error: "shop_inactive", message: "This shop is deactivated. Please contact Super Admin." };
-        }
-        if (shop && shop.license_expiry) {
-            const st = (typeof computeSubStatus === "function")
-                ? computeSubStatus(shop.license_expiry)
-                : "unknown";
-            if (st === "expired" && data.role !== "super_admin") {
-                return {
-                    error: "license_expired",
-                    message: "The shop license has expired.\n\nLogin is disabled.\nA Super Admin can renew it from the Subscription page."
-                };
-            }
-        }
-    }
-
-    return { user: data, shop };
+    // Never fall back to direct table access. Authentication must be verified
+    // by the SECURITY DEFINER app_login RPC.
+    throw new Error("Secure login service is unavailable. Contact the administrator.");
 }
 
 async function login() {
@@ -256,8 +185,42 @@ async function enforceMaintenanceGate(options) {
     if (page.includes("maintenance.html")) return false;
 
     const session = (typeof getSession === "function") ? getSession() : null;
-    // Only a real logged-in Super Admin bypasses maintenance.
-    if (session && session.isLoggedIn && session.role === "super_admin") return false;
+
+    // Every protected-page session must be verified by the server. Local/session
+    // storage values alone never grant a role or access.
+    if (!page.includes("login.html")) {
+        if (!session || !session.isLoggedIn || !session.sessionToken) {
+            try { clearSession(); } catch (_) {}
+            window.location.replace("login.html");
+            return true;
+        }
+        try {
+            const { data, error } = await getSupabase().rpc("app_validate_session", {
+                p_token: session.sessionToken
+            });
+            if (error || !data || data.valid !== true) {
+                try { clearSession(); } catch (_) {}
+                window.location.replace("login.html");
+                return true;
+            }
+            const verified = data.user || {};
+            if (verified.role !== session.role ||
+                String(verified.shop_id || "") !== String(session.shopId || "") ||
+                String(verified.id || "") !== String(session.userId || "")) {
+                try { clearSession(); } catch (_) {}
+                window.location.replace("login.html");
+                return true;
+            }
+        } catch (verifyError) {
+            console.error("Session verification failed", verifyError);
+            try { clearSession(); } catch (_) {}
+            window.location.replace("login.html");
+            return true;
+        }
+    }
+
+    // Only a server-verified Super Admin bypasses maintenance.
+    if (session && session.role === "super_admin") return false;
 
     // Login page remains visible so Super Admin can sign in, but normal-user
     // credentials are blocked separately in login().
@@ -303,7 +266,7 @@ async function enforceMaintenanceGate(options) {
     else setTimeout(run, 0);
     // Re-check when user returns to the tab and periodically while logged in.
     document.addEventListener("visibilitychange", function(){ if (!document.hidden) run(); });
-    setInterval(function(){ if (!document.hidden) run(); }, 60000);
+    setInterval(run, 15000);
 })();
 
 function checkLogin() {
@@ -324,7 +287,7 @@ function checkLogin() {
         try { sessionStorage.setItem("sa-privacy-customers", "1"); } catch (e) {}
     }
 
-    if (page.includes("settings.html") && role !== "admin" && role !== "super_admin") {
+    if (page.includes("settings.html") && role !== "admin" && role !== "super_admin" && !window.RecountixPermissions) {
         alert("Access Denied. Settings is available to Admin only.");
         window.location.href = "dashboard.html";
         return;
@@ -394,7 +357,7 @@ function applyRoleRestrictions() {
             if (!header.querySelector(".vo-topbar-brand")) {
                 const brand = document.createElement("div");
                 brand.className = "vo-topbar-brand";
-                brand.innerHTML = '<div class="vo-topbar-brand-name">RECOUNTIX<small>BEYOND WHAT&apos;S DUE.</small></div>';
+                brand.innerHTML = '<img src="assets/logo.png" alt="Recountix"><div class="vo-topbar-brand-name">RECOUNTIX<small>BEYOND WHAT&apos;S DUE.</small></div>';
                 header.insertBefore(brand, header.firstChild);
             }
             // Keep top headers clean and premium: no role/name chips in the upper bar.
@@ -417,23 +380,31 @@ function applyRoleRestrictions() {
 
     const shopLabel = document.getElementById("currentShopName");
     if (shopLabel) {
-        shopLabel.innerText = session.shopName || (role === "super_admin" ? "All Shops" : "");
+        shopLabel.innerText = session.shopName || (role === "super_admin" ? "All Businesses" : "");
     }
 
     if (role === "admin" || role === "super_admin") return;
 
     document.querySelectorAll('a[href="settings.html"]').forEach(link => {
-        link.style.display = "none";
+        link.style.display = window.rxCan && rxCan("settings") ? "" : "none";
     });
 
     const userMgmt = document.getElementById("userManagementSection");
     if (userMgmt) userMgmt.style.display = "none";
 }
 
-function logout() {
-    if (confirm("Are you sure you want to logout?")) {
+async function logout() {
+    if (!confirm("Are you sure you want to logout?")) return;
+    try {
+        const session = getSession();
+        if (session.sessionToken) {
+            await getSupabase().rpc("app_logout", { p_token: session.sessionToken });
+        }
+    } catch (e) {
+        console.warn("Server logout failed", e);
+    } finally {
         clearSession();
-        window.location.href = "login.html";
+        window.location.replace("login.html");
     }
 }
 
@@ -460,113 +431,7 @@ function closeForgotPassword() {
 }
 
 async function submitForgotPassword() {
-    const username = (document.getElementById("forgotUsername")?.value || "").trim();
-    const email = (document.getElementById("forgotEmail")?.value || "").trim().toLowerCase();
-    const newPass = document.getElementById("forgotNewPass")?.value || "";
-    const confirmPass = document.getElementById("forgotConfirmPass")?.value || "";
-
-    if (!username) {
-        alert("Please enter username.");
-        return;
-    }
-    if (!email) {
-        alert("Please enter recovery email.\n\nUse the Recovery Email saved in Settings.");
-        return;
-    }
-    if (newPass !== confirmPass) {
-        alert("New password and confirm password do not match.");
-        return;
-    }
-
-    try {
-        const sb = getSupabase();
-        if (!sb) {
-            alert("Cloud connection failed.");
-            return;
-        }
-
-        const { data: user, error } = await sb
-            .from("users")
-            .select("id, username, role, shop_id, recovery_email, is_active")
-            .eq("username", username)
-            .maybeSingle();
-
-        if (error) throw error;
-        if (!user) {
-            alert("Username not found.");
-            return;
-        }
-        if (user.is_active === false) {
-            alert("Account is inactive. Contact Super Admin.");
-            return;
-        }
-
-        // Allowed emails: user recovery + shop register email + settings emails
-        const allowed = new Set();
-        if (user.recovery_email) {
-            allowed.add(String(user.recovery_email).trim().toLowerCase());
-        }
-        if (user.shop_id) {
-            const { data: shop } = await sb.from("shops")
-                .select("email")
-                .eq("id", user.shop_id)
-                .maybeSingle();
-            if (shop && shop.email) {
-                allowed.add(String(shop.email).trim().toLowerCase());
-            }
-            const { data: st } = await sb.from("settings")
-                .select("recovery_email, email")
-                .eq("shop_id", user.shop_id)
-                .maybeSingle();
-            if (st) {
-                if (st.recovery_email) allowed.add(String(st.recovery_email).trim().toLowerCase());
-                if (st.email) allowed.add(String(st.email).trim().toLowerCase());
-            }
-        }
-        if (user.role === "super_admin") {
-            const { data: shops } = await sb.from("shops").select("email").limit(50);
-            (shops || []).forEach(sh => {
-                if (sh.email) allowed.add(String(sh.email).trim().toLowerCase());
-            });
-            const { data: anySt } = await sb.from("settings").select("recovery_email, email").limit(50);
-            (anySt || []).forEach(x => {
-                if (x.recovery_email) allowed.add(String(x.recovery_email).trim().toLowerCase());
-                if (x.email) allowed.add(String(x.email).trim().toLowerCase());
-            });
-        }
-        allowed.delete("");
-        if (!allowed.size) {
-            alert("No registered email for this account.\nAdd shop Email in Company Management.");
-            return;
-        }
-        if (!allowed.has(email)) {
-            alert("Email does not match.\nUse the email saved at company registration.");
-            return;
-        }
-
-        const strength = validatePasswordStrength(newPass, user.role || "user");
-        if (!strength.ok) {
-            alert(strength.message);
-            return;
-        }
-
-        const { error: upErr } = await sb
-            .from("users")
-            .update({ password: await hashPassword(newPass) })
-            .eq("id", user.id);
-
-        if (upErr) throw upErr;
-
-        alert("✅ Password reset successful!\n\nUsername: " + username + "\nPlease login with the new password.");
-        closeForgotPassword();
-        const passInput = document.getElementById("password") || document.querySelector('input[type="password"]');
-        const userInput = document.getElementById("username") || document.querySelector('input[type="text"]');
-        if (userInput) userInput.value = username;
-        if (passInput) passInput.value = "";
-    } catch (e) {
-        console.error(e);
-        alert("Reset failed: " + (e.message || e));
-    }
+    showLoginError("Contact your Business Administrator or Super Admin to reset your password securely.");
 }
 
 
@@ -599,3 +464,4 @@ function showLoginError(msg) {
     try { alert(msg); } catch (e) {}
 }
 window.showLoginError = showLoginError;
+

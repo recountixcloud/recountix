@@ -7,10 +7,9 @@
 
 /* ---------- SHOPS ---------- */
 async function sbGetShops() {
-    const sb = getSupabase();
-    const { data, error } = await sb.from("shops").select("*").eq("is_active", true).order("name");
-    if (error) throw error;
-    return data || [];
+    const token=getSession().sessionToken;if(!token)return[];
+    const {data,error}=await getSupabase().rpc("app_get_shops",{p_token:token});
+    if(error)throw error;return data||[];
 }
 
 /* ---------- CUSTOMERS ---------- */
@@ -77,102 +76,34 @@ function mapCustomerToDb(c, shopId) {
         auto_reminder: c.autoReminder !== false,
         reminder_interval_days: Number(c.reminderInterval || 3),
         next_reminder_date: c.nextReminderDate || c.followup || null,
-        due_date: (c.dueDate !== undefined && c.dueDate !== null && String(c.dueDate).trim() !== "") ? String(c.dueDate).slice(0, 10) : (c.followup ? String(c.followup).slice(0, 10) : null)
+        due_date: (c.dueDate !== undefined && c.dueDate !== null && String(c.dueDate).trim() !== "") ? String(c.dueDate).slice(0, 10) : (c.followup ? String(c.followup).slice(0, 10) : null),
+        interest_rate_pa: c.interestRatePa ? Number(c.interestRatePa) : null,
+        msme_45_day_start: c.msme45DayStart || null,
+        msme_45_day_due: c.msme45DayDue || null
     };
 }
 
-async function sbGetCustomers(shopId) {
-    const sb = getSupabase();
-    const token = (typeof getSession === "function" && getSession().sessionToken) || "";
-    if (token) {
-        try {
-            const { data, error } = await sb.rpc("app_get_customers", { p_token: token });
-            if (!error) return (data || []).map(mapCustomerFromDb);
-            console.warn("app_get_customers", error);
-        } catch (e) { console.warn(e); }
-    }
-    if (!shopId) return [];
-    const { data, error } = await sb.from("customers").select("*")
-        .eq("shop_id", shopId)
-        .order("created_at", { ascending: false });
-    if (error) throw error;
-    return (data || []).map(mapCustomerFromDb);
+async function sbGetCustomers() {
+    const token=getSession().sessionToken;if(!token)return[];
+    const {data,error}=await getSupabase().rpc("app_get_customers",{p_token:token});
+    if(error)throw error;return(data||[]).map(mapCustomerFromDb);
 }
 
-async function sbSaveCustomer(customer, shopId) {
-    const sb = getSupabase();
-    const payload = mapCustomerToDb(customer, shopId);
-
-    // Force due_date from form (YYYY-MM-DD)
-    const dueRaw = (customer.dueDate !== undefined && customer.dueDate !== null && String(customer.dueDate).trim() !== "")
-        ? String(customer.dueDate).trim().slice(0, 10)
-        : "";
-    if (dueRaw) payload.due_date = dueRaw;
-
-    const hasId = customer.id !== undefined && customer.id !== null && String(customer.id).trim() !== "";
-    const token = (typeof getSession === "function" && getSession().sessionToken) || "";
-
-    // Preferred: SECURITY DEFINER RPC (updates due_date reliably under RLS)
-    if (hasId && token) {
-        try {
-            const { data, error } = await sb.rpc("app_update_customer", {
-                p_token: token,
-                p_customer_id: String(customer.id),
-                p_payload: payload
-            });
-            if (error) throw error;
-            if (data && data.ok === false) throw new Error(data.message || "Update failed");
-            return mapCustomerFromDb({ ...payload, id: customer.id, due_date: dueRaw || payload.due_date });
-        } catch (rpcErr) {
-            console.warn("app_update_customer fallback", rpcErr);
-            // fall through to direct update
-        }
-    }
-
-    if (hasId) {
-        // Direct update — check row count when possible
-        const q = sb.from("customers")
-            .update({ ...payload, updated_at: new Date().toISOString() })
-            .eq("id", customer.id);
-        const { error, count } = await q;
-        if (error) throw error;
-        // Also shop_id match if available
-        return mapCustomerFromDb({ ...payload, id: customer.id });
-    }
-
-    const { error } = await sb.from("customers").insert(payload);
-    if (error) throw error;
-    return mapCustomerFromDb(payload);
+async function sbSaveCustomer(customer) {
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const payload=mapCustomerToDb(customer,null);
+    delete payload.shop_id;
+    const id=customer.id?String(customer.id):null;
+    const {data,error}=await getSupabase().rpc("app_save_customer",{
+      p_token:token,p_customer_id:id,p_payload:payload
+    });
+    if(error)throw error;return mapCustomerFromDb(data);
 }
 
 async function sbDeleteCustomer(id) {
-    const sb = getSupabase();
-    if (!id) throw new Error("Customer id missing");
-
-    // Delete related rows first (FK) — ignore table-missing errors
-    const childTables = [
-        "recoveries",
-        "promises_to_pay",
-        "agent_activity_log",
-        "escalations",
-        "payment_links",
-        "receipts",
-        "legal_notices",
-        "customer_balances",
-        "reminder_queue"
-    ];
-    for (const table of childTables) {
-        try {
-            const { error } = await sb.from(table).delete().eq("customer_id", id);
-            if (error) console.warn("cleanup " + table, error.message || error);
-        } catch (e) {
-            console.warn("cleanup " + table, e);
-        }
-    }
-
-    const { error, count } = await sb.from("customers").delete({ count: "exact" }).eq("id", id);
-    if (error) throw error;
-    return true;
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {error}=await getSupabase().rpc("app_delete_customer",{p_token:token,p_customer_id:id});
+    if(error)throw error;return true;
 }
 
 /* ---------- RECOVERIES ---------- */
@@ -192,265 +123,158 @@ function mapRecoveryFromDb(row) {
     };
 }
 
-async function sbGetRecoveries(shopId) {
-    const sb = getSupabase();
-    const token = (typeof getSession === "function" && getSession().sessionToken) || "";
-    if (token) {
-        try {
-            const { data, error } = await sb.rpc("app_get_recoveries", { p_token: token });
-            if (!error) {
-                return (data || []).map(mapRecoveryFromDb);
-            }
-        } catch (e) { console.warn(e); }
-    }
-    if (!shopId) return [];
-    const { data, error } = await sb.from("recoveries").select("*")
-        .eq("shop_id", shopId)
-        .order("recovery_date", { ascending: false });
-    if (error) throw error;
-    return (data || []).map(mapRecoveryFromDb);
+async function sbGetRecoveries() {
+    const token=getSession().sessionToken;if(!token)return[];
+    const {data,error}=await getSupabase().rpc("app_get_recoveries",{p_token:token});
+    if(error)throw error;return(data||[]).map(mapRecoveryFromDb);
 }
 
-async function sbSaveRecovery(recovery, shopId) {
-    const sb = getSupabase();
-    const sid = shopId || recovery.shop_id || null;
-    if (!sid) throw new Error("shop_id required for recovery");
-    if (!recovery.customerId && recovery.customerId !== 0) {
-        throw new Error("customer_id required");
-    }
-
-    const payload = {
-        shop_id: sid,
-        customer_id: recovery.customerId,
-        amount: Number(recovery.amount || 0),
-        recovery_date: (recovery.date || new Date().toISOString().split("T")[0]).toString().slice(0, 10),
-        payment_mode: recovery.paymentMode || "Cash",
-        receipt_no: recovery.receiptNo || "",
-        collected_by: recovery.collectedBy || "",
-        remarks: recovery.remarks || ""
-    };
-
-    // RLS: no SELECT on recoveries — insert only (no .select().single())
-    const { error } = await sb.from("recoveries").insert(payload);
-    if (error) throw error;
-    return mapRecoveryFromDb(payload);
+async function sbSaveRecovery(recovery) {
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const payload={customer_id:recovery.customerId,amount:Number(recovery.amount||0),
+      recovery_date:(recovery.date||"").toString().slice(0,10),
+      payment_mode:recovery.paymentMode||"Cash",receipt_no:recovery.receiptNo||"",
+      collected_by:recovery.collectedBy||"",remarks:recovery.remarks||"",
+      request_key:recovery.requestKey||""};
+    const {data,error}=await getSupabase().rpc("app_save_recovery",{p_token:token,p_payload:payload});
+    if(error)throw error;return mapRecoveryFromDb(data);
 }
 
 async function sbDeleteRecovery(id) {
-    const sb = getSupabase();
-    const { error } = await sb.from("recoveries").delete().eq("id", id);
-    if (error) throw error;
-    return true;
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {error}=await getSupabase().rpc("app_delete_recovery",{p_token:token,p_recovery_id:id});
+    if(error)throw error;return true;
 }
 
-async function sbUpdateCustomerOutstanding(customerId, newOutstanding) {
-    const sb = getSupabase();
-    if (customerId === undefined || customerId === null || String(customerId).trim() === "") {
-        throw new Error("customer id missing for outstanding update");
-    }
-    const val = Math.max(0, Number(newOutstanding) || 0);
-    const payload = {
-        outstanding: val,
-        updated_at: new Date().toISOString()
-    };
-
-    // Prefer RPC if available (same as customer save under RLS)
-    const token = (typeof getSession === "function" && getSession().sessionToken) || "";
-    if (token) {
-        try {
-            const { data, error } = await sb.rpc("app_update_customer", {
-                p_token: token,
-                p_customer_id: String(customerId),
-                p_payload: payload
-            });
-            if (!error && data) return true;
-            if (error) console.warn("app_update_customer outstanding", error);
-        } catch (e) {
-            console.warn("outstanding RPC fallback", e);
-        }
-    }
-
-    const { error } = await sb
-        .from("customers")
-        .update(payload)
-        .eq("id", customerId);
-    if (error) throw error;
-    return true;
+async function sbUpdateCustomerOutstanding() {
+    throw new Error("Outstanding is maintained atomically by the recovery service");
 }
 
 /* ---------- USERS ---------- */
-async function sbGetUsers(shopId) {
-    const sb = getSupabase();
-    let q = sb.from("users").select("id, username, role, shop_id, display_name, is_active, is_field_agent, mobile, agent_code").order("username");
-    if (shopId) q = q.eq("shop_id", shopId);
-    // Super admin can see all; shop admin sees only own shop
-    const { data, error } = await q;
-    if (error) throw error;
-    return data || [];
+async function sbGetUsers() {
+    const token=getSession().sessionToken;if(!token)return[];
+    const {data,error}=await getSupabase().rpc("app_get_users",{p_token:token});
+    if(error)throw error;return data||[];
 }
 
 async function sbAddUser(user) {
-    const sb = getSupabase();
-    const payload = {
-        username: user.username,
-        password: (typeof hashPassword === 'function' ? await hashPassword(user.password) : user.password),
-        role: user.role || "user",
-        shop_id: user.shop_id || currentShopId(),
-        display_name: user.display_name || user.username
-    };
-    const { data, error } = await sb.from("users").insert(payload).select().single();
-    if (error) throw error;
-    return data;
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_create_user",{p_token:token,p_payload:{
+      username:user.username,password:user.password,role:user.role||"user",
+      shop_id:user.shop_id||currentShopId(),display_name:user.display_name||user.username
+    }});
+    if(error)throw error;return data;
 }
 
 async function sbDeleteUser(userId) {
-    const sb = getSupabase();
-    const { error } = await sb.from("users").delete().eq("id", userId);
-    if (error) throw error;
-    return true;
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {error}=await getSupabase().rpc("app_delete_user",{p_token:token,p_user_id:userId});
+    if(error)throw error;return true;
 }
 
-async function sbUpdateUserPassword(userId, newPassword) {
-    const sb = getSupabase();
-    const { error } = await sb.from("users").update({ password: (typeof hashPassword === 'function' ? await hashPassword(newPassword) : newPassword) }).eq("id", userId);
-    if (error) throw error;
-    return true;
+async function sbResetUserPassword(userId,newPassword) {
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_admin_reset_user_password",{
+      p_token:token,p_user_id:userId,p_new_password:newPassword||""
+    });
+    if(error)throw error;return data;
+}
+window.sbResetUserPassword=sbResetUserPassword;
+
+async function sbResetPasswordByRecovery(username,recoveryEmail,newPassword) {
+    const {data,error}=await getSupabase().rpc("app_reset_password_by_recovery",{
+      p_username:username||"",p_recovery_email:recoveryEmail||"",p_new_password:newPassword||""
+    });
+    if(error)throw error;if(data&&data.error)throw new Error(data.error);return data;
+}
+window.sbResetPasswordByRecovery=sbResetPasswordByRecovery;
+
+async function sbUpdateUserPassword() {
+    throw new Error("Use secure profile update");
 }
 
-async function sbUpdateUsername(userId, newUsername) {
-    const sb = getSupabase();
-    const { error } = await sb.from("users").update({ username: newUsername }).eq("id", userId);
-    if (error) throw error;
-    return true;
+async function sbUpdateUsername() {
+    throw new Error("Use secure profile update");
 }
 
 /* ---------- SETTINGS ---------- */
-async function sbGetSettings(shopId) {
-    const sb = getSupabase();
-    if (!shopId) return {};
-    const { data, error } = await sb.from("settings").select("*").eq("shop_id", shopId).maybeSingle();
-    if (error) throw error;
-    if (!data) return {};
-    let extra = data.extra || {};
-    if (typeof extra === "string") {
-        try { extra = JSON.parse(extra); } catch (e) { extra = {}; }
-    }
-    return {
-        company: data.company_name || "",
-        softwareName: data.software_name || "Recountix",
-        phone: data.phone || "",
-        email: data.email || "",
-        address: data.address || "",
-        logoDataUrl: data.logo_data_url || "",
-        recoveryEmail: data.recovery_email || "",
-        executives: Array.isArray(extra.executives) ? extra.executives : ["Mukesh", "Bharat", "Office"]
-    };
+async function sbUpdateOwnProfile(currentPassword,newUsername,newPassword,recoveryEmail) {
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_update_own_profile",{
+      p_token:token,p_current_password:currentPassword||"",p_username:newUsername||"",
+      p_new_password:newPassword||"",p_recovery_email:recoveryEmail||""
+    });
+    if(error)throw error;return data;
+}
+window.sbUpdateOwnProfile=sbUpdateOwnProfile;
+
+async function sbGetSettings() {
+    const token=getSession().sessionToken;if(!token)return{};
+    const {data,error}=await getSupabase().rpc("app_get_settings",{p_token:token});
+    if(error)throw error;
+    const row=data||{};let extra=row.extra||{};
+    if(typeof extra==="string"){try{extra=JSON.parse(extra)}catch(e){extra={}}}
+    return {company:row.company_name||"",softwareName:"Recountix",phone:row.phone||"",
+      email:row.email||"",address:row.address||"",logoDataUrl:row.logo_data_url||"",
+      preferences:extra.preferences||{},recoveryEmail:row.recovery_email||"",upiId:extra.upi_id||"",website:extra.website||"",
+      executives:Array.isArray(extra.executives)?extra.executives:["Mukesh","Bharat","Office"]};
 }
 
-async function sbSaveSettings(shopId, settingsObj) {
-    const sb = getSupabase();
-    const execs = Array.isArray(settingsObj.executives)
-        ? settingsObj.executives
-        : ["Mukesh", "Bharat", "Office"];
-    const payload = {
-        shop_id: shopId,
-        company_name: settingsObj.company || "",
-        software_name: settingsObj.softwareName || "Recountix",
-        phone: settingsObj.phone || "",
-        email: settingsObj.email || "",
-        address: settingsObj.address || "",
-        logo_data_url: settingsObj.logoDataUrl || null,
-        recovery_email: settingsObj.recoveryEmail || "",
-        extra: { executives: execs },
-        updated_at: new Date().toISOString()
-    };
-    const { data, error } = await sb
-        .from("settings")
-        .upsert(payload, { onConflict: "shop_id" })
-        .select()
-        .single();
-    if (error) throw error;
-    return data;
+async function sbSaveSettings(shopId,settingsObj) {
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_save_settings",{p_token:token,p_payload:{
+      company:settingsObj.company||"",phone:settingsObj.phone||"",email:settingsObj.email||"",
+      address:settingsObj.address||"",logoDataUrl:settingsObj.logoDataUrl||"",
+      recoveryEmail:settingsObj.recoveryEmail||"",upiId:settingsObj.upiId||"",website:settingsObj.website||"",
+      ...(settingsObj.preferences?{preferences:settingsObj.preferences}:{}),executives:Array.isArray(settingsObj.executives)?settingsObj.executives:[]
+    }});
+    if(error)throw error;return data;
 }
 
 /* ---------- SYSTEM MAINTENANCE (Super Admin only) ---------- */
 async function sbGetMaintenanceStatus() {
-    const sb = getSupabase();
-    const { data, error } = await sb.from("system_config").select("*").eq("id", 1).maybeSingle();
+    const { data, error } = await getSupabase().rpc("app_maintenance_status");
     if (error) throw error;
-    if (!data) return { enabled: false, message: "" };
-    return {
-        enabled: !!data.maintenance_mode,
-        message: data.maintenance_message || ""
-    };
+    return { enabled: !!(data && data.enabled), message: (data && data.message) || "" };
 }
 
 async function sbSetMaintenanceMode(enabled, message) {
-    const sb = getSupabase();
-    const { data, error } = await sb
-        .from("system_config")
-        .upsert({
-            id: 1,
-            maintenance_mode: !!enabled,
-            maintenance_message: message || "",
-            updated_at: new Date().toISOString()
-        }, { onConflict: "id" })
-        .select()
-        .single();
+    const token = getSession().sessionToken;
+    if (!token) throw new Error("Secure session required");
+    const { data, error } = await getSupabase().rpc("app_set_maintenance", {
+        p_token: token, p_enabled: !!enabled, p_message: message || ""
+    });
     if (error) throw error;
     return data;
 }
 
 /* ---------- BULK IMPORT ---------- */
-async function sbBulkInsertCustomers(list, shopId) {
-    const sb = getSupabase();
-    const rows = list.map(c => mapCustomerToDb(c, shopId));
-    // Insert in chunks of 50
-    const results = [];
-    for (let i = 0; i < rows.length; i += 50) {
-        const chunk = rows.slice(i, i + 50);
-        const { data, error } = await sb.from("customers").insert(chunk).select();
-        if (error) throw error;
-        results.push(...(data || []).map(mapCustomerFromDb));
-    }
-    return results;
+async function __records(action,payload){const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");const {data,error}=await getSupabase().rpc("app_records",{p_token:token,p_action:action,p_payload:payload||{}});if(error)throw error;return data;}
+async function sbBulkInsertCustomers(list){
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const rows=list.map(c=>{const x=mapCustomerToDb(c,null);delete x.shop_id;return x});
+    const {data,error}=await getSupabase().rpc("app_bulk_customers",{p_token:token,p_rows:rows});
+    if(error)throw error;return(data||[]).map(mapCustomerFromDb);
 }
 
 /* ---------- STATUS UI ---------- */
 function updateSupabaseStatusUI(online, text) {
     const el = document.getElementById("firebaseStatus");
     if (el) {
-        el.innerHTML = text || (online ? "Online" : "Offline");
+        el.textContent = text || (online ? "Online" : "Offline");
         el.style.color = online ? "#16a34a" : "#ef4444";
     }
     const badge = document.getElementById("dbStatusBadge");
     if (badge) {
-        badge.innerHTML = online ? "Supabase Online" : "Offline";
+        badge.textContent = online ? "Supabase Online" : "Offline";
         badge.className = online ? "badge badge-success" : "badge badge-warning";
     }
 }
 
 async function supabaseBoot() {
-    try {
-        const sb = getSupabase();
-        if (!sb) {
-            updateSupabaseStatusUI(false, "SDK Missing");
-            return false;
-        }
-        // lightweight ping
-        const { error } = await sb.from("shops").select("id").limit(1);
-        if (error) {
-            console.error("Supabase boot error", error);
-            updateSupabaseStatusUI(false, "Error");
-            return false;
-        }
-        updateSupabaseStatusUI(true, "Online");
-        return true;
-    } catch (e) {
-        console.error(e);
-        updateSupabaseStatusUI(false, "Error");
-        return false;
-    }
+    const sb=getSupabase();if(!sb){updateSupabaseStatusUI(false,"SDK Missing");return false;}
+    const {error}=await sb.rpc("app_maintenance_status");
+    updateSupabaseStatusUI(!error,error?"Error":"Connected");return !error;
 }
 
 // Export
@@ -477,253 +301,62 @@ window.mapCustomerFromDb = mapCustomerFromDb;
 window.mapRecoveryFromDb = mapRecoveryFromDb;
 
 /* ---------- COMPANY / SHOP REGISTRATION ---------- */
-async function sbRegisterShop(form) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-
-    const companyName = (form.companyName || "").trim();
-    const code = (form.code || "").trim().toUpperCase().replace(/\s+/g, "");
-    const contact = (form.contact || "").trim();
-    const email = (form.email || "").trim();
-    const address = (form.address || "").trim();
-    const adminUsername = (form.adminUsername || "").trim();
-    const adminPassword = (form.adminPassword || "").trim();
-    const adminName = (form.adminName || adminUsername).trim();
-
-    if (!companyName) throw new Error("Company name required");
-    if (!code || code.length < 2) throw new Error("Shop code required (min 2 chars, e.g. VO, RJ)");
-    if (!adminUsername) throw new Error("Admin username required");
-    if (!adminPassword || adminPassword.length < 4) throw new Error("Admin password min 4 characters");
-
-    // Check code unique
-    const { data: existingCode } = await sb.from("shops").select("id").eq("code", code).maybeSingle();
-    if (existingCode) throw new Error("Shop code already exists. Choose another code.");
-
-    // Check username unique
-    const { data: existingUser } = await sb.from("users").select("id").eq("username", adminUsername).maybeSingle();
-    if (existingUser) throw new Error("Username already taken. Choose another.");
-
-    // 1) Create shop
-    const { data: shop, error: shopErr } = await sb
-        .from("shops")
-        .insert({
-            name: companyName,
-            code: code,
-            contact_number: contact || null,
-            email: email || null,
-            address: address || null,
-            is_active: true
-        })
-        .select()
-        .single();
-    if (shopErr) throw shopErr;
-
-    // 2) Create admin user for this shop
-    const { data: user, error: userErr } = await sb
-        .from("users")
-        .insert({
-            username: adminUsername,
-            password: (typeof hashPassword === 'function' ? await hashPassword(adminPassword) : adminPassword),
-            role: "admin",
-            shop_id: shop.id,
-            display_name: adminName,
-            is_active: true
-        })
-        .select()
-        .single();
-    if (userErr) {
-        // rollback shop if user fails
-        await sb.from("shops").delete().eq("id", shop.id);
-        throw userErr;
-    }
-
-    // 3) Create settings row
-    await sb.from("settings").upsert({
-        shop_id: shop.id,
-        company_name: companyName,
-        software_name: "Recountix",
-        phone: contact || null,
-        email: email || null,
-        address: address || null
-    }, { onConflict: "shop_id" });
-
-    return { shop, user };
+async function sbRegisterShop() {
+    throw new Error("Public company registration is disabled. Use Super Admin Company Management.");
 }
 
 window.sbRegisterShop = sbRegisterShop;
 
 /* ==========================================================
    SUPER ADMIN MODULE
-   Company Management, Add Jewellery (shops), Subscriptions,
+   Business Management, tenant businesses, Subscriptions,
    Audit Log, System-wide Dashboard
 ========================================================== */
 
 /* ---------- AUDIT LOG ---------- */
-async function sbAddAuditLog(action, entityType, entityId, details, shopId) {
-    try {
-        const sb = getSupabase();
-        const session = getSession();
-        await sb.from("audit_log").insert({
-            shop_id: shopId || null,
-            user_id: session.userId || null,
-            username: session.username || "",
-            action: action,
-            entity_type: entityType || "",
-            entity_id: entityId ? String(entityId) : "",
-            details: details || ""
-        });
-    } catch (e) {
-        console.error("audit log failed", e);
-    }
+async function sbAddAuditLog(action,entityType,entityId,details) {
+    try{
+      const token=getSession().sessionToken;if(!token)return;
+      const {error}=await getSupabase().rpc("app_add_audit",{p_token:token,p_action:action||"",
+        p_entity_type:entityType||"",p_entity_id:entityId?String(entityId):"",p_details:details||""});
+      if(error)throw error;
+    }catch(e){console.error("audit log failed",e)}
 }
 
 async function sbGetAuditLog(limit) {
-    const sb = getSupabase();
-    const { data, error } = await sb
-        .from("audit_log")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(limit || 100);
-    if (error) throw error;
-    return data || [];
+    const token=getSession().sessionToken;if(!token)return[];
+    const {data,error}=await getSupabase().rpc("app_get_audit",{p_token:token,p_limit:limit||100});
+    if(error)throw error;return data||[];
 }
 
 /* ---------- SHOPS (full, incl. inactive) ---------- */
-async function sbGetAllShopsFull() {
-    const sb = getSupabase();
-    const { data, error } = await sb.from("shops").select("*").order("name");
-    if (error) throw error;
-    return data || [];
+async function __superAdmin(action,payload) {
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_superadmin",{p_token:token,p_action:action,p_payload:payload||{}});
+    if(error)throw error;return data;
+}
+async function sbGetAllShopsFull(){return(await __superAdmin("shops",{}))||[];}
+
+async function __setBusinessType(shopId,businessType){
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_set_business_type",{
+      p_token:token,p_shop_id:shopId,p_business_type:businessType||"Other"
+    });
+    if(error)throw error;return data;
+}
+async function sbAddShop(form){
+    const created=await __superAdmin("create_shop",form);
+    return created&&created.id?await __setBusinessType(created.id,form.businessType):created;
 }
 
-async function sbAddShop(form) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-
-    const name = (form.name || "").trim();
-    const code = (form.code || "").trim().toUpperCase().replace(/\s+/g, "");
-    if (!name) throw new Error("Shop / Company name required");
-    if (!code || code.length < 2) throw new Error("Shop code required (min 2 chars)");
-
-    const { data: existingCode } = await sb.from("shops").select("id").eq("code", code).maybeSingle();
-    if (existingCode) throw new Error("Shop code already exists. Choose another code.");
-
-    const payload = {
-        name,
-        code,
-        contact_number: (form.contact || "").trim() || null,
-        email: (form.email || "").trim() || null,
-        address: (form.address || "").trim() || null,
-        plan_name: form.plan || "Basic",
-        license_expiry: form.licenseExpiry || null,
-        max_users: Number(form.maxUsers || 5),
-        is_active: true
-    };
-
-    const { data: shop, error } = await sb.from("shops").insert(payload).select().single();
-    if (error) throw error;
-
-    // Optional: create an initial admin user for this shop
-    if (form.adminUsername) {
-        const adminUsername = form.adminUsername.trim();
-        const adminPassword = (form.adminPassword || "1234").trim();
-        const { data: existingUser } = await sb.from("users").select("id").eq("username", adminUsername).maybeSingle();
-        if (!existingUser) {
-            await sb.from("users").insert({
-                username: adminUsername,
-                password: (typeof hashPassword === 'function' ? await hashPassword(adminPassword || "ChangeMe@1234") : (adminPassword || "ChangeMe@1234")),
-                role: "admin",
-                shop_id: shop.id,
-                display_name: form.adminName || adminUsername,
-                is_active: true
-            });
-        }
-    }
-
-    // Settings row + starter subscription
-    await sb.from("settings").upsert({
-        shop_id: shop.id,
-        company_name: name,
-        software_name: "Recountix",
-        phone: payload.contact_number,
-        email: payload.email,
-        address: payload.address
-    }, { onConflict: "shop_id" });
-
-    if (form.licenseExpiry) {
-        await sb.from("subscriptions").insert({
-            shop_id: shop.id,
-            plan_name: form.plan || "Basic",
-            amount: Number(form.amount || 0),
-            start_date: new Date().toISOString().split("T")[0],
-            end_date: form.licenseExpiry,
-            status: "active"
-        });
-    }
-
-    await sbAddAuditLog("shop.create", "shop", shop.id, `Created shop "${name}" (${code})`, shop.id);
-    return shop;
+async function sbUpdateShop(shopId,form){
+    await __superAdmin("update_shop",{...form,id:shopId});
+    return await __setBusinessType(shopId,form.businessType);
 }
 
-async function sbUpdateShop(shopId, form) {
-    const sb = getSupabase();
-    const payload = {
-        name: (form.name || "").trim(),
-        contact_number: (form.contact || "").trim() || null,
-        email: (form.email || "").trim() || null,
-        address: (form.address || "").trim() || null,
-        plan_name: form.plan || "Basic",
-        license_expiry: form.licenseExpiry || null,
-        max_users: Number(form.maxUsers || 5)
-    };
-    const { data, error } = await sb.from("shops").update(payload).eq("id", shopId).select().single();
-    if (error) throw error;
-    await sbAddAuditLog("shop.update", "shop", shopId, `Updated shop details`, shopId);
-    
-    // Keep latest subscription end_date in sync with shop license
-    if (form.licenseExpiry) {
-        try {
-            const { data: latest } = await sb.from("subscriptions")
-                .select("id")
-                .eq("shop_id", shopId)
-                .order("end_date", { ascending: false })
-                .limit(1)
-                .maybeSingle();
-            if (latest && latest.id) {
-                await sb.from("subscriptions").update({
-                    end_date: form.licenseExpiry,
-                    plan_name: form.planName || form.plan || "Basic",
-                    status: "active"
-                }).eq("id", latest.id);
-            } else {
-                await sb.from("subscriptions").insert({
-                    shop_id: shopId,
-                    plan_name: form.planName || form.plan || "Basic",
-                    end_date: form.licenseExpiry,
-                    start_date: new Date().toISOString().slice(0,10),
-                    status: "active"
-                });
-            }
-        } catch (e) { console.warn("sub sync", e); }
-    }
-    return data;
-}
+async function sbToggleShopActive(shopId,isActive){return await __superAdmin("toggle_shop",{id:shopId,is_active:!!isActive});}
 
-async function sbToggleShopActive(shopId, isActive) {
-    const sb = getSupabase();
-    const { data, error } = await sb.from("shops").update({ is_active: isActive }).eq("id", shopId).select().single();
-    if (error) throw error;
-    await sbAddAuditLog(isActive ? "shop.activate" : "shop.deactivate", "shop", shopId, isActive ? "Shop activated" : "Shop deactivated", shopId);
-    return data;
-}
-
-async function sbDeleteShop(shopId) {
-    const sb = getSupabase();
-    const { error } = await sb.from("shops").delete().eq("id", shopId);
-    if (error) throw error;
-    await sbAddAuditLog("shop.delete", "shop", shopId, "Shop deleted", shopId);
-    return true;
-}
+async function sbDeleteShop(shopId){await __superAdmin("delete_shop",{id:shopId});return true;}
 
 /* ---------- SUBSCRIPTIONS ---------- */
 function getEffectiveLicenseExpiry(shop, sub) {
@@ -746,92 +379,17 @@ function computeSubStatus(endDate) {
     return "active";
 }
 
-async function sbGetSubscriptionsWithShops() {
-    const sb = getSupabase();
-    const { data: shops, error: shopErr } = await sb.from("shops").select("*").order("name");
-    if (shopErr) throw shopErr;
-
-    const { data: subs, error: subErr } = await sb
-        .from("subscriptions")
-        .select("*")
-        .order("end_date", { ascending: false });
-    if (subErr) throw subErr;
-
-    // latest subscription per shop
-    const latestByShop = {};
-    (subs || []).forEach(s => {
-        if (!latestByShop[s.shop_id]) latestByShop[s.shop_id] = s;
-    });
-
-    return (shops || []).map(shop => {
-        const sub = latestByShop[shop.id] || null;
-        // Same rule on every page: later of shop.license_expiry vs subscription.end_date
-        const a = shop.license_expiry ? String(shop.license_expiry).slice(0, 10) : "";
-        const b = sub && sub.end_date ? String(sub.end_date).slice(0, 10) : "";
-        let endDate = "";
-        if (a && b) endDate = a >= b ? a : b;
-        else endDate = b || a || null;
-        // Auto-heal: if subscription is later than shop.license_expiry, trust later and update shop async
-        if (endDate && shop.license_expiry && String(shop.license_expiry).slice(0,10) !== String(endDate).slice(0,10)) {
-            const later = String(endDate).slice(0,10);
-            if (!shop.license_expiry || later > String(shop.license_expiry).slice(0,10)) {
-                sb.from("shops").update({ license_expiry: later }).eq("id", shop.id).then(() => {});
-                shop.license_expiry = later;
-            } else if (sub && sub.id && String(shop.license_expiry).slice(0,10) > String(sub.end_date).slice(0,10)) {
-                sb.from("subscriptions").update({ end_date: shop.license_expiry }).eq("id", sub.id).then(() => {});
-                endDate = shop.license_expiry;
-            }
-        }
-        return {
-            shop,
-            subscription: sub,
-            endDate: endDate,
-            liveStatus: computeSubStatus(endDate)
-        };
-    });
+async function sbGetSubscriptionsWithShops(){
+    const rows=(await __superAdmin("subscriptions",{}))||[];
+    return rows.map(x=>({...x,liveStatus:computeSubStatus(x.endDate)}));
 }
 
-async function sbRenewSubscription(shopId, form) {
-    const sb = getSupabase();
-    const payload = {
-        shop_id: shopId,
-        plan_name: form.plan || "Basic",
-        amount: Number(form.amount || 0),
-        start_date: new Date().toISOString().split("T")[0],
-        end_date: form.endDate,
-        status: "active",
-        remarks: form.remarks || ""
-    };
-    const { data, error } = await sb.from("subscriptions").insert(payload).select().single();
-    if (error) throw error;
-
-    // keep shop row in sync for quick reads
-    await sb.from("shops").update({ license_expiry: form.endDate, plan_name: form.plan || "Basic" }).eq("id", shopId);
-
-    await sbAddAuditLog("subscription.renew", "subscription", data.id, `Renewed to ${form.plan} until ${form.endDate}`, shopId);
-    return data;
+async function sbRenewSubscription(shopId,form){
+    return await __superAdmin("renew",{...form,shop_id:shopId});
 }
 
 /* ---------- SUPER ADMIN DASHBOARD STATS ---------- */
-async function sbGetSuperDashboardStats() {
-    const sb = getSupabase();
-
-    const { data: shops, error: shopErr } = await sb.from("shops").select("*");
-    if (shopErr) throw shopErr;
-
-    const { data: custs, error: custErr } = await sb.from("customers").select("shop_id, outstanding");
-    if (custErr) throw custErr;
-
-    const totalShops = (shops || []).length;
-    const activeShops = (shops || []).filter(s => s.is_active).length;
-    const inactiveShops = totalShops - activeShops;
-    const totalCustomers = (custs || []).length;
-    const totalOutstanding = (custs || []).reduce((sum, c) => sum + Number(c.outstanding || 0), 0);
-    const expiringSoon = (shops || []).filter(s => computeSubStatus(s.license_expiry) === "expiring").length;
-    const expired = (shops || []).filter(s => computeSubStatus(s.license_expiry) === "expired").length;
-
-    return { totalShops, activeShops, inactiveShops, totalCustomers, totalOutstanding, expiringSoon, expired, shops: shops || [] };
-}
+async function sbGetSuperDashboardStats(){return await __superAdmin("stats",{});}
 
 window.sbAddAuditLog = sbAddAuditLog;
 window.sbGetAuditLog = sbGetAuditLog;
@@ -846,153 +404,41 @@ window.sbRenewSubscription = sbRenewSubscription;
 window.sbGetSuperDashboardStats = sbGetSuperDashboardStats;
 
 
-async function sbMarkReminderSent(customerId, nextDate) {
-    const sb = getSupabase();
-    const payload = {
-        last_reminder_at: new Date().toISOString(),
-        next_reminder_date: nextDate || null,
-        updated_at: new Date().toISOString()
-    };
-    const { error } = await sb.from("customers").update(payload).eq("id", customerId);
-    if (error) throw error;
-    return true;
+async function sbMarkReminderSent(customerId,nextDate) {
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {error}=await getSupabase().rpc("app_mark_reminder",{p_token:token,p_customer_id:customerId,p_next_date:nextDate||null});
+    if(error)throw error;return true;
 }
 window.sbMarkReminderSent = sbMarkReminderSent;
 
 window.getEffectiveLicenseExpiry = getEffectiveLicenseExpiry;
 
 /* ---------- AGING SUMMARY (RPC) ---------- */
-async function sbGetAgingSummary(shopId) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    if (!shopId) {
-        return {
-            total_customers: 0,
-            total_outstanding: 0,
-            bucket_0_30: 0,
-            bucket_31_60: 0,
-            bucket_61_90: 0,
-            bucket_90_plus: 0,
-            total_overdue: 0,
-            open_ptp: 0,
-            open_escalations: 0
-        };
-    }
-    const { data, error } = await sb.rpc("shop_aging_summary", { p_shop_id: shopId });
-    if (error) throw error;
-    // rpc returns array of rows for RETURNS TABLE
-    const row = Array.isArray(data) ? (data[0] || {}) : (data || {});
-    return {
-        total_customers: Number(row.total_customers || 0),
-        total_outstanding: Number(row.total_outstanding || 0),
-        bucket_0_30: Number(row.bucket_0_30 || 0),
-        bucket_31_60: Number(row.bucket_31_60 || 0),
-        bucket_61_90: Number(row.bucket_61_90 || 0),
-        bucket_90_plus: Number(row.bucket_90_plus || 0),
-        total_overdue: Number(row.total_overdue || 0),
-        open_ptp: Number(row.open_ptp || 0),
-        open_escalations: Number(row.open_escalations || 0)
-    };
+async function sbGetAgingSummary(){
+ const token=getSession().sessionToken;if(!token)return{};
+ const {data,error}=await getSupabase().rpc("app_aging",{p_token:token,p_action:"summary"});if(error)throw error;
+ const row=data||{};return {total_customers:Number(row.total_customers||0),total_outstanding:Number(row.total_outstanding||0),
+ bucket_0_30:Number(row.bucket_0_30||0),bucket_31_60:Number(row.bucket_31_60||0),bucket_61_90:Number(row.bucket_61_90||0),
+ bucket_90_plus:Number(row.bucket_90_plus||0),total_overdue:Number(row.total_overdue||0),open_ptp:Number(row.open_ptp||0),
+ open_escalations:Number(row.open_escalations||0)};
 }
 window.sbGetAgingSummary = sbGetAgingSummary;
 
-async function sbRecalcAging(shopId) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const { data, error } = await sb.rpc("recalc_all_aging", { p_shop_id: shopId || null });
-    if (error) throw error;
-    return data;
+async function sbRecalcAging(){
+ const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+ const {data,error}=await getSupabase().rpc("app_aging",{p_token:token,p_action:"recalc"});if(error)throw error;return data;
 }
 window.sbRecalcAging = sbRecalcAging;
 
 /* ---------- PROMISE TO PAY ---------- */
-async function sbGetPtp(shopId, status) {
-    const sb = getSupabase();
-    if (!shopId) return [];
-    if (!sb) throw new Error("Supabase not ready");
-    let q = sb.from("promises_to_pay").select("*").order("promised_date", { ascending: true });
-    if (shopId) q = q.eq("shop_id", shopId);
-    if (status && status !== "all") q = q.eq("status", status);
-    const { data, error } = await q;
-    if (error) throw error;
-    return data || [];
-}
+async function __collection(action,payload){const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");const {data,error}=await getSupabase().rpc("app_collection",{p_token:token,p_action:action,p_payload:payload||{}});if(error)throw error;return data;}
+async function sbGetPtp(shopId,status){return(await __collection("ptp_list",{status:status||"all"}))||[];}
 
-async function sbSavePtp(row) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const payload = {
-        shop_id: row.shop_id,
-        customer_id: row.customer_id,
-        agent_id: row.agent_id ? String(row.agent_id) : null,
-        promised_amount: Number(row.promised_amount || 0),
-        promised_date: row.promised_date,
-        notes: row.notes || "",
-        status: row.status || "open",
-        updated_at: new Date().toISOString()
-    };
-    if (row.id) {
-        const { data, error } = await sb.from("promises_to_pay").update(payload).eq("id", row.id).select().maybeSingle();
-        if (error) throw error;
-        return data;
-    }
-    payload.created_at = new Date().toISOString();
-    payload.created_by = row.created_by ? String(row.created_by) : null;
-    const { data, error } = await sb.from("promises_to_pay").insert(payload).select().maybeSingle();
-    if (error) throw error;
-    // denormalize on customer
-    try {
-        await sb.from("customers").update({
-            ptp_date: payload.promised_date,
-            ptp_amount: payload.promised_amount,
-            ptp_notes: payload.notes
-        }).eq("id", payload.customer_id);
-    } catch (e) { console.warn("customer ptp fields", e); }
-    return data;
-}
+async function sbSavePtp(row){return await __collection("ptp_save",{id:row.id||null,customer_id:row.customer_id,agent_id:row.agent_id||null,promised_amount:Number(row.promised_amount||0),promised_date:row.promised_date,notes:row.notes||""});}
 
-async function sbUpdatePtpStatus(id, status, extra) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const payload = { status: status, updated_at: new Date().toISOString() };
-    if (status === "broken") payload.broken_at = new Date().toISOString();
-    if (status === "kept") {
-        payload.kept_at = new Date().toISOString();
-        if (extra && extra.kept_recovery_id) payload.kept_recovery_id = extra.kept_recovery_id;
-    }
-    const { data, error } = await sb.from("promises_to_pay").update(payload).eq("id", id).select().maybeSingle();
-    if (error) throw error;
-    // clear customer denorm if closed
-    if (data && (status === "kept" || status === "broken" || status === "cancelled")) {
-        try {
-            await sb.from("customers").update({
-                ptp_date: null, ptp_amount: null, ptp_notes: null
-            }).eq("id", data.customer_id);
-        } catch (e) {}
-    }
-    // escalation on broken
-    if (status === "broken" && data) {
-        try {
-            await sb.from("escalations").insert({
-                shop_id: data.shop_id,
-                customer_id: data.customer_id,
-                reason: "ptp_broken",
-                level: 1,
-                notes: "PTP broken via app. Amount: " + data.promised_amount + " Date: " + data.promised_date,
-                status: "open"
-            });
-        } catch (e) { console.warn("escalation", e); }
-    }
-    return data;
-}
+async function sbUpdatePtpStatus(id,status,extra){return await __collection("ptp_status",{id,status,kept_recovery_id:extra&&extra.kept_recovery_id||null});}
 
-async function sbDeletePtp(id) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const { error } = await sb.from("promises_to_pay").delete().eq("id", id);
-    if (error) throw error;
-    return true;
-}
+async function sbDeletePtp(id){await __collection("ptp_delete",{id});return true;}
 
 window.sbGetPtp = sbGetPtp;
 window.sbSavePtp = sbSavePtp;
@@ -1000,86 +446,15 @@ window.sbUpdatePtpStatus = sbUpdatePtpStatus;
 window.sbDeletePtp = sbDeletePtp;
 
 /* ---------- PHASE 2: Payment links, receipts, escalations, agents ---------- */
-async function sbCreatePaymentLinkRow(row) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const payload = {
-        shop_id: row.shop_id,
-        customer_id: row.customer_id,
-        amount: Number(row.amount || 0),
-        currency: "INR",
-        gateway: row.gateway || "upi",
-        short_url: row.short_url || null,
-        qr_data: row.qr_data || null,
-        status: row.status || "created",
-        notes: row.notes || "",
-        created_by: row.created_by ? String(row.created_by) : null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-    };
-    const { data, error } = await sb.from("payment_links").insert(payload).select().maybeSingle();
-    if (error) throw error;
-    return data;
-}
+async function sbCreatePaymentLinkRow(row){return await __records("payment_link_add",row);}
 
-async function sbSaveReceiptRow(row) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    let receiptNo = row.receipt_no;
-    if (!receiptNo && row.shop_id) {
-        try {
-            const { data: rn } = await sb.rpc("next_receipt_no", { p_shop_id: row.shop_id });
-            receiptNo = rn || ("R-" + Date.now());
-        } catch (e) {
-            receiptNo = "R-" + Date.now();
-        }
-    }
-    const payload = {
-        shop_id: row.shop_id,
-        recovery_id: row.recovery_id,
-        customer_id: row.customer_id || null,
-        receipt_no: receiptNo,
-        amount: Number(row.amount || 0),
-        pdf_url: row.pdf_url || null,
-        whatsapp_sent: !!row.whatsapp_sent,
-        created_at: new Date().toISOString()
-    };
-    const { data, error } = await sb.from("receipts").insert(payload).select().maybeSingle();
-    if (error) throw error;
-    return data;
-}
+async function sbSaveReceiptRow(row){return await __records("receipt_add",row);}
 
-async function sbGetEscalations(shopId, status) {
-    const sb = getSupabase();
-    if (!shopId) return [];
-    if (!sb) throw new Error("Supabase not ready");
-    let q = sb.from("escalations").select("*").order("created_at", { ascending: false });
-    if (shopId) q = q.eq("shop_id", shopId);
-    if (status && status !== "all") q = q.eq("status", status);
-    const { data, error } = await q;
-    if (error) throw error;
-    return data || [];
-}
+async function sbGetEscalations(shopId,status){return(await __collection("escalation_list",{status:status||"all"}))||[];}
 
-async function sbUpdateEscalation(id, patch) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const payload = Object.assign({}, patch, { updated_at: new Date().toISOString() });
-    const { data, error } = await sb.from("escalations").update(payload).eq("id", id).select().maybeSingle();
-    if (error) throw error;
-    return data;
-}
+async function sbUpdateEscalation(id,patch){return await __collection("escalation_update",{...patch,id});}
 
-async function sbAssignAgent(customerId, agentId, executiveName) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const payload = { updated_at: new Date().toISOString() };
-    if (agentId !== undefined) payload.assigned_agent_id = agentId;
-    if (executiveName !== undefined) payload.executive = executiveName;
-    const { data, error } = await sb.from("customers").update(payload).eq("id", customerId).select().maybeSingle();
-    if (error) throw error;
-    return data;
-}
+async function sbAssignAgent(customerId,agentId,executiveName){return await __records("assign_agent",{customer_id:customerId,agent_id:agentId||null,executive:executiveName||""});}
 
 window.sbCreatePaymentLinkRow = sbCreatePaymentLinkRow;
 window.sbSaveReceiptRow = sbSaveReceiptRow;
@@ -1088,62 +463,11 @@ window.sbUpdateEscalation = sbUpdateEscalation;
 window.sbAssignAgent = sbAssignAgent;
 
 /* ---------- PHASE 3: Activity log + analytics helpers ---------- */
-async function sbAddActivity(row) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const payload = {
-        shop_id: row.shop_id,
-        agent_id: String(row.agent_id || ""),
-        customer_id: row.customer_id || null,
-        task_id: row.task_id || null,
-        activity_type: row.activity_type || "note",
-        outcome: row.outcome || "",
-        notes: row.notes || "",
-        gps_lat: row.gps_lat != null ? row.gps_lat : null,
-        gps_lng: row.gps_lng != null ? row.gps_lng : null,
-        duration_sec: row.duration_sec != null ? row.duration_sec : null,
-        created_at: new Date().toISOString()
-    };
-    const { data, error } = await sb.from("agent_activity_log").insert(payload).select().maybeSingle();
-    if (error) throw error;
-    return data;
-}
+async function sbAddActivity(row){return await __records("activity_add",row);}
 
-async function sbGetActivities(shopId, limit) {
-    const sb = getSupabase();
-    if (!shopId) return [];
-    if (!sb) throw new Error("Supabase not ready");
-    let q = sb.from("agent_activity_log").select("*").order("created_at", { ascending: false });
-    if (shopId) q = q.eq("shop_id", shopId);
-    if (limit) q = q.limit(limit);
-    const { data, error } = await q;
-    if (error) throw error;
-    return data || [];
-}
+async function sbGetActivities(shopId,limit){return(await __records("activity_list",{limit:limit||100}))||[];}
 
-async function sbSaveLegalNotice(row) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const payload = {
-        shop_id: row.shop_id,
-        customer_id: row.customer_id,
-        notice_type: row.notice_type || "reminder_letter",
-        amount_at_issue: Number(row.amount_at_issue || 0),
-        sent_via: row.sent_via || "print",
-        sent_at: row.sent_at || new Date().toISOString(),
-        created_by: row.created_by ? String(row.created_by) : null,
-        notes: row.notes || "",
-        created_at: new Date().toISOString()
-    };
-    const { data, error } = await sb.from("legal_notices").insert(payload).select().maybeSingle();
-    if (error) throw error;
-    try {
-        await sb.from("customers").update({
-            last_legal_notice_at: new Date().toISOString()
-        }).eq("id", row.customer_id);
-    } catch (e) {}
-    return data;
-}
+async function sbSaveLegalNotice(row){return await __records("legal_add",row);}
 
 window.sbAddActivity = sbAddActivity;
 window.sbGetActivities = sbGetActivities;
@@ -1151,36 +475,138 @@ window.sbSaveLegalNotice = sbSaveLegalNotice;
 
 
 
-async function sbGetActivitiesByAgent(shopId, agentId, limit) {
-    const sb = getSupabase();
-    if (!shopId) return [];
-    if (!sb) throw new Error("Supabase not ready");
-    let q = sb.from("agent_activity_log").select("*").order("created_at", { ascending: false });
-    if (shopId) q = q.eq("shop_id", shopId);
-    if (agentId) q = q.eq("agent_id", String(agentId));
-    if (limit) q = q.limit(limit);
-    const { data, error } = await q;
-    if (error) throw error;
-    return data || [];
-}
+async function sbGetActivitiesByAgent(shopId,agentId,limit){return(await __records("activity_list",{agent_id:agentId||null,limit:limit||100}))||[];}
 window.sbGetActivitiesByAgent = sbGetActivitiesByAgent;
 
-async function sbSetFieldAgent(userId, isField) {
-    const sb = getSupabase();
-    if (!sb) throw new Error("Supabase not ready");
-    const { data, error } = await sb.from("users").update({
-        is_field_agent: !!isField
-    }).eq("id", userId).select().maybeSingle();
-    if (error) throw error;
-    return data;
-}
+async function sbSetFieldAgent(userId,isField){return await __records("set_field_agent",{user_id:userId,is_field:!!isField});}
 window.sbSetFieldAgent = sbSetFieldAgent;
 
 
 // Recountix Ad Manager
-async function sbGetActiveAds(shopId){const sb=getSupabase();if(!sb)return[];const now=new Date().toISOString();let q=sb.from('ads').select('*').eq('is_active',true).lte('start_at',now).gte('end_at',now).order('created_at',{ascending:false});const {data,error}=await q;if(error){console.warn('Ads unavailable',error.message);return[]}return(data||[]).filter(a=>a.target_type==='all'||(a.target_type==='shop'&&String(a.target_shop_id)===String(shopId||'')));}
-async function sbGetAds(){const sb=getSupabase();const {data,error}=await sb.from('ads').select('*, shops(name)').order('created_at',{ascending:false});if(error)throw error;return data||[];}
-async function sbSaveAd(ad){const sb=getSupabase();const row={title:ad.title,description:ad.description||'',image_url:ad.image_url||null,link_url:ad.link_url||null,cta_text:ad.cta_text||'Learn More',target_type:ad.target_type||'all',target_shop_id:ad.target_type==='shop'?(ad.target_shop_id||null):null,start_at:ad.start_at,end_at:ad.end_at,is_active:!!ad.is_active};let r=ad.id?await sb.from('ads').update(row).eq('id',ad.id).select().single():await sb.from('ads').insert(row).select().single();if(r.error)throw r.error;return r.data;}
-async function sbDeleteAd(id){const {error}=await getSupabase().from('ads').delete().eq('id',id);if(error)throw error;}
-async function sbTrackAdClick(id){try{await getSupabase().rpc('increment_ad_click',{ad_id:id});}catch(e){}}
+async function sbGetActiveAds(){
+    const token=getSession().sessionToken;if(!token)return[];
+    const {data,error}=await getSupabase().rpc('app_active_ads',{p_token:token});
+    if(error){console.warn('Ads unavailable',error.message);return[]}
+    return data||[];
+}
+async function sbGetAds(){
+    const token=getSession().sessionToken;if(!token)throw new Error('Secure session required');
+    const {data,error}=await getSupabase().rpc('app_manage_ads',{p_token:token,p_action:'list',p_payload:{}});
+    if(error)throw error;return data||[];
+}
+async function sbSaveAd(ad){
+    const token=getSession().sessionToken;if(!token)throw new Error('Secure session required');
+    const payload={...ad,target_shop_id:ad.target_type==='shop'?(ad.target_shop_id||null):null};
+    const {data,error}=await getSupabase().rpc('app_manage_ads',{
+      p_token:token,p_action:ad.id?'update':'create',p_payload:payload
+    });if(error)throw error;return data;
+}
+async function sbDeleteAd(id){
+    const token=getSession().sessionToken;if(!token)throw new Error('Secure session required');
+    const {error}=await getSupabase().rpc('app_manage_ads',{p_token:token,p_action:'delete',p_payload:{id}});
+    if(error)throw error;
+}
+async function sbTrackAdClick(id){try{const token=getSession().sessionToken;if(token)await getSupabase().rpc('app_ad_click',{p_token:token,p_ad_id:id});}catch(e){}}
 window.sbGetActiveAds=sbGetActiveAds;window.sbGetAds=sbGetAds;window.sbSaveAd=sbSaveAd;window.sbDeleteAd=sbDeleteAd;window.sbTrackAdClick=sbTrackAdClick;
+
+
+/* ---------- OFFLINE BUSINESS BACKUP ---------- */
+async function sbExportBusinessBackup(shopId) {
+    const token=getSession().sessionToken;
+    if(!token) throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_backup_export",{
+        p_token:token,p_shop_id:shopId||null
+    });
+    if(error) throw error;
+    return data;
+}
+async function sbRestoreBusinessBackup(backup) {
+    const token=getSession().sessionToken;
+    if(!token) throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_backup_restore",{
+        p_token:token,p_backup:backup
+    });
+    if(error) throw error;
+    return data;
+}
+window.sbExportBusinessBackup=sbExportBusinessBackup;
+window.sbRestoreBusinessBackup=sbRestoreBusinessBackup;
+
+async function sbModifyRecovery(id, expectedAmount, payload) {
+ const {data,error}=await getSupabase().rpc('app_update_recovery',{
+  p_token:getSession().sessionToken,p_recovery_id:id,p_expected_amount:expectedAmount,p_payload:payload
+ });
+ if(error)throw error;
+ return mapRecoveryFromDb(data);
+}
+
+
+async function sbSetCustomerPortalPin(customerId,pin){const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");const{data,error}=await getSupabase().rpc("app_set_customer_portal_pin",{p_token:token,p_customer_id:customerId,p_pin:pin||""});if(error)throw error;return data;}window.sbSetCustomerPortalPin=sbSetCustomerPortalPin;
+
+
+
+/* ---------- RECOVERY COMMAND CENTER LIVE METRICS ---------- */
+function __rxDateOnly(value){return (value||"").toString().slice(0,10);}
+function __rxDaysBetween(from,to){
+    const a=new Date(__rxDateOnly(from)), b=new Date(__rxDateOnly(to));
+    if(Number.isNaN(a.getTime())||Number.isNaN(b.getTime()))return null;
+    a.setHours(0,0,0,0);b.setHours(0,0,0,0);
+    return Math.floor((b-a)/86400000);
+}
+function __rxAgingSummary(customers){
+    const today=new Date().toISOString().slice(0,10);
+    const out={total_customers:0,total_outstanding:0,bucket_0_30:0,bucket_31_60:0,bucket_61_90:0,bucket_90_plus:0,count_0_30:0,count_31_60:0,count_61_90:0,count_90:0,msme_watch:0};
+    (customers||[]).forEach(c=>{
+        const amount=Number(c.outstanding||c.balance||0);
+        if(amount<=0)return;
+        out.total_customers+=1;out.total_outstanding+=amount;
+        const due=__rxDateOnly(c.dueDate||c.due_date||c.followup||c.created_at);
+        const days=due?Math.max(0,__rxDaysBetween(due,today)||0):0;
+        if(days<=30){out.bucket_0_30+=amount;out.count_0_30+=1;}
+        else if(days<=60){out.bucket_31_60+=amount;out.count_31_60+=1;}
+        else if(days<=90){out.bucket_61_90+=amount;out.count_61_90+=1;}
+        else{out.bucket_90_plus+=amount;out.count_90+=1;}
+        const msmeStart=__rxDateOnly(c.msme45DayStart||c.msme_45_day_start||due);
+        const msmeDays=msmeStart?(__rxDaysBetween(msmeStart,today)||0):0;
+        if(msmeDays>=35&&msmeDays<=45)out.msme_watch+=1;
+    });
+    return out;
+}
+async function sbGetRecoveryExecMetrics(){
+    const today=new Date();
+    const todayISO=today.toISOString().slice(0,10);
+    const monthPrefix=todayISO.slice(0,7);
+    const [customers,recoveries,ptpRows]=await Promise.all([
+        sbGetCustomers().catch(()=>[]),
+        sbGetRecoveries().catch(()=>[]),
+        (typeof sbGetPtp==="function"?sbGetPtp(null,"open"):Promise.resolve([])).catch(()=>[])
+    ]);
+    const aging=__rxAgingSummary(customers);
+    const recoveredThisMonth=(recoveries||[]).reduce((sum,r)=>{
+        const d=__rxDateOnly(r.date||r.recovery_date||r.created_at);
+        return d.slice(0,7)===monthPrefix?sum+Number(r.amount||0):sum;
+    },0);
+    let ptp7=0,ptp15=0,ptp30=0,brokenPtp=0,brokenPtpCount=0;
+    (ptpRows||[]).forEach(p=>{
+        const date=__rxDateOnly(p.promised_date||p.ptp_date||p.date);
+        const amount=Number(p.promised_amount||p.ptp_amount||p.amount||0);
+        const diff=date?__rxDaysBetween(todayISO,date):null;
+        if(diff!==null&&diff>=0&&amount>0){
+            if(diff<=7)ptp7+=amount;
+            if(diff<=15)ptp15+=amount;
+            if(diff<=30)ptp30+=amount;
+        }
+        if(diff!==null&&diff<0&&amount>0){brokenPtp+=amount;brokenPtpCount+=1;}
+    });
+    const elapsed=Math.max(1,today.getDate());
+    const dso=recoveredThisMonth>0?Math.round((aging.total_outstanding/(recoveredThisMonth/elapsed))*10)/10:null;
+    return {aging,recoveredThisMonth,dso,ptp7,ptp15,ptp30,brokenPtp,brokenPtpCount};
+}
+async function sbMarkDemandNoticeSent(customerId){
+    const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
+    const {data,error}=await getSupabase().rpc("app_mark_demand_notice_sent",{p_token:token,p_customer_id:customerId});
+    if(error)throw error;return data;
+}
+window.sbGetRecoveryExecMetrics=sbGetRecoveryExecMetrics;
+window.sbMarkDemandNoticeSent=sbMarkDemandNoticeSent;
+window.__rxAgingSummary=__rxAgingSummary;

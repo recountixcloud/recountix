@@ -1,14 +1,28 @@
 # Recountix Rc.0.05
 
-Premium dashboard refinement.
+**Release date:** 2026-09-15  
+**Status:** Production Candidate
 
-- Removed upper user/role chips from top headers.
-- Recovery Trend is now a clean line-only chart with no area fill.
-- Added refined card shadows, borders, hover states, analytics styling and table treatment.
-- Added visible build label `Rc.0.05` in the sidebar.
-- Updated Settings > Application Version to `Rc.0.05`.
-- Updated internal APP_INFO version to `Rc.0.05`.
+Rc.0.05 is the first fully hardened multi-business build.
 
-Login/session behavior and database logic were intentionally left unchanged.
+## Release scope
 
-- Recovery Trend now shows a rolling 30-day daily recovery series, including zero-recovery days.
+- Professional responsive interface for desktop and mobile.
+- Rolling 30-day recovery analytics.
+- Super Admin business, subscription, maintenance and advertisement controls.
+- Server-side shop isolation for customers, recoveries, users and settings.
+- Encrypted per-business offline backup history and portable restore files.
+- Automatic backup retry and failure status while the app is open.
+- Bcrypt credentials, expiring server sessions and login throttling.
+- Deny-by-default database access with token-authorized RPC operations.
+- Content Security Policy and automated security/release checks.
+
+## Acceptance status
+
+- Functional smoke testing: passed
+- Business privacy/isolation testing: passed
+- Backup and restore testing: passed
+- Mobile/responsive verification: passed
+- Invalid session and protected-route testing: passed
+- Security workflow: required
+- GitHub Pages deployment: required

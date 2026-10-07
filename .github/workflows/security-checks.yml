@@ -1,0 +1,25 @@
+name: Security checks
+
+on:
+  pull_request:
+  push:
+    branches: [main, "security/**", "staging/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  static-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: JavaScript syntax
+        run: |
+          find frontend/js -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Security regression scan
+        run: node scripts/security-check.mjs
+      - name: Release readiness
+        run: node scripts/release-check.mjs

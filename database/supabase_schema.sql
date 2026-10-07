@@ -151,11 +151,16 @@ ALTER TABLE recoveries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 
 -- For anon/authenticated full access during development (tighten later)
-CREATE POLICY "Allow all for anon" ON shops FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for anon" ON users FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for anon" ON customers FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for anon" ON recoveries FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for anon" ON settings FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow all for anon" ON public.shops;
+REVOKE ALL ON TABLE public.shops FROM anon, authenticated;
+DROP POLICY IF EXISTS "Allow all for anon" ON public.users;
+REVOKE ALL ON TABLE public.users FROM anon, authenticated;
+DROP POLICY IF EXISTS "Allow all for anon" ON public.customers;
+REVOKE ALL ON TABLE public.customers FROM anon, authenticated;
+DROP POLICY IF EXISTS "Allow all for anon" ON public.recoveries;
+REVOKE ALL ON TABLE public.recoveries FROM anon, authenticated;
+DROP POLICY IF EXISTS "Allow all for anon" ON public.settings;
+REVOKE ALL ON TABLE public.settings FROM anon, authenticated;
 */
 
 -- Allow public read/write for now (GitHub Pages + anon key)
@@ -166,11 +171,16 @@ ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE recoveries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "public_all_shops" ON shops FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "public_all_users" ON users FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "public_all_customers" ON customers FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "public_all_recoveries" ON recoveries FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "public_all_settings" ON settings FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "public_all_shops" ON public.shops;
+REVOKE ALL ON TABLE public.shops FROM anon, authenticated;
+DROP POLICY IF EXISTS "public_all_users" ON public.users;
+REVOKE ALL ON TABLE public.users FROM anon, authenticated;
+DROP POLICY IF EXISTS "public_all_customers" ON public.customers;
+REVOKE ALL ON TABLE public.customers FROM anon, authenticated;
+DROP POLICY IF EXISTS "public_all_recoveries" ON public.recoveries;
+REVOKE ALL ON TABLE public.recoveries FROM anon, authenticated;
+DROP POLICY IF EXISTS "public_all_settings" ON public.settings;
+REVOKE ALL ON TABLE public.settings FROM anon, authenticated;
 
 -- Done
 SELECT 'Schema + seed applied successfully' AS status;

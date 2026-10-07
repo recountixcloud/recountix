@@ -149,30 +149,20 @@ ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'shops' AND policyname = 'public_all_shops') THEN
-        CREATE POLICY "public_all_shops" ON shops FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'users' AND policyname = 'public_all_users') THEN
-        CREATE POLICY "public_all_users" ON users FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'customers' AND policyname = 'public_all_customers') THEN
-        CREATE POLICY "public_all_customers" ON customers FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'recoveries' AND policyname = 'public_all_recoveries') THEN
-        CREATE POLICY "public_all_recoveries" ON recoveries FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'settings' AND policyname = 'public_all_settings') THEN
-        CREATE POLICY "public_all_settings" ON settings FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'subscriptions' AND policyname = 'public_all_subscriptions') THEN
-        CREATE POLICY "public_all_subscriptions" ON subscriptions FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'audit_log' AND policyname = 'public_all_audit_log') THEN
-        CREATE POLICY "public_all_audit_log" ON audit_log FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-END $$;
+ALTER TABLE public.shops ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.shops FROM anon, authenticated;
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.users FROM anon, authenticated;
+ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.customers FROM anon, authenticated;
+ALTER TABLE public.recoveries ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.recoveries FROM anon, authenticated;
+ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.settings FROM anon, authenticated;
+ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.subscriptions FROM anon, authenticated;
+ALTER TABLE public.audit_log ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.audit_log FROM anon, authenticated;
 
 -- Reload PostgREST schema cache (Supabase)
 NOTIFY pgrst, 'reload schema';

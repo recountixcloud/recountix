@@ -3,8 +3,8 @@
    Production SaaS Edition
 ========================================================== */
 
-const SUPABASE_URL = "https://tmgpajynsvpjhpgrziue.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_LSQW7TBVNoTpgL3g8ccnaw_fYZJrbVh";
+const SUPABASE_URL = "https://niroqvhpyrwulzwiyctl.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_s4PUJ-wsnfstBEeap9j2tQ_PgRUlZq7";
 
 let supabaseClient = null;
 

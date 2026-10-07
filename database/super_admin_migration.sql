@@ -34,14 +34,8 @@ CREATE INDEX IF NOT EXISTS idx_subscriptions_end ON subscriptions(end_date);
 
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_policies WHERE tablename = 'subscriptions' AND policyname = 'public_all_subscriptions'
-    ) THEN
-        CREATE POLICY "public_all_subscriptions" ON subscriptions FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-END $$;
+ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.subscriptions FROM anon, authenticated;
 
 -- ------------------------------------------------------------
 -- AUDIT LOG (who changed what)
@@ -63,14 +57,8 @@ CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
 
 ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_policies WHERE tablename = 'audit_log' AND policyname = 'public_all_audit_log'
-    ) THEN
-        CREATE POLICY "public_all_audit_log" ON audit_log FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
-    END IF;
-END $$;
+ALTER TABLE public.audit_log ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.audit_log FROM anon, authenticated;
 
 -- ------------------------------------------------------------
 -- SEED: give existing 3 shops a 1-year subscription + license_expiry
