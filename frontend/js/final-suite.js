@@ -13,7 +13,7 @@ function once(id,tag,attrs){
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
   document.head.appendChild(el);
 }
-once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=command-center-9'});
+once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=command-center-10'});
 if(/dashboard|customers|recovery|ptp|reports|escalations/i.test(location.pathname)){
   once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
 }
@@ -46,8 +46,19 @@ function ensureProfile(){if(document.getElementById('voProfile'))return;const d=
 function showProfile(index){const c=(typeof customers!=='undefined'?customers:[])[index];if(!c)return;ensureProfile();const d=document.getElementById('voProfile');document.getElementById('voProfileName').textContent=c.name||'Customer';document.getElementById('voProfileSub').textContent=[c.mobile,c.village].filter(Boolean).join(' • ');const rr=(typeof recoveries!=='undefined'?recoveries:[]).filter(r=>String(r.customerId||r.customer_id)===String(c.id));const paid=rr.reduce((a,r)=>a+Number(r.amount||0),0);const last=rr.slice().sort((a,b)=>String(b.date||b.recovery_date||'').localeCompare(String(a.date||a.recovery_date||'')))[0];document.getElementById('voProfileBody').innerHTML=`<div class="vo-profile-grid"><div class="vo-profile-stat"><span>Total Bill</span><strong>${money(c.bill)}</strong></div><div class="vo-profile-stat"><span>Recovered</span><strong>${money(paid+Number(c.down||0))}</strong></div><div class="vo-profile-stat"><span>Outstanding</span><strong>${money(c.outstanding)}</strong></div><div class="vo-profile-stat"><span>Follow-up</span><strong>${esc(c.followup||'-')}</strong></div><div class="vo-profile-stat"><span>Last Payment</span><strong>${esc(last?(last.date||last.recovery_date):'-')}</strong></div><div class="vo-profile-stat"><span>Status</span><strong>${esc(c.status||'Active')}</strong></div></div><div class="vo-profile-info"><div><b>Father</b>${esc(c.father||'-')}</div><div><b>Executive</b>${esc(c.executive||'-')}</div><div><b>Taluka</b>${esc(c.taluka||'-')}</div><div><b>District</b>${esc(c.district||'-')}</div><div><b>Address</b>${esc(c.address||'-')}</div><div><b>Remarks</b>${esc(c.remarks||'-')}</div></div><div class="vo-profile-actions"><a href="tel:${nums(c.mobile)}">📞 Call</a><a href="${waUrl(c)}" target="_blank">💬 WhatsApp</a><a href="recovery.html">₹ Record Recovery</a><a href="ptp.html">🤝 Promise to Pay</a></div>`;d.classList.add('open')}
 function upgradeCustomerView(){if(typeof window.viewCustomer==='function'&&!window.__oldViewCustomer){window.__oldViewCustomer=window.viewCustomer;window.viewCustomer=showProfile}}
 function polish(){document.querySelectorAll('button').forEach(b=>{if(!b.dataset.voBusy){b.dataset.voBusy='1';b.addEventListener('click',()=>{if(b.disabled)return;b.classList.add('vo-clicked');setTimeout(()=>b.classList.remove('vo-clicked'),250)})}})}
-async function run(){await window.rxPreferencesReady;applyRoleUI();upgradeCustomerView();polish();await enhanceDashboard()}
-window.addEventListener('load',()=>{setTimeout(run,900);setTimeout(run,2200)});document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(run,200)});setInterval(()=>{if(document.getElementById('voFinalKpis'))enhanceDashboard()},30000);
+function idle(fn,delay){setTimeout(()=>('requestIdleCallback'in window?requestIdleCallback(fn,{timeout:1600}):fn()),delay||0)}
+async function run(){
+  await window.rxPreferencesReady;
+  applyRoleUI();
+  if(document.body.dataset.rxSuiteReady==='1') return;
+  document.body.dataset.rxSuiteReady='1';
+  upgradeCustomerView();
+  polish();
+  if(document.getElementById('totalCustomers')) await enhanceDashboard();
+}
+window.addEventListener('load',()=>idle(run,450));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&document.getElementById('totalCustomers')) idle(enhanceDashboard,250)});
+if(document.getElementById('totalCustomers')) setInterval(()=>{if(!document.hidden)enhanceDashboard()},60000);
 })();
 
 /* Recountix Rc.0.05 — Compact data views: overview first, details on demand */
@@ -81,7 +92,13 @@ window.addEventListener('load',()=>{setTimeout(run,900);setTimeout(run,2200)});d
     document.querySelectorAll('section.table-section, section.vo-today-panel').forEach(makeCompact);
   }
   window.rcApplyCompactViews=apply;
-  window.addEventListener('load',()=>{setTimeout(apply,350);setTimeout(apply,1400);setTimeout(apply,2600)});
-  const mo=new MutationObserver(()=>{clearTimeout(window.__rcCompactTimer);window.__rcCompactTimer=setTimeout(apply,120)});
-  mo.observe(document.documentElement,{childList:true,subtree:true});
+  function bootCompact(){
+    if(!document.querySelector('section.table-section, section.vo-today-panel')) return;
+    apply();
+    const root=document.querySelector('.main-content')||document.body;
+    const mo=new MutationObserver(()=>{clearTimeout(window.__rcCompactTimer);window.__rcCompactTimer=setTimeout(apply,250)});
+    mo.observe(root,{childList:true,subtree:true});
+    setTimeout(()=>mo.disconnect(),12000);
+  }
+  window.addEventListener('load',()=>('requestIdleCallback'in window?requestIdleCallback(bootCompact,{timeout:1800}):setTimeout(bootCompact,600)));
 })();
