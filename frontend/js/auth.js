@@ -394,7 +394,7 @@ function applyRoleRestrictions() {
             if (!header.querySelector(".vo-topbar-brand")) {
                 const brand = document.createElement("div");
                 brand.className = "vo-topbar-brand";
-                brand.innerHTML = '<img src="assets/logo.png" alt="Recountix"><div class="vo-topbar-brand-name">RECOUNTIX<small>BEYOND WHAT&apos;S DUE.</small></div>';
+                brand.innerHTML = '<div class="vo-topbar-brand-name">RECOUNTIX<small>BEYOND WHAT&apos;S DUE.</small></div>';
                 header.insertBefore(brand, header.firstChild);
             }
             // Keep top headers clean and premium: no role/name chips in the upper bar.
