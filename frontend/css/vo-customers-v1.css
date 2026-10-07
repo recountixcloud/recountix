@@ -78,3 +78,75 @@ body{background:var(--c-bg);}
   .table-responsive{border-radius:14px!important}
   .table-responsive table{min-width:850px}
 }
+
+
+/* Recountix Customer Action Buttons - mobile polish */
+body.customers-part2 .summary-bar{
+  align-items:flex-start!important;
+}
+body.customers-part2 .summary-bar .add-btn,
+body.customers-part2 .summary-bar label.add-btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:9px!important;
+  min-height:44px!important;
+  width:auto!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:11px 16px!important;
+  color:#fff!important;
+  font-size:13px!important;
+  line-height:1.15!important;
+  white-space:normal!important;
+  text-align:center!important;
+  vertical-align:middle!important;
+}
+body.customers-part2 .summary-bar .add-btn i,
+body.customers-part2 .summary-bar label.add-btn i{
+  flex:0 0 auto!important;
+  color:#fff!important;
+  opacity:1!important;
+}
+body.customers-part2 .summary-bar label.add-btn{
+  cursor:pointer!important;
+}
+body.customers-part2 .summary-bar label.add-btn *{
+  pointer-events:none;
+}
+body.customers-part2 .summary-bar label.add-btn input{
+  pointer-events:auto;
+}
+@media(max-width:768px){
+  body.customers-part2 .summary-bar{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:12px!important;
+  }
+  body.customers-part2 .summary-bar>div:first-child{
+    grid-column:1/-1!important;
+  }
+  body.customers-part2 .summary-bar .add-btn,
+  body.customers-part2 .summary-bar label.add-btn{
+    width:100%!important;
+    min-width:0!important;
+    min-height:58px!important;
+    padding:12px 10px!important;
+    border-radius:14px!important;
+    font-size:12.5px!important;
+  }
+  body.customers-part2 .summary-bar .add-btn:nth-of-type(2),
+  body.customers-part2 .summary-bar label.add-btn{
+    grid-column:1/-1!important;
+    min-height:54px!important;
+  }
+}
+@media(max-width:420px){
+  body.customers-part2 .summary-bar{
+    grid-template-columns:1fr!important;
+  }
+  body.customers-part2 .summary-bar .add-btn,
+  body.customers-part2 .summary-bar label.add-btn{
+    grid-column:1/-1!important;
+  }
+}
