@@ -575,6 +575,17 @@ Open Offline Backup
 <a class="add-btn" href="backup.html">Open Backup &amp; Restore</a>
 </div>
 
+<div class="card green">
+<i class="fa-solid fa-gauge-high"></i>
+<h3>Optimize Website</h3>
+<p>Clear old app cache and reload the faster version</p>
+<br>
+<button type="button" class="add-btn" id="optimizeWebsiteBtn" onclick="optimizeWebsite()">
+<i class="fa-solid fa-bolt"></i>
+Optimize Now
+</button>
+</div>
+
 <div class="card orange">
 <i class="fa-solid fa-file-export"></i>
 <h3>Export Reports</h3>
@@ -1189,6 +1200,31 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 
 <script src="js/final-suite.js?v=command-center-10"></script>
 <script src="js/offline-backup.js?v=preferences-1"></script><script src="js/i18n.js?v=2"></script>
+
+<script>
+async function optimizeWebsite(){
+  const btn=document.getElementById('optimizeWebsiteBtn');
+  const old=btn?btn.innerHTML:'';
+  try{
+    if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Optimizing...';}
+    if('caches' in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+    if('serviceWorker' in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r=>r.unregister()));
+    }
+    sessionStorage.setItem('rx_optimized_at', new Date().toISOString());
+    alert('Website optimized. Fresh fast version will load now.');
+    location.reload();
+  }catch(e){
+    alert('Optimize failed: '+(e&&e.message?e.message:e));
+    if(btn){btn.disabled=false;btn.innerHTML=old;}
+  }
+}
+</script>
+
 </body>
 
 </html>
