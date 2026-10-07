@@ -1,6 +1,7 @@
 /* Recountix – Final Combined Suite */
 (function(){
 'use strict';
+const RX_FAST_DASHBOARD = !!document.getElementById('recoveryTrendChart');
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const day=()=>new Date().toISOString().slice(0,10);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -22,8 +23,8 @@ function ensureProfile(){if(document.getElementById('voProfile'))return;const d=
 function showProfile(index){const c=(typeof customers!=='undefined'?customers:[])[index];if(!c)return;ensureProfile();const d=document.getElementById('voProfile');document.getElementById('voProfileName').textContent=c.name||'Customer';document.getElementById('voProfileSub').textContent=[c.mobile,c.village].filter(Boolean).join(' • ');const rr=(typeof recoveries!=='undefined'?recoveries:[]).filter(r=>String(r.customerId||r.customer_id)===String(c.id));const paid=rr.reduce((a,r)=>a+Number(r.amount||0),0);const last=rr.slice().sort((a,b)=>String(b.date||b.recovery_date||'').localeCompare(String(a.date||a.recovery_date||'')))[0];document.getElementById('voProfileBody').innerHTML=`<div class="vo-profile-grid"><div class="vo-profile-stat"><span>Total Bill</span><strong>${money(c.bill)}</strong></div><div class="vo-profile-stat"><span>Recovered</span><strong>${money(paid+Number(c.down||0))}</strong></div><div class="vo-profile-stat"><span>Outstanding</span><strong>${money(c.outstanding)}</strong></div><div class="vo-profile-stat"><span>Follow-up</span><strong>${esc(c.followup||'-')}</strong></div><div class="vo-profile-stat"><span>Last Payment</span><strong>${esc(last?(last.date||last.recovery_date):'-')}</strong></div><div class="vo-profile-stat"><span>Status</span><strong>${esc(c.status||'Active')}</strong></div></div><div class="vo-profile-info"><div><b>Father</b>${esc(c.father||'-')}</div><div><b>Executive</b>${esc(c.executive||'-')}</div><div><b>Taluka</b>${esc(c.taluka||'-')}</div><div><b>District</b>${esc(c.district||'-')}</div><div><b>Address</b>${esc(c.address||'-')}</div><div><b>Remarks</b>${esc(c.remarks||'-')}</div></div><div class="vo-profile-actions"><a href="tel:${nums(c.mobile)}">📞 Call</a><a href="${waUrl(c)}" target="_blank">💬 WhatsApp</a><a href="recovery.html">₹ Record Recovery</a><a href="ptp.html">🤝 Promise to Pay</a></div>`;d.classList.add('open')}
 function upgradeCustomerView(){if(typeof window.viewCustomer==='function'&&!window.__oldViewCustomer){window.__oldViewCustomer=window.viewCustomer;window.viewCustomer=showProfile}}
 function polish(){document.querySelectorAll('button').forEach(b=>{if(!b.dataset.voBusy){b.dataset.voBusy='1';b.addEventListener('click',()=>{if(b.disabled)return;b.classList.add('vo-clicked');setTimeout(()=>b.classList.remove('vo-clicked'),250)})}})}
-async function run(){applyRoleUI();upgradeCustomerView();polish();await enhanceDashboard()}
-window.addEventListener('load',()=>{setTimeout(run,900);setTimeout(run,2200)});document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(run,200)});setInterval(()=>{if(document.getElementById('voFinalKpis'))enhanceDashboard()},30000);
+async function run(){applyRoleUI();upgradeCustomerView();polish();if(!RX_FAST_DASHBOARD) await enhanceDashboard()}
+window.addEventListener('load',()=>{setTimeout(run,900);setTimeout(run,2200)});document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(run,200)});setInterval(()=>{if(!RX_FAST_DASHBOARD&&document.getElementById('voFinalKpis'))enhanceDashboard()},120000);
 })();
 
 /* Recountix Rc.0.05 — Compact data views: overview first, details on demand */
