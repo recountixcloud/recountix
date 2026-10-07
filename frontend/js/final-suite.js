@@ -1,15 +1,22 @@
 /* Recountix dark recovery shell bootstrap */
 (function(){
 'use strict';
+function hasAsset(part){
+  return Array.prototype.some.call(document.querySelectorAll('link[href],script[src]'),function(el){
+    return ((el.getAttribute('href')||el.getAttribute('src')||'').indexOf(part)>-1);
+  });
+}
 function once(id,tag,attrs){
-  if(document.getElementById(id)) return;
+  if(document.getElementById(id) || (attrs.href&&hasAsset(attrs.href.split('?')[0])) || (attrs.src&&hasAsset(attrs.src.split('?')[0]))) return;
   var el=document.createElement(tag);
   el.id=id;
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
   document.head.appendChild(el);
 }
 once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=command-center-9'});
-once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
+if(/dashboard|customers|recovery|ptp|reports|escalations/i.test(location.pathname)){
+  once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
+}
 var meta=document.querySelector('meta[name="theme-color"]');
 if(meta) meta.setAttribute('content','#0B0F17');
 document.documentElement.classList.add('rx-dark-shell');
