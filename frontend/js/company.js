@@ -83,6 +83,12 @@ async function loadCompanies() {
 
     try {
         const rows = await sbGetSubscriptionsWithShops();
+        allShopsCache = (rows || []).map(r => {
+            const shop = Object.assign({}, r.shop || {});
+            shop.license_expiry = r.endDate || shop.license_expiry || "";
+            shop.plan_name = (r.subscription && r.subscription.plan_name) || shop.plan_name || "Basic";
+            return shop;
+        });
         body.innerHTML = rows.map((r, i) => {
             const shop = r.shop;
             const status = r.liveStatus;
@@ -309,31 +315,89 @@ function closeRenewModal() {
     document.getElementById("renewModal").style.display = "none";
 }
 
+async function renewLicenseDirectly(shopId, form) {
+    const sb = getSupabase();
+    if (!sb) throw new Error("Supabase not ready");
+    const payload = {
+        license_expiry: form.endDate,
+        plan_name: form.plan || "Basic",
+        is_active: true,
+        updated_at: new Date().toISOString()
+    };
+    const { error } = await sb.from("shops").update(payload).eq("id", shopId);
+    if (error) throw error;
+
+    try {
+        await sb.from("subscriptions").insert({
+            shop_id: shopId,
+            plan_name: form.plan || "Basic",
+            amount: Number(form.amount || 0),
+            start_date: new Date().toISOString().slice(0, 10),
+            end_date: form.endDate,
+            status: "active",
+            remarks: form.remarks || ""
+        });
+    } catch (subErr) {
+        console.warn("Subscription history insert skipped, license was renewed on shop row", subErr);
+    }
+    try {
+        if (typeof sbAddAuditLog === "function") {
+            await sbAddAuditLog("subscription.renew", "shop", shopId, "Renewed license until " + form.endDate, shopId);
+        }
+    } catch (auditErr) {
+        console.warn("Audit log skipped", auditErr);
+    }
+    return true;
+}
+
 async function confirmRenewSubscription() {
     const shopId = document.getElementById("renewShopId").value;
+    const btn = document.querySelector("#renewModal .add-btn");
     const form = {
         plan: document.getElementById("renewPlan").value,
         amount: document.getElementById("renewAmount").value,
         endDate: document.getElementById("renewEndDate").value,
         remarks: document.getElementById("renewRemarks").value
     };
+    if (!shopId) {
+        alert("Shop not found. Please reopen renewal.");
+        return;
+    }
     if (!form.endDate) {
         alert("Please choose a new expiry date");
         return;
     }
     try {
-        await sbRenewSubscription(shopId, form);
+        if (btn) {
+            btn.disabled = true;
+            btn.dataset.oldText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Renewing...';
+        }
+        try {
+            await sbRenewSubscription(shopId, form);
+        } catch (primaryErr) {
+            console.warn("Primary renewal failed, trying direct license update", primaryErr);
+            await renewLicenseDirectly(shopId, form);
+        }
         closeRenewModal();
         await loadSubscriptions();
+        if (document.getElementById("companiesBody")) await loadCompanies();
+        if (document.getElementById("shopOverviewBody")) await loadSuperDashboard();
         alert("Subscription renewed successfully.");
     } catch (e) {
         alert("Renewal failed: " + (e.message || e));
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = btn.dataset.oldText || '<i class="fa-solid fa-rotate"></i> Confirm Renewal';
+        }
     }
 }
 
 window.openRenewModal = openRenewModal;
 window.closeRenewModal = closeRenewModal;
 window.confirmRenewSubscription = confirmRenewSubscription;
+window.renewLicenseDirectly = renewLicenseDirectly;
 
 /* ================================
    INIT
