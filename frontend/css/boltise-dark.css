@@ -1550,3 +1550,78 @@ html.rx-dark-shell body:has(.login-wrap) {
 .rx-dark-shell ::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, .72) !important;
 }
+
+/* Rc speed pass: cheaper mobile paint and lower layout cost */
+.rx-dark-shell .content-box,
+.rx-dark-shell .table-section,
+.rx-dark-shell .analytics-panel,
+.rx-dark-shell .vo-today-panel,
+.rx-dark-shell .rx-roadmap-panel,
+.rx-dark-shell .rx-command-panel,
+.rx-dark-shell .rx-risk-panel,
+.rx-dark-shell .backup-panel,
+.rx-dark-shell .card,
+.rx-dark-shell .rx-nav-card,
+.rx-dark-shell .action-card,
+.rx-dark-shell .rx-module-card {
+  contain: layout paint style !important;
+}
+
+@supports (content-visibility: auto) {
+  .rx-dark-shell .table-section,
+  .rx-dark-shell .rx-roadmap-panel,
+  .rx-dark-shell .analytics-panel,
+  .rx-dark-shell .content-box,
+  .rx-dark-shell .vo-today-panel {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 420px;
+  }
+}
+
+@media (max-width: 900px) {
+  .rx-dark-shell body::before {
+    background: linear-gradient(180deg, #0B0F17 0%, #090D14 100%) !important;
+  }
+
+  .rx-dark-shell .rx-live-clock,
+  .rx-dark-shell .card,
+  .rx-dark-shell .content-box,
+  .rx-dark-shell .table-section,
+  .rx-dark-shell .analytics-panel,
+  .rx-dark-shell .vo-command-strip,
+  .rx-dark-shell .rx-nav-card,
+  .rx-dark-shell .backup-panel,
+  .rx-dark-shell .action-card,
+  .rx-dark-shell .vo-final-kpi,
+  .rx-dark-shell .vo-today-panel,
+  .rx-dark-shell .rx-command-panel,
+  .rx-dark-shell .rx-risk-panel,
+  .rx-dark-shell .rx-roadmap-panel,
+  .rx-dark-shell .rx-module-card,
+  .rx-dark-shell .panel,
+  .rx-dark-shell .shell {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .22) !important;
+  }
+
+  .rx-dark-shell .card:hover,
+  .rx-dark-shell .rx-nav-card:hover,
+  .rx-dark-shell .vo-command-btn:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .24) !important;
+  }
+
+  .rx-dark-shell * {
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (max-width: 900px) {
+  .rx-dark-shell *,
+  .rx-dark-shell *::before,
+  .rx-dark-shell *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
