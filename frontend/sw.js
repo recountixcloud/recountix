@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recountix-fast-20261007-1';
+const CACHE_NAME = 'recountix-fast-20261007-2';
 const CORE = [
   './',
   './index.html',
@@ -43,7 +43,7 @@ self.addEventListener('fetch', event => {
 
   if (isStaticAsset(event.request)) {
     event.respondWith(
-      caches.match(event.request).then(cached => {
+      caches.match(event.request, { ignoreSearch: true }).then(cached => {
         if (cached) return cached;
         return fetch(event.request).then(response => {
           if (response && response.ok) {
@@ -64,6 +64,6 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
       }
       return response;
-    }).catch(() => caches.match(event.request).then(cached => cached || caches.match('./login.html')))
+    }).catch(() => caches.match(event.request, { ignoreSearch: true }).then(cached => cached || caches.match('./login.html')))
   );
 });
