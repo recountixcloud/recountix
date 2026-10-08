@@ -2507,3 +2507,22 @@ body::after,
 .rx-dark-shell body::after {
   pointer-events: none !important;
 }
+
+/* Expose the decorative layer through the page canvas, keeping panels opaque. */
+html body .wrapper,
+html body .main-content,
+html.rx-dark-shell body .wrapper,
+html.rx-dark-shell body .main-content {
+  background: transparent !important;
+}
+body::after,
+.rx-dark-shell body::after {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, .14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, .14) 1px, transparent 1px) !important;
+  opacity: .65 !important;
+}
+@media (max-width: 640px) {
+  body::after,
+  .rx-dark-shell body::after { opacity: .5 !important; }
+}
