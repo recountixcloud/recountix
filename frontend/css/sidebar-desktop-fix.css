@@ -1,7 +1,7 @@
 /* Recountix desktop sidebar fix.
-   The main responsive sheet turns every sidebar into a mobile drawer; this
-   narrow override restores the fixed desktop navigation on wide screens. */
-@media screen and (min-width: 881px) {
+   Desktop browsers can report a narrow CSS viewport when zoomed, so this uses
+   both width and pointer capability to keep the side options visible. */
+@media screen and (min-width: 641px), screen and (hover: hover) and (pointer: fine) {
   .sidebar {
     width: var(--sidebar-w, 256px) !important;
     transform: translateX(0) !important;
@@ -13,7 +13,10 @@
     z-index: 1000 !important;
   }
 
+  .sidebar,
+  .sidebar.open,
   .sidebar[aria-hidden="true"] {
+    transform: translateX(0) !important;
     visibility: visible !important;
   }
 
@@ -37,5 +40,12 @@
 
   body.sidebar-open {
     overflow: auto !important;
+  }
+}
+
+@media screen and (max-width: 640px) and (hover: none) and (pointer: coarse) {
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
   }
 }
