@@ -2385,3 +2385,79 @@ body::before,
   opacity: 1 !important;
   transform: none !important;
 }
+
+/* Recountix live motion background.
+   Lightweight animated grid + glow, designed to stay fast on mobile. */
+body::before,
+.rx-dark-shell body::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(124, 58, 237, .18), transparent 28rem),
+    radial-gradient(circle at 84% 10%, rgba(56, 189, 248, .12), transparent 24rem),
+    radial-gradient(circle at 72% 86%, rgba(16, 185, 129, .08), transparent 24rem),
+    linear-gradient(180deg, #0B0F17 0%, #090D14 100%) !important;
+  background-size: 120% 120%, 120% 120%, 120% 120%, 100% 100% !important;
+  animation: rxAuroraDrift 18s ease-in-out infinite alternate !important;
+  opacity: 1 !important;
+}
+
+body::after,
+.rx-dark-shell body::after {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, .045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black 0%, black 58%, transparent 100%);
+  opacity: .36;
+  animation: rxGridFloat 28s linear infinite !important;
+}
+
+.wrapper,
+.main-content,
+.modal,
+.sidebar,
+.menu-toggle {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes rxAuroraDrift {
+  0% { background-position: 0% 0%, 100% 0%, 80% 100%, 0 0; }
+  100% { background-position: 8% 4%, 88% 8%, 70% 88%, 0 0; }
+}
+
+@keyframes rxGridFloat {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 42px 42px, 42px 42px; }
+}
+
+@media (max-width: 640px) {
+  body::after,
+  .rx-dark-shell body::after {
+    background-size: 34px 34px;
+    opacity: .22;
+  }
+
+  body::before,
+  .rx-dark-shell body::before {
+    animation-duration: 24s !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after,
+  .rx-dark-shell body::before,
+  .rx-dark-shell body::after {
+    animation: none !important;
+  }
+}
