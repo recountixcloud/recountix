@@ -2249,3 +2249,139 @@ html.rx-dark-shell body:has(.login-wrap) {
     padding-top: 72px !important;
   }
 }
+
+/* Recountix anti white navigation flash.
+   Keep legacy light/glass header layers from painting during page switches. */
+html,
+body,
+.wrapper,
+.main-content,
+.rx-dark-shell,
+.rx-dark-shell body,
+.rx-dark-shell .wrapper,
+.rx-dark-shell .main-content {
+  background-color: #0B0F17 !important;
+}
+
+body,
+.rx-dark-shell body,
+.main-content,
+.rx-dark-shell .main-content {
+  background-image: none !important;
+}
+
+body::before,
+.rx-dark-shell body::before {
+  background: linear-gradient(180deg, #0B0F17 0%, #090D14 100%) !important;
+  opacity: 1 !important;
+}
+
+.topbar,
+.content-header,
+.page-header,
+.page-title-wrap,
+.header-card,
+.heading-card,
+.module-header,
+.card-header,
+.table-header,
+.list-header,
+.filters,
+.filter-bar,
+.toolbar,
+.page-hero,
+.hero,
+.hero-section,
+.section-header,
+.summary-bar,
+.license-header,
+.subscription-header,
+.subscription-hero,
+.admin-hero,
+.settings-header,
+.vo-today-head,
+.rx-panel-head,
+.rx-dark-shell [class*="header"],
+.rx-dark-shell [class*="Header"],
+.rx-dark-shell [class*="hero"],
+.rx-dark-shell [class*="Hero"],
+.rx-dark-shell [class*="banner"]:not(.rx-ad-slot):not(#recountixAdSlot) {
+  background: linear-gradient(135deg, rgba(17, 24, 39, .98), rgba(15, 23, 42, .94)) !important;
+  background-color: #111827 !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .24) !important;
+}
+
+.topbar::before,
+.content-header::before,
+.page-header::before,
+.page-title-wrap::before,
+.header-card::before,
+.heading-card::before,
+.module-header::before,
+.card-header::before,
+.table-header::before,
+.list-header::before,
+.filters::before,
+.filter-bar::before,
+.toolbar::before,
+.page-hero::before,
+.hero::before,
+.hero-section::before,
+.section-header::before,
+.summary-bar::before,
+.license-header::before,
+.subscription-header::before,
+.subscription-hero::before,
+.admin-hero::before,
+.settings-header::before,
+.vo-today-head::before,
+.rx-panel-head::before,
+.rx-dark-shell [class*="header"]::before,
+.rx-dark-shell [class*="Header"]::before,
+.rx-dark-shell [class*="hero"]::before,
+.rx-dark-shell [class*="Hero"]::before,
+.rx-dark-shell [class*="banner"]:not(.rx-ad-slot):not(#recountixAdSlot)::before,
+.topbar::after,
+.content-header::after,
+.page-header::after,
+.page-title-wrap::after,
+.header-card::after,
+.heading-card::after,
+.module-header::after,
+.card-header::after,
+.table-header::after,
+.list-header::after,
+.filters::after,
+.filter-bar::after,
+.toolbar::after,
+.page-hero::after,
+.hero::after,
+.hero-section::after,
+.section-header::after,
+.summary-bar::after,
+.license-header::after,
+.subscription-header::after,
+.subscription-hero::after,
+.admin-hero::after,
+.settings-header::after,
+.vo-today-head::after,
+.rx-panel-head::after,
+.rx-dark-shell [class*="header"]::after,
+.rx-dark-shell [class*="Header"]::after,
+.rx-dark-shell [class*="hero"]::after,
+.rx-dark-shell [class*="Hero"]::after,
+.rx-dark-shell [class*="banner"]:not(.rx-ad-slot):not(#recountixAdSlot)::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+.rx-dark-shell .fade,
+.rx-dark-shell .page-enter,
+.rx-dark-shell .page-transition,
+.rx-dark-shell .content-transition {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
