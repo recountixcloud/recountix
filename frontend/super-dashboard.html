@@ -134,6 +134,22 @@
     </div>
 </section>
 
+
+<section class="table-section fade" id="speedOptimizerPanel">
+    <div class="summary-bar">
+        <div>
+            <h2><i class="fa-solid fa-gauge-high"></i> Website Speed Boost</h2>
+            <span>Refresh old cache and load the latest optimized files on this device.</span>
+        </div>
+        <button type="button" class="add-btn" onclick="optimizeWebsiteSpeed()">
+            <i class="fa-solid fa-bolt"></i> Speed Boost
+        </button>
+    </div>
+    <div style="padding:0 20px 20px;">
+        <small id="speedBoostStatus" style="color:#94A3B8;font-weight:700;">Use this when the website feels slow or old design changes are not visible.</small>
+    </div>
+</section>
+
 <section class="table-section fade">
     <div class="summary-bar">
         <div>
@@ -183,6 +199,46 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 </script>
 
 <script>
+
+async function optimizeWebsiteSpeed() {
+    const status = document.getElementById("speedBoostStatus");
+    const button = document.querySelector("#speedOptimizerPanel .add-btn");
+    try {
+        if (status) status.textContent = "Cleaning cache and updating website files...";
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Working...';
+        }
+
+        if ("caches" in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(function (key) { return caches.delete(key); }));
+        }
+
+        if ("serviceWorker" in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(registrations.map(function (registration) {
+                return registration.update().catch(function () {});
+            }));
+        }
+
+        localStorage.setItem("rx_speed_boost_at", new Date().toISOString());
+        if (status) status.textContent = "Done. Reloading latest version...";
+        setTimeout(function () {
+            const cleanUrl = window.location.pathname + "?v=" + Date.now();
+            window.location.replace(cleanUrl);
+        }, 450);
+    } catch (e) {
+        console.error(e);
+        if (status) status.textContent = "Speed boost failed. Please hard refresh once.";
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = '<i class="fa-solid fa-bolt"></i> Speed Boost';
+        }
+        alert("Speed boost failed: " + (e.message || e));
+    }
+}
+
 async function loadMaintenanceUI() {
     try {
         const status = await sbGetMaintenanceStatus();
