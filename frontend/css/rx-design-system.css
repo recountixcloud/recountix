@@ -1,0 +1,335 @@
+/* ==========================================================================
+   RECOUNTIX DESIGN SYSTEM — typography, 8pt spacing, layout, buttons, forms
+   Loaded LAST (after recountix-2027.css and boltise-dark.css).
+   Colors are NOT redefined here: everything reads the existing theme tokens
+   (--brand-*, --bg, --surface, --border, --ink*, --danger ...).
+   ========================================================================== */
+
+:root{
+  --theme-color: var(--brand-500);            /* primary used for focus rings */
+  --rx-font: 'Inter','Roboto',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display: var(--rx-font);
+  --font-body: var(--rx-font);
+
+  /* 8pt spacing scale */
+  --sp-1:4px; --sp-2:8px; --sp-3:16px; --sp-4:24px; --sp-5:32px; --sp-6:48px;
+
+  /* Layout */
+  --sidebar-w:248px;
+  --sidebar-w-collapsed:64px;
+  --header-h:60px;
+  --edge:32px;                                /* main container horizontal padding */
+  --card-radius:12px;
+  --card-pad:24px;
+  --card-shadow:0 1px 3px rgba(0,0,0,.06);
+  --ctl-radius:8px;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
+
+/* ---------- 1. Typography ---------- */
+:root:root body{ font-family:var(--rx-font) !important; font-size:14px; line-height:1.5; font-weight:400; }
+:root:root h1,
+:root:root h2,
+:root:root h3,
+:root:root h4,
+:root:root h5,
+:root:root h6,
+:root:root .page-title{ font-family:var(--rx-font) !important; letter-spacing:0 !important; }
+:root:root h1,
+:root:root .page-title{ font-size:clamp(28px,2.4vw,32px) !important; font-weight:700 !important; line-height:1.25 !important; letter-spacing:-.01em !important; }
+:root:root h2{ font-size:clamp(20px,1.8vw,24px) !important; font-weight:600 !important; line-height:1.3 !important; }
+:root:root h3{ font-size:16px !important; font-weight:600 !important; line-height:1.4 !important; }
+:root:root .modal-content h3,
+:root:root .modal h3{ font-size:18px !important; }
+:root:root p,
+:root:root li,
+:root:root td,
+:root:root th,
+:root:root span,
+:root:root a,
+:root:root button,
+:root:root input,
+:root:root select,
+:root:root textarea{ line-height:1.5; }
+:root:root small,
+:root:root .caption,
+:root:root .eyebrow,
+:root:root .helper,
+:root:root .hint{ font-size:12px !important; font-weight:500 !important; line-height:1.4 !important; letter-spacing:0 !important; text-transform:none !important; }
+:root:root .page-subtitle{ font-size:14px !important; line-height:1.5 !important; margin:var(--sp-1) 0 0 !important; }
+
+/* Context overrides: cards use h1/h2/h3 as metric / label / panel titles */
+:root:root .card h1{ font-size:24px !important; font-weight:700 !important; line-height:1.25 !important; }
+:root:root .card h3{ font-size:12px !important; font-weight:500 !important; line-height:1.4 !important; letter-spacing:0 !important; text-transform:none !important; margin:0 0 var(--sp-1) !important; }
+:root:root .content-box h2,
+:root:root .table-section h2,
+:root:root .summary-bar h2{ font-size:20px !important; font-weight:600 !important; line-height:1.3 !important; }
+:root:root .analytics-head h2,
+:root:root .vo-command-title strong,
+:root:root .rx-nav-card b{ font-size:16px !important; font-weight:600 !important; line-height:1.4 !important; }
+:root:root .sidebar .logo h2{ font-size:18px !important; font-weight:700 !important; line-height:1.3 !important; }
+:root:root .sidebar .logo p{ font-size:12px !important; font-weight:500 !important; letter-spacing:0 !important; text-transform:none !important; line-height:1.4 !important; }
+:root:root .rx-clock-date{ font-size:12px !important; font-weight:500 !important; letter-spacing:0 !important; }
+:root:root table{ font-size:14px; line-height:1.5; }
+:root:root th{ font-size:12px !important; font-weight:500 !important; letter-spacing:0 !important; line-height:1.4 !important; }
+:root:root td,
+:root:root th{ padding:12px var(--sp-3) !important; }
+
+/* ---------- 2. Layout (desktop) ---------- */
+:root:root .sidebar{ width:var(--sidebar-w) !important; padding:var(--sp-3) var(--sp-2) !important; transition:width .3s var(--ease), transform .28s ease !important; }
+:root:root .sidebar .logo{ padding:var(--sp-1) var(--sp-2) var(--sp-3) !important; margin-bottom:var(--sp-2) !important; }
+:root:root .sidebar .menu li{ margin:var(--sp-1) 0 !important; }
+:root:root .sidebar .menu a{ min-height:40px; padding:var(--sp-2) 12px !important; font-size:14px !important; font-weight:500 !important; border-radius:var(--ctl-radius) !important; white-space:nowrap; }
+
+:root:root .main-content{
+  margin-left:var(--sidebar-w) !important; width:auto !important;
+  padding:0 var(--edge) var(--sp-5) !important;
+  overflow:visible !important; overflow-x:clip !important;       /* keeps the sticky header working */
+  transition:margin-left .3s var(--ease);
+}
+:root:root .topbar{
+  position:sticky !important; top:0; z-index:50 !important;
+  min-height:var(--header-h); margin:0 calc(var(--edge) * -1) var(--sp-4) !important;
+  padding:var(--sp-2) var(--edge) !important; gap:var(--sp-3);
+  background:var(--bg) !important; border-bottom:1px solid var(--border-soft) !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important; border-radius:0 !important;
+}
+:root:root .topbar::before{ display:none !important; }
+:root:root .topbar h1{ margin:0 !important; }
+
+/* Cards & containers */
+:root:root .card,
+:root:root .content-box,
+:root:root .table-section,
+:root:root .analytics-panel,
+:root:root .vo-command-strip,
+:root:root .quick-actions,
+:root:root .rx-nav-card,
+:root:root .action-card,
+:root:root .backup-panel,
+:root:root .vo-final-kpi,
+:root:root .vo-today-panel{
+  background:var(--surface) !important; border:1px solid var(--border) !important;
+  border-radius:var(--card-radius) !important; box-shadow:var(--card-shadow) !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+}
+:root:root .card::before,
+:root:root .content-box::before,
+:root:root .table-section::before,
+:root:root .backup-panel::before,
+:root:root .vo-final-kpi::before,
+:root:root .vo-today-panel::before{ display:none !important; }
+:root:root .content-box,
+:root:root .table-section,
+:root:root .analytics-panel,
+:root:root .vo-command-strip,
+:root:root .quick-actions,
+:root:root .backup-panel,
+:root:root .action-card{ padding:var(--card-pad) !important; margin-top:var(--sp-4) !important; }
+:root:root .card,
+:root:root .rx-nav-card,
+:root:root .vo-final-kpi,
+:root:root .vo-today-panel{ padding:20px !important; }
+:root:root .card:hover{ transform:none !important; }
+:root:root .rx-nav-card:hover{ transform:none !important; box-shadow:0 2px 8px rgba(0,0,0,.12) !important; }
+:root:root .dashboard-grid,
+:root:root .dashboard-cards{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:var(--sp-3) !important; margin:0 0 var(--sp-4) !important; }
+:root:root .dashboard-analytics{ gap:var(--sp-3) !important; margin-bottom:var(--sp-4) !important; }
+:root:root .form-grid{ gap:var(--sp-3) !important; }
+:root:root .summary-bar{ gap:var(--sp-3) !important; margin-bottom:var(--sp-3) !important; }
+:root:root .footer{ padding:var(--sp-5) 0 var(--sp-2) !important; font-size:12px !important; }
+
+/* Collapsed icon rail (desktop only) */
+@media (min-width:641px){
+  :root:root body.rx-collapsed .sidebar .menu a span,
+:root:root body.rx-collapsed .sidebar .logo p{ display:none !important; }
+  :root:root body.rx-collapsed .sidebar .logo h2{ font-size:0 !important; justify-content:center; }
+  :root:root body.rx-collapsed .sidebar .menu a{ justify-content:center !important; padding:var(--sp-2) 0 !important; }
+  :root:root body.rx-collapsed .sidebar .menu a i{ width:auto; font-size:16px; }
+  :root:root body.rx-collapsed .rx-collapse-btn i{ transform:rotate(180deg); }
+}
+:root:root .rx-collapse-btn{ margin-top:var(--sp-3) !important; border-top:1px solid rgba(255,255,255,.1); padding-top:var(--sp-2); list-style:none; }
+:root:root .rx-collapse-btn button{
+  display:flex; align-items:center; gap:12px; width:100%; min-height:40px; padding:var(--sp-2) 12px;
+  background:transparent; border:0; border-radius:var(--ctl-radius); cursor:pointer;
+  color:rgba(255,255,255,.62); font:500 14px/1.5 var(--rx-font);
+}
+:root:root .rx-collapse-btn button:hover{ background:rgba(255,255,255,.07); color:#fff; }
+:root:root .rx-collapse-btn i{ width:18px; text-align:center; transition:transform .3s var(--ease); }
+@media (min-width:641px){ :root:root body.rx-collapsed .rx-collapse-btn button{ justify-content:center; padding:var(--sp-2) 0; } :root:root body.rx-collapsed .rx-collapse-btn span{ display:none; } }
+
+/* ---------- 3. Buttons ---------- */
+:root:root .add-btn,
+:root:root .btn-primary,
+:root:root .btn-secondary,
+:root:root .btn-cancel,
+:root:root .btn-reset,
+:root:root .cancel-btn,
+:root:root button.save-btn,
+:root:root button[type="submit"],
+:root:root .btn,
+:root:root .btn-md{
+  display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:var(--sp-2) !important;
+  height:40px !important; min-height:40px !important; padding:var(--sp-2) var(--sp-3) !important;
+  font-family:var(--rx-font) !important; font-size:14px !important; font-weight:600 !important; line-height:1.5 !important;
+  border-radius:var(--ctl-radius) !important; white-space:nowrap; cursor:pointer;
+  transition:filter .15s var(--ease), box-shadow .15s var(--ease), transform .15s var(--ease), background .15s var(--ease) !important;
+}
+/* Small: table rows, filters (inline font-size:12px marks the compact buttons already in the markup) */
+:root:root .btn-sm,
+:root:root button.btn-sm,
+:root:root td .add-btn,
+:root:root td .btn-secondary,
+:root:root .add-btn[style*="font-size:12px"],
+:root:root .add-btn[style*="font-size: 12px"],
+:root:root .add-btn[style*="font-size:11px"]{
+  height:32px !important; min-height:32px !important; padding:6px 12px !important; font-size:13px !important;
+}
+:root:root .action-btn{ height:32px; min-width:32px; padding:6px 12px; font-size:13px; border-radius:var(--ctl-radius) !important; }
+/* Large: hero / key CTA */
+:root:root .btn-lg,
+:root:root button.btn-lg,
+:root:root #loginBtn{ height:48px !important; min-height:48px !important; padding:12px var(--sp-4) !important; font-size:16px !important; }
+:root:root #loginBtn{ width:100%; }
+
+:root:root .add-btn:hover,
+:root:root .btn-primary:hover,
+:root:root .btn-secondary:hover,
+:root:root .btn-cancel:hover,
+:root:root .btn-reset:hover,
+:root:root .cancel-btn:hover,
+:root:root button.save-btn:hover,
+:root:root button[type="submit"]:hover,
+:root:root .btn:hover,
+:root:root .action-btn:hover{
+  filter:brightness(1.1); box-shadow:0 2px 8px rgba(0,0,0,.18) !important; transform:none !important;
+}
+:root:root .add-btn:active,
+:root:root .btn-primary:active,
+:root:root .btn-secondary:active,
+:root:root .btn-cancel:active,
+:root:root .btn-reset:active,
+:root:root .cancel-btn:active,
+:root:root button.save-btn:active,
+:root:root button[type="submit"]:active,
+:root:root .btn:active,
+:root:root .action-btn:active,
+:root:root .rx-expand:active{
+  transform:scale(.98) !important; filter:brightness(.94);
+}
+:root:root button:disabled,
+:root:root .add-btn[disabled],
+:root:root .btn[disabled],
+:root:root [aria-disabled="true"],
+:root:root .is-disabled{
+  opacity:.5 !important; cursor:not-allowed !important; filter:none !important; box-shadow:none !important; transform:none !important;
+}
+
+/* ---------- 4. Icon-first hover expansion (desktop) ---------- */
+:root:root .rx-expand{ gap:0 !important; min-width:40px !important; padding:var(--sp-2) 12px !important; overflow:hidden; }
+:root:root .rx-expand .rx-label{
+  display:inline-block; max-width:0 !important; opacity:0 !important; overflow:hidden; white-space:nowrap; margin-left:0 !important;
+  transition:max-width .3s var(--ease), opacity .3s var(--ease), margin-left .3s var(--ease);
+}
+@media (hover:hover){
+  :root:root .rx-expand:hover .rx-label,
+:root:root .rx-expand:focus-visible .rx-label{ max-width:240px !important; opacity:1 !important; margin-left:var(--sp-2) !important; }  /* numeric cap: fit-content can't be animated */
+}
+@media (hover:none),(max-width:640px){
+  :root:root .rx-expand{ gap:var(--sp-2) !important; padding:var(--sp-2) var(--sp-3) !important; }
+  :root:root .rx-expand .rx-label{ max-width:none !important; opacity:1 !important; margin-left:0 !important; }          /* touch: persistent text */
+}
+
+/* ---------- 5. Inputs & forms ---------- */
+:root:root label,
+:root:root .form-grid label{ font-size:13px !important; font-weight:500 !important; line-height:1.4 !important; margin:0 0 6px !important; }
+:root:root label.add-btn{ margin:0 !important; }
+:root:root .form-control,
+:root:root input[type="text"],
+:root:root input[type="number"],
+:root:root input[type="date"],
+:root:root input[type="email"],
+:root:root input[type="password"],
+:root:root input[type="tel"],
+:root:root input[type="search"],
+:root:root select,
+:root:root textarea,
+:root:root .search-box{
+  height:40px; min-height:40px !important; padding:var(--sp-2) 12px !important; border-radius:var(--ctl-radius) !important;
+  font-size:14px !important; line-height:1.5 !important; border-width:1px !important;
+}
+:root:root textarea{ height:auto; min-height:88px !important; }
+:root:root .form-control:focus,
+:root:root input:focus,
+:root:root select:focus,
+:root:root textarea:focus,
+:root:root .search-box:focus{
+  border-color:var(--theme-color) !important; box-shadow:0 0 0 2px var(--theme-color) !important; outline:none !important;
+}
+:root:root :focus-visible{ outline:2px solid var(--theme-color); outline-offset:2px; }
+:root:root .modal-content{ border-radius:var(--card-radius) !important; padding:var(--card-pad) !important; }
+
+/* ---------- Tablet ---------- */
+@media (max-width:1024px){
+  :root:root .dashboard-grid,
+:root:root .dashboard-cards{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  :root:root .dashboard-analytics{ grid-template-columns:1fr !important; }
+}
+
+/* ---------- 2b. Mobile ---------- */
+@media (max-width:640px){
+  :root{ --edge:16px; --card-pad:16px; }
+  :root:root body{ font-size:15px; }
+  :root:root .main-content{ margin-left:0 !important; padding:64px var(--edge) var(--sp-4) !important; }
+  :root:root .topbar{ position:static !important; margin:0 0 var(--sp-3) !important; padding:0 !important; border:0 !important; background:transparent !important; min-height:0; }
+  :root:root .menu-toggle{ width:44px !important; height:44px !important; top:var(--sp-2) !important; left:var(--edge) !important; }
+  :root:root .dashboard-grid,
+:root:root .dashboard-cards,
+:root:root .dashboard-analytics,
+:root:root .form-grid,
+:root:root .rx-dashboard-nav,
+:root:root .vo-command-grid{ grid-template-columns:1fr !important; }
+  :root:root .topbar .add-btn,
+:root:root .btn-row .add-btn,
+:root:root .btn-row button{ width:100%; }
+  :root:root .rx-collapse-btn{ display:none !important; }
+  /* 16px prevents iOS zoom-on-focus; 44px touch targets */
+  :root:root .form-control,
+:root:root input[type="text"],
+:root:root input[type="number"],
+:root:root input[type="date"],
+:root:root input[type="email"],
+:root:root input[type="password"],
+:root:root input[type="tel"],
+:root:root input[type="search"],
+:root:root select,
+:root:root textarea,
+:root:root .search-box{ height:44px; min-height:44px !important; font-size:16px !important; }
+  :root:root textarea{ height:auto; min-height:88px !important; }
+}
+@media (max-width:640px),(pointer:coarse){
+  :root:root .add-btn,
+:root:root .btn-primary,
+:root:root .btn-secondary,
+:root:root .btn-cancel,
+:root:root .btn-reset,
+:root:root .cancel-btn,
+:root:root button.save-btn,
+:root:root button[type="submit"],
+:root:root .btn,
+:root:root .btn-md,
+:root:root .btn-sm,
+:root:root .action-btn,
+:root:root .sidebar .menu a,
+:root:root .rx-collapse-btn button{ min-height:44px !important; }
+  :root:root .action-btn{ min-width:44px; }
+  :root:root #loginBtn,
+:root:root .btn-lg{ min-height:48px !important; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  :root:root *,
+:root:root *::before,
+:root:root *::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
+}
