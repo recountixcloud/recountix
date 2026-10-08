@@ -2461,3 +2461,48 @@ body::after,
     animation: none !important;
   }
 }
+
+/* Recountix sidebar click safety after motion background.
+   Keep navigation above decorative/background/content layers. */
+.sidebar,
+.rx-dark-shell .sidebar {
+  position: fixed !important;
+  z-index: 1200 !important;
+  pointer-events: auto !important;
+}
+
+.sidebar .menu,
+.sidebar .menu li,
+.sidebar .menu a,
+.rx-dark-shell .sidebar .menu,
+.rx-dark-shell .sidebar .menu li,
+.rx-dark-shell .sidebar .menu a {
+  position: relative !important;
+  z-index: 1201 !important;
+  pointer-events: auto !important;
+}
+
+.menu-toggle,
+.rx-dark-shell .menu-toggle {
+  position: fixed !important;
+  z-index: 1300 !important;
+  pointer-events: auto !important;
+}
+
+.sidebar-overlay,
+.rx-dark-shell .sidebar-overlay {
+  z-index: 1100 !important;
+}
+
+.main-content,
+.rx-dark-shell .main-content {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+body::before,
+body::after,
+.rx-dark-shell body::before,
+.rx-dark-shell body::after {
+  pointer-events: none !important;
+}
