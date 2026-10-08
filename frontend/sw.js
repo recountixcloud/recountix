@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recountix-fast-20261008-sidebar-live-1';
+const CACHE_NAME = 'recountix-fast-20261008-sidebar-labels-1';
 const CORE = [
   './',
   './index.html',
