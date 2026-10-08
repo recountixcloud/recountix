@@ -1625,3 +1625,76 @@ html.rx-dark-shell body:has(.login-wrap) {
     transition-duration: .001ms !important;
   }
 }
+
+
+/* Recountix desktop sidebar labels live-branch fix.
+   Live GitHub Pages is serving this branch. Show desktop side options
+   immediately instead of hiding text in rail/hover mode. */
+@media screen and (min-width: 641px), screen and (hover: hover) and (pointer: fine) {
+  .rx-dark-shell .sidebar,
+  .rx-dark-shell .sidebar.open,
+  .sidebar,
+  .sidebar.open,
+  .sidebar[aria-hidden="true"] {
+    width: var(--sidebar-w, 256px) !important;
+    min-width: var(--sidebar-w, 256px) !important;
+    max-width: var(--sidebar-w, 256px) !important;
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    overflow-x: hidden !important;
+    pointer-events: auto !important;
+    padding-top: 22px !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+  }
+
+  .rx-dark-shell .sidebar .logo h2,
+  .rx-dark-shell .sidebar .logo p,
+  .rx-dark-shell .sidebar .menu a span,
+  .rx-dark-shell .sidebar .menu a b,
+  .rx-dark-shell .sidebar .menu a small,
+  .sidebar .logo h2,
+  .sidebar .logo p,
+  .sidebar .menu a span,
+  .sidebar .menu a b,
+  .sidebar .menu a small {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    display: inline !important;
+    white-space: nowrap !important;
+  }
+
+  .rx-dark-shell .sidebar .menu a,
+  .sidebar .menu a {
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .rx-dark-shell .sidebar .menu a i,
+  .sidebar .menu a i {
+    flex: 0 0 22px !important;
+    margin: 0 !important;
+    text-align: center !important;
+  }
+
+  .menu-toggle,
+  .rx-dark-shell .menu-toggle,
+  .sidebar-overlay,
+  .sidebar-overlay.show {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .main-content,
+  .rx-dark-shell .main-content {
+    margin-left: var(--sidebar-w, 256px) !important;
+    width: calc(100% - var(--sidebar-w, 256px)) !important;
+    padding: 26px 30px 44px !important;
+  }
+}
