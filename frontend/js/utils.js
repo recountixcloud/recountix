@@ -82,41 +82,55 @@ window.escapeHtml = escapeHtml;
 window.showToast = showToast;
 
 
-/* ========== Sidebar drawer V7: overlay-safe direct navigation ========== */
+/* ========== Sidebar drawer V8: desktop sidebar + mobile drawer ========== */
 (function () {
   function initDrawerV6() {
     var btn = document.getElementById('menuToggle');
     var sb = document.querySelector('.sidebar');
     var ov = document.getElementById('sidebarOverlay');
+    var desktopMq = window.matchMedia ? window.matchMedia('(min-width: 881px)') : null;
     if (!btn || !sb) return;
 
+    function isDesktop() {
+      return desktopMq ? desktopMq.matches : window.innerWidth >= 881;
+    }
+
     function setOpen(open) {
-      sb.classList.toggle('open', open);
-      sb.inert = !open;
-      sb.setAttribute('aria-hidden', open ? 'false' : 'true');
-      if (ov) ov.classList.toggle('show', open);
-      document.documentElement.classList.toggle('sidebar-open', open);
-      document.body.classList.toggle('sidebar-open', open);
-      document.body.style.overflow = open ? 'hidden' : '';
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      var desktop = isDesktop();
+      var active = desktop || !!open;
+
+      sb.classList.toggle('open', active);
+      sb.inert = !active;
+      sb.setAttribute('aria-hidden', active ? 'false' : 'true');
+
+      if (ov) ov.classList.toggle('show', !desktop && !!open);
+      document.documentElement.classList.toggle('sidebar-open', !desktop && !!open);
+      document.body.classList.toggle('sidebar-open', !desktop && !!open);
+      document.body.style.overflow = (!desktop && open) ? 'hidden' : '';
+
+      btn.setAttribute('aria-expanded', (!desktop && open) ? 'true' : 'false');
+      btn.setAttribute('aria-label', (!desktop && open) ? 'Close menu' : 'Open menu');
     }
 
     window.closeRecountixDrawer = function () { setOpen(false); };
 
-    // Never inherit a stale open state after navigation/back-cache restore.
+    // Desktop must keep side options active; mobile starts closed.
     setOpen(false);
 
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
+      if (isDesktop()) {
+        setOpen(false);
+        return;
+      }
       setOpen(!sb.classList.contains('open'));
     }, false);
 
-    // The visual overlay never owns pointer input. Close the drawer on any
-    // outside pointer before the underlying page can react.
+    // The visual overlay never owns pointer input. Close only the mobile drawer
+    // on outside pointer before the underlying page can react.
     document.addEventListener('pointerdown', function (e) {
-      if (!sb.classList.contains('open')) return;
+      if (isDesktop() || !sb.classList.contains('open')) return;
       if (sb.contains(e.target) || btn.contains(e.target)) return;
       e.preventDefault();
       e.stopPropagation();
@@ -143,6 +157,10 @@ window.showToast = showToast;
       if (e.key === 'Escape') setOpen(false);
     });
 
+    if (desktopMq) {
+      if (desktopMq.addEventListener) desktopMq.addEventListener('change', function () { setOpen(false); });
+      else if (desktopMq.addListener) desktopMq.addListener(function () { setOpen(false); });
+    }
     window.addEventListener('pageshow', function () { setOpen(false); });
   }
 
