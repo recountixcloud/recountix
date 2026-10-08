@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recountix-fast-20261007-4';
+const CACHE_NAME = 'recountix-fast-20261008-sidebar-1';
 const CORE = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const CORE = [
   './dashboard.html',
   './css/recountix-2027.css',
   './css/boltise-dark.css',
+  './css/sidebar-desktop-fix.css',
   './js/final-suite.js',
   './js/supabase.js',
   './js/utils.js',
