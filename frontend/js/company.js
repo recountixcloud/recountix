@@ -81,6 +81,7 @@ async function loadSuperDashboard() {
    COMPANY MANAGEMENT
 ================================ */
 let allShopsCache = [];
+let subscriptionRowsCache = [];
 
 async function loadCompanies() {
     const body = document.getElementById("companiesBody");
@@ -165,6 +166,13 @@ function setShopFieldValue(id, value) {
     if (field) field.value = value;
 }
 
+function setRenewFieldsVisible(show) {
+    const block = document.getElementById("companyRenewFields");
+    const note = document.getElementById("companyRenewLockedNote");
+    if (block) block.style.display = show ? "" : "none";
+    if (note) note.style.display = show ? "none" : "block";
+}
+
 function showShopModal() {
     const modal = document.getElementById("shopModal");
     if (!modal) {
@@ -194,6 +202,7 @@ function openAddShopModal() {
     setShopFieldValue("shopAdminPassword", "");
     setShopFieldValue("shopAdminName", "");
 
+    setRenewFieldsVisible(true);
     const adminBlock = document.getElementById("newShopAdminBlock");
     if (adminBlock) adminBlock.style.display = "block";
     const codeField = document.getElementById("shopCode");
@@ -218,6 +227,7 @@ function openEditShopModal(shopId) {
     document.getElementById("shopPlan").value = shop.plan_name || "Basic";
     document.getElementById("shopLicenseExpiry").value = shop.license_expiry || "";
     document.getElementById("shopMaxUsers").value = shop.max_users || 5;
+    setRenewFieldsVisible(false);
     document.getElementById("newShopAdminBlock").style.display = "none";
     showShopModal();
 }
@@ -294,9 +304,14 @@ window.deleteShopHandler = deleteShopHandler;
    SUBSCRIPTION PAGE
 ================================ */
 function openRenewShopById(shopId) {
-    const shop = allShopsCache.find((item) => String(item.id) === String(shopId));
-    if (!shop) return;
-    openRenewModal(shop.id, shop.name || "", shop.plan_name || "Basic");
+    const row = subscriptionRowsCache.find((item) => item.shop && String(item.shop.id) === String(shopId));
+    const shop = row && row.shop ? row.shop : allShopsCache.find((item) => String(item.id) === String(shopId));
+    if (!shop) {
+        alert("Business details are still loading. Please try again.");
+        return;
+    }
+    const plan = (row && row.subscription && row.subscription.plan_name) || shop.plan_name || "Basic";
+    openRenewModal(shop.id, shop.name || "", plan);
 }
 window.openRenewShopById = openRenewShopById;
 
@@ -306,6 +321,7 @@ async function loadSubscriptions() {
 
     try {
         const rows = await sbGetSubscriptionsWithShops();
+        subscriptionRowsCache = rows || [];
 
         let active = 0, expiring = 0, expired = 0;
         rows.forEach(r => {
