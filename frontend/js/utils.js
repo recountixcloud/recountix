@@ -82,72 +82,90 @@ window.escapeHtml = escapeHtml;
 window.showToast = showToast;
 
 
-/* ========== Sidebar drawer V7: overlay-safe direct navigation ========== */
+/* ========== Sidebar drawer V8: desktop-pinned, mobile overlay ========== */
 (function () {
-  function initDrawerV6() {
+  function initDrawerV8() {
     var btn = document.getElementById('menuToggle');
     var sb = document.querySelector('.sidebar');
     var ov = document.getElementById('sidebarOverlay');
     if (!btn || !sb) return;
 
+    var desktopMq = window.matchMedia ? window.matchMedia('(min-width: 641px), (hover: hover) and (pointer: fine)') : null;
+
+    function isDesktop() {
+      return (desktopMq && desktopMq.matches) || window.innerWidth >= 641;
+    }
+
     function setOpen(open) {
-      sb.classList.toggle('open', open);
-      sb.inert = !open;
-      sb.setAttribute('aria-hidden', open ? 'false' : 'true');
-      if (ov) ov.classList.toggle('show', open);
-      document.documentElement.classList.toggle('sidebar-open', open);
-      document.body.classList.toggle('sidebar-open', open);
-      document.body.style.overflow = open ? 'hidden' : '';
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      var desktop = isDesktop();
+      var active = desktop || !!open;
+
+      sb.classList.toggle('open', active);
+      sb.inert = !active;
+      sb.setAttribute('aria-hidden', active ? 'false' : 'true');
+
+      if (ov) ov.classList.toggle('show', active && !desktop);
+      document.documentElement.classList.toggle('sidebar-open', active && !desktop);
+      document.body.classList.toggle('sidebar-open', active && !desktop);
+      document.body.style.overflow = active && !desktop ? 'hidden' : '';
+
+      btn.setAttribute('aria-expanded', active ? 'true' : 'false');
+      btn.setAttribute('aria-label', active && !desktop ? 'Close menu' : 'Open menu');
     }
 
     window.closeRecountixDrawer = function () { setOpen(false); };
 
-    // Never inherit a stale open state after navigation/back-cache restore.
+    // Desktop drawers stay pinned open; mobile drawers start closed.
     setOpen(false);
 
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
+      if (isDesktop()) {
+        setOpen(false);
+        return;
+      }
       setOpen(!sb.classList.contains('open'));
     }, false);
 
-    // The visual overlay never owns pointer input. Close the drawer on any
-    // outside pointer before the underlying page can react.
     document.addEventListener('pointerdown', function (e) {
-      if (!sb.classList.contains('open')) return;
+      if (isDesktop() || !sb.classList.contains('open')) return;
       if (sb.contains(e.target) || btn.contains(e.target)) return;
       e.preventDefault();
       e.stopPropagation();
       setOpen(false);
     }, true);
 
-    // Capture real sidebar links and navigate explicitly. This avoids mobile
-    // WebView/stacking-layer bugs that can swallow the browser's default tap.
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('.sidebar a[href]');
       if (!a) return;
       var href = a.getAttribute('href') || '';
       if (!href || href === '#' || /^javascript:/i.test(href)) {
-        window.setTimeout(function(){ setOpen(false); }, 0);
+        window.setTimeout(function(){ if (!isDesktop()) setOpen(false); }, 0);
         return;
       }
       e.preventDefault();
       e.stopImmediatePropagation();
-      setOpen(false);
+      if (!isDesktop()) setOpen(false);
       window.location.assign(a.href);
     }, true);
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape' && !isDesktop()) setOpen(false);
     });
 
+    if (desktopMq && desktopMq.addEventListener) {
+      desktopMq.addEventListener('change', function () { setOpen(false); });
+    } else if (desktopMq && desktopMq.addListener) {
+      desktopMq.addListener(function () { setOpen(false); });
+    }
+
+    window.addEventListener('resize', function () { setOpen(false); });
     window.addEventListener('pageshow', function () { setOpen(false); });
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initDrawerV6, {once:true});
-  else initDrawerV6();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initDrawerV8, {once:true});
+  else initDrawerV8();
 })();
 
 /* Premium ambient cursor effect — desktop pointer devices only. */
