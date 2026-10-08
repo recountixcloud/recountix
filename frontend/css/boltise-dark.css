@@ -1698,3 +1698,186 @@ html.rx-dark-shell body:has(.login-wrap) {
     padding: 26px 30px 44px !important;
   }
 }
+
+
+/* Recountix global typography and button consistency fix.
+   Keep the app readable by reducing heavy weights and normalizing common
+   buttons across every page. */
+.rx-dark-shell,
+.rx-dark-shell body {
+  font-weight: 400 !important;
+}
+
+.rx-dark-shell h1,
+.rx-dark-shell h2,
+.rx-dark-shell h3,
+.rx-dark-shell h4,
+.rx-dark-shell h5,
+.rx-dark-shell h6,
+.rx-dark-shell .page-title,
+.rx-dark-shell .summary-bar h2,
+.rx-dark-shell .summary-bar h3,
+.rx-dark-shell .content-box h2,
+.rx-dark-shell .table-section h2,
+.rx-dark-shell .card h1,
+.rx-dark-shell .card h2,
+.rx-dark-shell .card h3,
+.rx-dark-shell .rx-nav-card b,
+.rx-dark-shell .action-card h3,
+.rx-dark-shell .vo-command-title strong {
+  font-weight: 650 !important;
+  letter-spacing: 0 !important;
+}
+
+.rx-dark-shell .page-title,
+.rx-dark-shell h1 {
+  font-size: clamp(28px, 4.6vw, 42px) !important;
+  line-height: 1.08 !important;
+}
+
+.rx-dark-shell .summary-bar h2,
+.rx-dark-shell .summary-bar h3,
+.rx-dark-shell .content-box h2,
+.rx-dark-shell .table-section h2 {
+  font-size: clamp(19px, 3.8vw, 26px) !important;
+  line-height: 1.15 !important;
+}
+
+.rx-dark-shell .card h1 {
+  font-size: clamp(24px, 4vw, 34px) !important;
+  font-weight: 650 !important;
+}
+
+.rx-dark-shell .card h3,
+.rx-dark-shell label,
+.rx-dark-shell .form-label,
+.rx-dark-shell th,
+.rx-dark-shell .rx-eyebrow,
+.rx-dark-shell .badge,
+.rx-dark-shell .rx-status-pill {
+  font-weight: 650 !important;
+  letter-spacing: .02em !important;
+}
+
+.rx-dark-shell p,
+.rx-dark-shell span,
+.rx-dark-shell small,
+.rx-dark-shell td,
+.rx-dark-shell input,
+.rx-dark-shell select,
+.rx-dark-shell textarea {
+  font-weight: 400 !important;
+}
+
+.rx-dark-shell .sidebar .menu a,
+.rx-dark-shell .sidebar .logo h2,
+.rx-dark-shell .user-info,
+.rx-dark-shell .vo-mini-btn,
+.rx-dark-shell .rc-view-details,
+.rx-dark-shell .rx-module-card a {
+  font-weight: 600 !important;
+}
+
+.rx-dark-shell button,
+.rx-dark-shell .add-btn,
+.rx-dark-shell a.add-btn,
+.rx-dark-shell .btn-primary,
+.rx-dark-shell .btn-secondary,
+.rx-dark-shell .btn-cancel,
+.rx-dark-shell .btn-reset,
+.rx-dark-shell .cancel-btn,
+.rx-dark-shell .save-btn,
+.rx-dark-shell .action-btn,
+.rx-dark-shell .vo-command-btn,
+.rx-dark-shell .vo-mini-btn,
+.rx-dark-shell .rc-view-details,
+.rx-dark-shell input[type="button"],
+.rx-dark-shell input[type="submit"],
+.rx-dark-shell input[type="reset"] {
+  min-height: 44px !important;
+  height: 44px !important;
+  padding: 0 16px !important;
+  border-radius: 12px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+
+.rx-dark-shell .add-btn,
+.rx-dark-shell a.add-btn,
+.rx-dark-shell .btn-primary,
+.rx-dark-shell .btn-secondary,
+.rx-dark-shell .btn-cancel,
+.rx-dark-shell .btn-reset,
+.rx-dark-shell .cancel-btn,
+.rx-dark-shell .save-btn,
+.rx-dark-shell button[type="submit"],
+.rx-dark-shell input[type="submit"] {
+  min-width: 148px !important;
+}
+
+.rx-dark-shell .action-btn,
+.rx-dark-shell .vo-mini-btn,
+.rx-dark-shell .delete-btn,
+.rx-dark-shell .edit-btn,
+.rx-dark-shell .retry-btn {
+  min-width: 44px !important;
+}
+
+.rx-dark-shell .table-section .add-btn,
+.rx-dark-shell .content-box .add-btn,
+.rx-dark-shell .summary-bar .add-btn {
+  min-width: 148px !important;
+  height: 44px !important;
+  padding: 0 16px !important;
+  font-size: 13px !important;
+}
+
+.rx-dark-shell .login-card .btn-primary {
+  height: 48px !important;
+  min-height: 48px !important;
+  font-weight: 600 !important;
+}
+
+.rx-dark-shell .login-card h1.title {
+  font-weight: 650 !important;
+}
+
+.rx-dark-shell .menu-toggle,
+.rx-dark-shell button.menu-toggle,
+.rx-dark-shell .login-card .field-wrap button.eye-btn {
+  min-width: 44px !important;
+  width: 44px !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 560px) {
+  .rx-dark-shell button,
+  .rx-dark-shell .add-btn,
+  .rx-dark-shell a.add-btn,
+  .rx-dark-shell .btn-primary,
+  .rx-dark-shell .btn-secondary,
+  .rx-dark-shell .btn-cancel,
+  .rx-dark-shell .btn-reset,
+  .rx-dark-shell .cancel-btn,
+  .rx-dark-shell .save-btn,
+  .rx-dark-shell .vo-command-btn,
+  .rx-dark-shell .rc-view-details {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .rx-dark-shell .action-btn,
+  .rx-dark-shell .vo-mini-btn,
+  .rx-dark-shell .menu-toggle,
+  .rx-dark-shell button.menu-toggle,
+  .rx-dark-shell .login-card .field-wrap button.eye-btn {
+    width: 44px !important;
+    min-width: 44px !important;
+  }
+}
