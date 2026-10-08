@@ -88,11 +88,11 @@ window.showToast = showToast;
     var btn = document.getElementById('menuToggle');
     var sb = document.querySelector('.sidebar');
     var ov = document.getElementById('sidebarOverlay');
-    var desktopMq = window.matchMedia ? window.matchMedia('(min-width: 881px)') : null;
+    var desktopMq = window.matchMedia ? window.matchMedia('(min-width: 641px), (hover: hover) and (pointer: fine)') : null;
     if (!btn || !sb) return;
 
     function isDesktop() {
-      return desktopMq ? desktopMq.matches : window.innerWidth >= 881;
+      return desktopMq ? desktopMq.matches : window.innerWidth >= 641;
     }
 
     function setOpen(open) {
