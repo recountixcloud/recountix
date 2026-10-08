@@ -143,17 +143,22 @@
                 <label>Address</label>
                 <textarea id="shopAddress" rows="2" placeholder="Business Address"></textarea>
             </div>
-            <div>
-                <label>Plan</label>
-                <select id="shopPlan">
-                    <option value="Basic">Basic</option>
-                    <option value="Standard">Standard</option>
-                    <option value="Premium">Premium</option>
-                </select>
+            <div id="companyRenewFields" style="display:contents;">
+                <div>
+                    <label>Plan</label>
+                    <select id="shopPlan">
+                        <option value="Basic">Basic</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Premium">Premium</option>
+                    </select>
+                </div>
+                <div>
+                    <label>License Expiry</label>
+                    <input type="date" id="shopLicenseExpiry">
+                </div>
             </div>
-            <div>
-                <label>License Expiry</label>
-                <input type="date" id="shopLicenseExpiry">
+            <div id="companyRenewLockedNote" class="full-width" style="display:none;color:#94A3B8;font-weight:700;">
+                Plan and license renewal are handled from Subscription & Licensing only.
             </div>
             <div>
                 <label>Max Users</label>
@@ -203,7 +208,7 @@
 <script src="js/db.js?v=preferences-1"></script>
 <script src="js/auth.js?v=rights-1"></script><script src="js/preferences.js?v=preferences-1"></script>
 <script src="js/app.js?v=preferences-1"></script>
-<script src="js/company.js?v=star-wave-3"></script>
+<script src="js/company.js?v=subscription-renew-2"></script>
 <script src="js/excel-import.js"></script>
 
 <script>
