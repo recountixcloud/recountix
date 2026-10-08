@@ -2074,3 +2074,178 @@ html.rx-dark-shell body:has(.login-wrap) {
     transform: none !important;
   }
 }
+
+
+/* Recountix mobile overlap cleanup.
+   Prevent fixed menu/action buttons and long labels from sitting over content. */
+@media (max-width: 768px) {
+  .rx-dark-shell .main-content {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    overflow-x: hidden !important;
+  }
+
+  .rx-dark-shell .menu-toggle,
+  .rx-dark-shell button.menu-toggle {
+    top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+    left: 14px !important;
+    width: 46px !important;
+    min-width: 46px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    border-radius: 14px !important;
+    z-index: 1300 !important;
+  }
+
+  .rx-dark-shell .topbar,
+  .rx-dark-shell .vo-command-strip,
+  .rx-dark-shell .content-box,
+  .rx-dark-shell .table-section,
+  .rx-dark-shell .analytics-panel,
+  .rx-dark-shell .vo-today-panel,
+  .rx-dark-shell .rx-command-panel,
+  .rx-dark-shell .rx-risk-panel,
+  .rx-dark-shell .rx-roadmap-panel {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .rx-dark-shell .topbar,
+  .rx-dark-shell .vo-command-strip {
+    padding-top: 76px !important;
+  }
+
+  .rx-dark-shell .vo-command-title,
+  .rx-dark-shell .rx-panel-head,
+  .rx-dark-shell .summary-bar,
+  .rx-dark-shell .vo-today-head,
+  .rx-dark-shell .analytics-head {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .rx-dark-shell .summary-bar > div,
+  .rx-dark-shell .vo-today-head > div,
+  .rx-dark-shell .analytics-head > div,
+  .rx-dark-shell .rx-panel-head > div,
+  .rx-dark-shell .vo-command-title {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+
+  .rx-dark-shell .page-title,
+  .rx-dark-shell h1,
+  .rx-dark-shell h2,
+  .rx-dark-shell h3,
+  .rx-dark-shell .summary-bar h2,
+  .rx-dark-shell .summary-bar h3,
+  .rx-dark-shell .vo-command-title strong,
+  .rx-dark-shell .vo-today-head h2,
+  .rx-dark-shell .rx-panel-head h2 {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    white-space: normal !important;
+  }
+
+  .rx-dark-shell .page-subtitle,
+  .rx-dark-shell .summary-bar span,
+  .rx-dark-shell .vo-command-title small,
+  .rx-dark-shell .vo-today-head p,
+  .rx-dark-shell .rx-panel-head p,
+  .rx-dark-shell .analytics-head p {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    white-space: normal !important;
+  }
+
+  .rx-dark-shell .summary-bar .add-btn,
+  .rx-dark-shell .vo-today-head .add-btn,
+  .rx-dark-shell .table-section > .summary-bar > a,
+  .rx-dark-shell .content-box > .summary-bar > a,
+  .rx-dark-shell .rc-compact-actions,
+  .rx-dark-shell .rx-status-pill {
+    flex: 0 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .rx-dark-shell button,
+  .rx-dark-shell .add-btn,
+  .rx-dark-shell a.add-btn,
+  .rx-dark-shell .btn-primary,
+  .rx-dark-shell .btn-secondary,
+  .rx-dark-shell .btn-cancel,
+  .rx-dark-shell .btn-reset,
+  .rx-dark-shell .cancel-btn,
+  .rx-dark-shell .save-btn,
+  .rx-dark-shell .vo-command-btn,
+  .rx-dark-shell .rc-view-details {
+    white-space: normal !important;
+    text-align: left !important;
+    line-height: 1.2 !important;
+  }
+
+  .rx-dark-shell .vo-command-grid,
+  .rx-dark-shell .rx-dashboard-nav,
+  .rx-dark-shell .settings-quick-actions {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .rx-dark-shell .vo-command-btn,
+  .rx-dark-shell .rx-nav-card,
+  .rx-dark-shell .settings-quick-actions .action-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    justify-content: flex-start !important;
+  }
+
+  .rx-dark-shell .vo-command-btn span,
+  .rx-dark-shell .rx-nav-card span,
+  .rx-dark-shell .settings-quick-actions .action-card h4,
+  .rx-dark-shell .settings-quick-actions .action-card p {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    white-space: normal !important;
+  }
+
+  .rx-dark-shell .table-responsive,
+  .rx-dark-shell .table-wrap {
+    overflow-x: auto !important;
+    max-width: 100% !important;
+  }
+
+  .rx-dark-shell .table-responsive table,
+  .rx-dark-shell .table-wrap table,
+  .rx-dark-shell .table-section table {
+    min-width: 680px !important;
+    table-layout: auto !important;
+  }
+
+  .rx-dark-shell th,
+  .rx-dark-shell td {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .rx-dark-shell .main-content {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .rx-dark-shell .topbar,
+  .rx-dark-shell .vo-command-strip {
+    padding-top: 72px !important;
+  }
+}
