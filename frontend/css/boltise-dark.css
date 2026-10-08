@@ -2421,11 +2421,12 @@ body::after,
   animation: rxGridFloat 28s linear infinite !important;
 }
 
-.wrapper,
-.main-content,
-.modal,
-.sidebar,
-.menu-toggle {
+.wrapper {
+  position: relative;
+  z-index: auto;
+}
+
+.main-content {
   position: relative;
   z-index: 1;
 }
