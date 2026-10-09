@@ -3,6 +3,8 @@
    app.js – Core application logic (customers, recovery, reports, settings)
 ==========================================================*/
 
+const APP_INFO = { version: "Rc.0.05" };
+
 // In-memory cache (loaded from Supabase)
 let customers = [];
 let recoveries = [];
