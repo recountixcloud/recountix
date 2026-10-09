@@ -2664,3 +2664,13 @@ html body :is(.card,.content-box,.table-section,.analytics-panel,.vo-command-str
  background-image:none !important;
  box-shadow:none !important;
 }
+
+/* Inner text headings must not create separate glass rectangles. */
+html.rx-dark-shell body :is(.rx-panel-head,.analytics-head,.vo-today-head,.vo-command-title),
+html.rx-dark-shell body :is(.rx-panel-head,.analytics-head,.vo-today-head,.vo-command-title) > div,
+html.rx-dark-shell body :is(.rx-panel-head,.analytics-head,.vo-today-head,.vo-command-title) :is(h1,h2,h3,p,.rx-eyebrow,.eyebrow) {
+ background:transparent !important;
+ box-shadow:none !important;
+ backdrop-filter:none !important;
+ -webkit-backdrop-filter:none !important;
+}
