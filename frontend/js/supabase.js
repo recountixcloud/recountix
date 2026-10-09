@@ -17,6 +17,20 @@ function getSupabase() {
     supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: { persistSession: false, autoRefreshToken: false }
     });
+    // Share simultaneous read requests only; writes and access checks always run.
+    const readRequests = new Map();
+    const sharedReads = new Set(["app_get_settings", "app_get_customers", "app_get_recoveries", "app_get_shops", "app_get_ptp"]);
+    const originalRpc = supabaseClient.rpc.bind(supabaseClient);
+    supabaseClient.rpc = function (name, args, options) {
+        if (!sharedReads.has(name)) return originalRpc(name, args, options);
+        const key = JSON.stringify([name, args, options]);
+        if (readRequests.has(key)) return readRequests.get(key);
+        const request = Promise.resolve(originalRpc(name, args, options)).finally(function () {
+            readRequests.delete(key);
+        });
+        readRequests.set(key, request);
+        return request;
+    };
     return supabaseClient;
 }
 

@@ -1779,7 +1779,7 @@ async function reloadAllData() {
 // ================================
 // Init
 // ================================
-window.addEventListener("load", async function () {
+window.addEventListener("DOMContentLoaded", async function () {
     if (typeof supabaseBoot === "function") {
         try { await supabaseBoot(); } catch (e) { console.error(e); }
     }

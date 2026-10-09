@@ -2538,3 +2538,16 @@ body::after,
   body::after,
   .rx-dark-shell body::after { opacity: .5 !important; }
 }
+
+/* Avoid costly glass compositing on touch devices. */
+@media (hover:none), (pointer:coarse) {
+  .card,.content-box,.table-section,.analytics-panel,.vo-command-strip,
+  .rx-nav-card,.action-card,.vo-final-kpi,.vo-today-panel,
+  .rx-command-panel,.rx-risk-panel,.rx-roadmap-panel {
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+  body::before,body::after,.rx-dark-shell body::before,.rx-dark-shell body::after {
+    animation:none !important;
+  }
+}
