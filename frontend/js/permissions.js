@@ -127,17 +127,14 @@ async function loadUsers() {
    [user.username, user.role+(user.is_active?' · Active':' · Inactive')].forEach(text=>{const td=document.createElement('td');td.textContent=text;row.append(td);});
    const cell=document.createElement('td');row.append(cell);
    const self=user.id===getSession().userId;
-   const menu=document.createElement('details');menu.className='rx-user-menu';
-   const summary=document.createElement('summary');summary.textContent='Actions';menu.append(summary);
-   const actions=document.createElement('div');actions.className='rx-user-menu-items';menu.append(actions);
    if(!self && user.role==='user') {
-    const edit=document.createElement('button');edit.type='button';edit.className='rx-user-action';edit.textContent='Modify / Rights';edit.onclick=()=>editUser(user.id);actions.append(edit);
+    const edit=document.createElement('button');edit.type='button';edit.className='rx-user-action';edit.textContent='Modify / Rights';edit.onclick=()=>editUser(user.id);cell.append(edit);
    }
    if(!self && user.role!=='super_admin' && (serverRole==='super_admin' || user.role==='user')) {
-    const reset=document.createElement('button');reset.type='button';reset.className='rx-user-action rx-reset';reset.textContent='Reset Password';reset.onclick=()=>resetUserPassword(user.id);actions.append(reset);
-    const del=document.createElement('button');del.type='button';del.className='rx-user-action rx-delete';del.textContent='Delete';del.onclick=()=>deleteUser(user.id);actions.append(del);
+    const reset=document.createElement('button');reset.type='button';reset.className='rx-user-action rx-reset';reset.textContent='Reset Password';reset.onclick=()=>resetUserPassword(user.id);cell.append(reset);
+    const del=document.createElement('button');del.type='button';del.className='rx-user-action rx-delete';del.textContent='Delete';del.onclick=()=>deleteUser(user.id);cell.append(del);
    }
-   if(actions.childNodes.length)cell.append(menu);else cell.textContent=self?'Your account':'Administrator';tbody.append(row);
+   if(!cell.childNodes.length)cell.textContent='Full administrator access';tbody.append(row);
   });
  } catch(error) {tbody.replaceChildren();const row=tbody.insertRow(),cell=row.insertCell();cell.colSpan=3;cell.textContent='Unable to load user rights: '+error.message;}
 }
