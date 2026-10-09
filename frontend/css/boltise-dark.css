@@ -2651,3 +2651,16 @@ html body .settings-quick-actions .action-card > i {
  background:rgba(14,165,233,.14) !important;
  color:#7dd3fc !important;
 }
+
+/* Remove dark inner heading strips from navy cards across the app. */
+html body :is(.card,.content-box,.table-section,.analytics-panel,.vo-command-strip,
+.rx-nav-card,.backup-panel,.action-card,.vo-final-kpi,.vo-today-panel,
+.rx-command-panel,.rx-risk-panel,.rx-roadmap-panel,.rx-mini-card,.rx-module-card)
+:is(.rx-panel-head,.analytics-head,.vo-today-head,.summary-bar,.vo-command-title,
+.card-header,.table-header,.list-header,.section-header,.content-header,.module-header,
+.page-header,.heading-card,.header-card,.page-title-wrap) {
+ background:transparent !important;
+ background-color:transparent !important;
+ background-image:none !important;
+ box-shadow:none !important;
+}
