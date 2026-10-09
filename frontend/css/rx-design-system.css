@@ -85,7 +85,7 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
 :root:root .main-content{
   margin-left:var(--sidebar-w) !important; width:auto !important;
   padding:0 var(--edge) var(--sp-5) !important;
-  overflow:visible !important; overflow-x:clip !important;       /* keeps the sticky header working */
+  overflow:visible !important; overflow-x:clip !important;
   transition:margin-left .3s var(--ease);
 }
 :root:root .topbar{
@@ -143,7 +143,7 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
 /* Collapsed icon rail (desktop only) */
 @media (min-width:641px){
   :root:root body.rx-collapsed .sidebar .menu a span,
-:root:root body.rx-collapsed .sidebar .logo p{ display:none !important; }
+  :root:root body.rx-collapsed .sidebar .logo p{ display:none !important; }
   :root:root body.rx-collapsed .sidebar .logo h2{ font-size:0 !important; justify-content:center; }
   :root:root body.rx-collapsed .sidebar .menu a{ justify-content:center !important; padding:var(--sp-2) 0 !important; }
   :root:root body.rx-collapsed .sidebar .menu a i{ width:auto; font-size:16px; }
@@ -157,7 +157,10 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
 }
 :root:root .rx-collapse-btn button:hover{ background:rgba(255,255,255,.07); color:#fff; }
 :root:root .rx-collapse-btn i{ width:18px; text-align:center; transition:transform .3s var(--ease); }
-@media (min-width:641px){ :root:root body.rx-collapsed .rx-collapse-btn button{ justify-content:center; padding:var(--sp-2) 0; } :root:root body.rx-collapsed .rx-collapse-btn span{ display:none; } }
+@media (min-width:641px){ 
+  :root:root body.rx-collapsed .rx-collapse-btn button{ justify-content:center; padding:var(--sp-2) 0; } 
+  :root:root body.rx-collapsed .rx-collapse-btn span{ display:none; } 
+}
 
 /* ---------- 3. Buttons ---------- */
 :root:root .add-btn,
@@ -176,7 +179,6 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
   border-radius:var(--ctl-radius) !important; white-space:nowrap; cursor:pointer;
   transition:filter .15s var(--ease), box-shadow .15s var(--ease), transform .15s var(--ease), background .15s var(--ease) !important;
 }
-/* Small: table rows, filters (inline font-size:12px marks the compact buttons already in the markup) */
 :root:root .btn-sm,
 :root:root button.btn-sm,
 :root:root td .add-btn,
@@ -187,7 +189,6 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
   height:32px !important; min-height:32px !important; padding:6px 12px !important; font-size:13px !important;
 }
 :root:root .action-btn{ height:32px; min-width:32px; padding:6px 12px; font-size:13px; border-radius:var(--ctl-radius) !important; }
-/* Large: hero / key CTA */
 :root:root .btn-lg,
 :root:root button.btn-lg,
 :root:root #loginBtn{ height:48px !important; min-height:48px !important; padding:12px var(--sp-4) !important; font-size:16px !important; }
@@ -226,7 +227,7 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
   opacity:.5 !important; cursor:not-allowed !important; filter:none !important; box-shadow:none !important; transform:none !important;
 }
 
-/* ---------- 4. Icon-first hover expansion (desktop) ---------- */
+/* ---------- 4. Icon-first hover expansion ---------- */
 :root:root .rx-expand{ gap:0 !important; min-width:40px !important; padding:var(--sp-2) 12px !important; overflow:hidden; }
 :root:root .rx-expand .rx-label{
   display:inline-block; max-width:0 !important; opacity:0 !important; overflow:hidden; white-space:nowrap; margin-left:0 !important;
@@ -234,11 +235,11 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
 }
 @media (hover:hover){
   :root:root .rx-expand:hover .rx-label,
-:root:root .rx-expand:focus-visible .rx-label{ max-width:240px !important; opacity:1 !important; margin-left:var(--sp-2) !important; }  /* numeric cap: fit-content can't be animated */
+  :root:root .rx-expand:focus-visible .rx-label{ max-width:240px !important; opacity:1 !important; margin-left:var(--sp-2) !important; }
 }
 @media (hover:none),(max-width:640px){
   :root:root .rx-expand{ gap:var(--sp-2) !important; padding:var(--sp-2) var(--sp-3) !important; }
-  :root:root .rx-expand .rx-label{ max-width:none !important; opacity:1 !important; margin-left:0 !important; }          /* touch: persistent text */
+  :root:root .rx-expand .rx-label{ max-width:none !important; opacity:1 !important; margin-left:0 !important; }
 }
 
 /* ---------- 5. Inputs & forms ---------- */
@@ -273,11 +274,11 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
 /* ---------- Tablet ---------- */
 @media (max-width:1024px){
   :root:root .dashboard-grid,
-:root:root .dashboard-cards{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  :root:root .dashboard-cards{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
   :root:root .dashboard-analytics{ grid-template-columns:1fr !important; }
 }
 
-/* ---------- 2b. Mobile ---------- */
+/* ---------- Mobile ---------- */
 @media (max-width:640px){
   :root{ --edge:16px; --card-pad:16px; }
   :root:root body{ font-size:15px; }
@@ -285,51 +286,51 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
   :root:root .topbar{ position:static !important; margin:0 0 var(--sp-3) !important; padding:0 !important; border:0 !important; background:transparent !important; min-height:0; }
   :root:root .menu-toggle{ width:44px !important; height:44px !important; top:var(--sp-2) !important; left:var(--edge) !important; }
   :root:root .dashboard-grid,
-:root:root .dashboard-cards,
-:root:root .dashboard-analytics,
-:root:root .form-grid,
-:root:root .rx-dashboard-nav,
-:root:root .vo-command-grid{ grid-template-columns:1fr !important; }
+  :root:root .dashboard-cards,
+  :root:root .dashboard-analytics,
+  :root:root .form-grid,
+  :root:root .rx-dashboard-nav,
+  :root:root .vo-command-grid{ grid-template-columns:1fr !important; }
   :root:root .topbar .add-btn,
-:root:root .btn-row .add-btn,
-:root:root .btn-row button{ width:100%; }
+  :root:root .btn-row .add-btn,
+  :root:root .btn-row button{ width:100%; }
   :root:root .rx-collapse-btn{ display:none !important; }
-  /* 16px prevents iOS zoom-on-focus; 44px touch targets */
   :root:root .form-control,
-:root:root input[type="text"],
-:root:root input[type="number"],
-:root:root input[type="date"],
-:root:root input[type="email"],
-:root:root input[type="password"],
-:root:root input[type="tel"],
-:root:root input[type="search"],
-:root:root select,
-:root:root textarea,
-:root:root .search-box{ height:44px; min-height:44px !important; font-size:16px !important; }
+  :root:root input[type="text"],
+  :root:root input[type="number"],
+  :root:root input[type="date"],
+  :root:root input[type="email"],
+  :root:root input[type="password"],
+  :root:root input[type="tel"],
+  :root:root input[type="search"],
+  :root:root select,
+  :root:root textarea,
+  :root:root .search-box{ height:44px; min-height:44px !important; font-size:16px !important; }
   :root:root textarea{ height:auto; min-height:88px !important; }
 }
+
 @media (max-width:640px),(pointer:coarse){
   :root:root .add-btn,
-:root:root .btn-primary,
-:root:root .btn-secondary,
-:root:root .btn-cancel,
-:root:root .btn-reset,
-:root:root .cancel-btn,
-:root:root button.save-btn,
-:root:root button[type="submit"],
-:root:root .btn,
-:root:root .btn-md,
-:root:root .btn-sm,
-:root:root .action-btn,
-:root:root .sidebar .menu a,
-:root:root .rx-collapse-btn button{ min-height:44px !important; }
+  :root:root .btn-primary,
+  :root:root .btn-secondary,
+  :root:root .btn-cancel,
+  :root:root .btn-reset,
+  :root:root .cancel-btn,
+  :root:root button.save-btn,
+  :root:root button[type="submit"],
+  :root:root .btn,
+  :root:root .btn-md,
+  :root:root .btn-sm,
+  :root:root .action-btn,
+  :root:root .sidebar .menu a,
+  :root:root .rx-collapse-btn button{ min-height:44px !important; }
   :root:root .action-btn{ min-width:44px; }
   :root:root #loginBtn,
-:root:root .btn-lg{ min-height:48px !important; }
+  :root:root .btn-lg{ min-height:48px !important; }
 }
 
 @media (prefers-reduced-motion:reduce){
   :root:root *,
-:root:root *::before,
-:root:root *::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
+  :root:root *::before,
+  :root:root *::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
 }
