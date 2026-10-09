@@ -14,7 +14,6 @@
     var loggedIn = store.getItem('bk_isLoggedIn') === 'true';
     if (!loggedIn) { window.location.replace('login.html'); return; }
     var role = store.getItem('bk_role') || 'user';
-    // Business settings permission is verified by the server after the scripts load.
   } catch (e) {}
 })();
 </script>
@@ -23,18 +22,19 @@
 <meta name="theme-color" content="#0B0F17" />
 
 <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style id="rx-critical-dark">html,body{background:#0B0F17!important;color:#F8FAFC!important;}html{min-height:100%;}body{min-height:100vh;}*{box-sizing:border-box;}main,.wrapper,.main-content,.page-shell{background:#0B0F17!important;}input,select,textarea{background:#0B0F17;color:#F8FAFC;color-scheme:dark;}</style>
+<style id="rx-critical-dark">html,body{background:#0B0F17!important;color:#F8FAFC!important;}html{min-height:100%;}body{min-height:100vh;}*{box-sizing:border-box;}main,.wrapper,.main-content,.page-shell{background:#0B0F17!important;}input,select,textarea{background:#0B0F17;color:#F8FAFC;color-scheme:dark;}</style>
 
-<title>Settings | Recountix</title><link rel="preconnect" href="https://fonts.googleapis.com" />
+<title>Settings | Recountix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
-<link rel="stylesheet" href="css/boltise-dark.css?v=command-center-10"><link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
+<link rel="stylesheet" href="css/boltise-dark.css?v=command-center-10">
+<link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
 </head>
 
 <body>
@@ -43,1157 +43,399 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="wrapper">
 
-<!-- =========================
-SIDEBAR START
-========================= -->
-
 <aside class="sidebar">
-
-<div class="logo">
-
-<h2>Recountix</h2>
-
-<p>Beyond What’s Due.</p>
-
-</div>
-
-<ul class="menu">
-<li><a href="dashboard.html"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
-<li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
-<li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
-<li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
-<li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
-<li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
-<li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
-<li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
-<li><a href="settings.html" class="active"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
-<li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li><li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
-</ul>
-
+  <div class="logo">
+    <h2>Recountix</h2>
+    <p>Beyond What’s Due.</p>
+  </div>
+  <ul class="menu">
+    <li><a href="dashboard.html"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+    <li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
+    <li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
+    <li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
+    <li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
+    <li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
+    <li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
+    <li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
+    <li><a href="settings.html" class="active"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+    <li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li>
+    <li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+  </ul>
 </aside>
-
-<!-- =========================
-SIDEBAR END
-========================= -->
-
-<!-- =========================
-MAIN CONTENT START
-========================= -->
 
 <main class="main-content">
 
-<!-- =========================
-END OF PART 1
-========================= --><!-- =========================
-PART 2
-========================= -->
-
-<!-- =========================
-TOPBAR START
-========================= -->
-
 <header class="topbar">
-
-<div>
-
-<h1 class="page-title">
-
-System Settings
-
-</h1>
-
-<p class="page-subtitle">
-
-Manage Application & Company Settings
-
-</p>
-
-</div>
-
-<div class="user-info">
-
-<i class="fa-solid fa-user-shield"></i>
-
-<span id="userRoleBadge">Administrator</span>
-
-</div>
-
+  <div>
+    <h1 class="page-title">System Settings</h1>
+    <p class="page-subtitle">Manage Application & Company Settings</p>
+  </div>
+  <div class="user-info">
+    <i class="fa-solid fa-user-shield"></i>
+    <span id="userRoleBadge">Administrator</span>
+  </div>
 </header>
 
-<!-- =========================
-TOPBAR END
-========================= -->
-
-<!-- =========================
-COMPANY INFORMATION START
-========================= -->
-
 <section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Company Information
-
-</h2>
-
-<span>
-
-Update Company Details
-
-</span>
-
-</div>
-
-</div>
-
-<form id="companyForm">
-
-<div class="form-grid">
-
-<!-- Company Name -->
-
-<div>
-
-<label>Company Name</label>
-
-<input
-
-type="text"
-
-id="companyName"
-
-value="Recountix"
-
-placeholder="Company Name">
-
-</div>
-
-<!-- Contact Number -->
-
-<div>
-
-<label>Contact Number</label>
-
-<input
-
-type="text"
-
-id="companyMobile"
-
-placeholder="Enter Contact Number">
-
-</div>
-
-<!-- Email -->
-
-
-<div>
-<label>Business UPI ID <small>(Payment links)</small></label>
-<input type="text" id="upiId" placeholder="shop@oksbi / shop@paytm">
-</div>
-<div>
-
-<label>Email Address</label>
-
-<input
-
-type="email"
-
-id="companyEmail"
-
-placeholder="Enter Email Address">
-
-</div>
-
-<!-- Website -->
-
-<div>
-
-<label>Website</label>
-
-<input
-
-type="text"
-
-id="companyWebsite"
-
-placeholder="www.example.com">
-
-</div>
-
-<!-- Address -->
-
-<div class="full-width">
-
-<label>Company Address</label>
-
-<textarea
-
-id="companyAddress"
-
-rows="4"
-
-placeholder="Enter Company Address">
-
-</textarea>
-
-</div>
-
-<!-- Company Logo -->
-
-<div class="full-width">
-
-<label>Company Logo</label>
-
-<input
-
-type="file"
-
-id="companyLogo"
-
-accept="image/*"
-
-onchange="previewCompanyLogo(event)">
-
-</div>
-
-</div>
-
-<button type="button" class="add-btn" onclick="saveCompanyBranding()" style="margin-top:15px;">
-Save Company Info
-</button>
-
-
-<!-- =========================
-END OF PART 2
-========================= --><!-- =========================
-PART 3
-========================= -->
-
-<!-- =========================
-ADMIN SETTINGS START
-========================= -->
-
-<br>
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-
-<div class="full-width" style="margin-top:15px;">
-<label>Company Logo (Login Page)</label>
-<input type="file" id="companyLogoFile" accept="image/*" onchange="previewCompanyLogo(event)">
-<small style="color:#9CA6B8;">Shown on the login page and print header</small>
-<img id="logoPreview" src="assets/logo.png" style="max-height:80px;margin-top:10px;border-radius:8px;" onerror="this.style.display='none'">
-</div>
-
-Administrator Settings
-
-</h2>
-
-<span>
-
-Manage Login Credentials
-
-</span>
-
-</div>
-
-</div>
-
-<div class="form-grid">
-
-<!-- Username -->
-
-<div>
-
-<label>Username</label>
-
-<input
-
-type="text"
-
-id="adminUsername"
-
-value="admin"
-
-placeholder="Enter Username">
-
-</div>
-
-<!-- Current Password -->
-
-<div>
-
-<label>Current Password</label>
-
-<input
-
-type="password"
-
-id="currentPassword"
-
-placeholder="Current Password">
-
-</div>
-
-<!-- New Password -->
-
-<div>
-
-<label>New Password</label>
-
-<input
-
-type="password"
-
-id="newPassword"
-
-placeholder="New Password">
-
-</div>
-
-<!-- Confirm Password -->
-
-<div>
-
-<label>Confirm Password</label>
-
-<input
-
-type="password"
-
-id="confirmPassword"
-
-placeholder="Confirm Password">
-
-</div>
-
-<!-- Recovery Email -->
-
-<div>
-
-<label>Recovery Email</label>
-
-<input
-
-type="email"
-
-id="recoveryEmail"
-
-placeholder="Recovery Email">
-
-</div>
-
-<!-- System Role -->
-
-<div>
-
-<label>Role</label>
-
-<input
-type="text"
-id="currentRoleDisplay"
-value="Administrator"
-readonly>
-
-</div>
-
-</div>
-
-<br>
-
-<button
-
-type="button"
-
-class="add-btn"
-
-onclick="saveSettings()">
-
-<i class="fa-solid fa-floppy-disk"></i>
-
-Save Settings
-
-</button>
-
-</form>
-
+  <div class="summary-bar">
+    <div>
+      <h2>Company Information</h2>
+      <span>Update Company Details</span>
+    </div>
+  </div>
+
+  <form id="companyForm">
+    <div class="form-grid">
+      <div>
+        <label for="companyName">Company Name</label>
+        <input type="text" id="companyName" value="Recountix" placeholder="Company Name" autocomplete="off">
+      </div>
+      <div>
+        <label for="companyMobile">Contact Number</label>
+        <input type="text" id="companyMobile" placeholder="Enter Contact Number" autocomplete="off">
+      </div>
+      <div>
+        <label for="upiId">Business UPI ID <small>(Payment links)</small></label>
+        <input type="text" id="upiId" placeholder="shop@oksbi / shop@paytm" autocomplete="off">
+      </div>
+      <div>
+        <label for="companyEmail">Email Address</label>
+        <input type="email" id="companyEmail" placeholder="Enter Email Address" autocomplete="off">
+      </div>
+      <div>
+        <label for="companyWebsite">Website</label>
+        <input type="text" id="companyWebsite" placeholder="www.example.com" autocomplete="off">
+      </div>
+      <div class="full-width">
+        <label for="companyAddress">Company Address</label>
+        <textarea id="companyAddress" rows="3" placeholder="Enter Company Address"></textarea>
+      </div>
+      <div class="full-width">
+        <label for="companyLogo">Company Logo</label>
+        <input type="file" id="companyLogo" accept="image/*" onchange="previewCompanyLogo(event)">
+        <small style="color:#9CA6B8;display:block;margin-top:6px;">Shown on the login page and print header</small>
+        <img id="logoPreview" src="assets/logo.png" style="max-height:80px;margin-top:10px;border-radius:8px;" onerror="this.style.display='none'">
+      </div>
+    </div>
+
+    <button type="button" class="add-btn" onclick="saveCompanyBranding()" style="margin-top:15px;">
+      Save Company Info
+    </button>
+  </form>
 </section>
 
-<!-- =========================
-END OF PART 3
-========================= --><!-- =========================
-PART 3B - USER MANAGEMENT
-========================= -->
+<section class="table-section fade" style="margin-top:20px;">
+  <div class="summary-bar">
+    <div>
+      <h2>Administrator Settings</h2>
+      <span>Manage Login Credentials</span>
+    </div>
+  </div>
 
+  <form id="adminSettingsForm" onsubmit="event.preventDefault(); saveSettings();">
+    <div class="form-grid">
+      <div>
+        <label for="adminUsername">Username</label>
+        <input type="text" id="adminUsername" value="admin" placeholder="Enter Username" autocomplete="username">
+      </div>
+      <div>
+        <label for="currentPassword">Current Password</label>
+        <input type="password" id="currentPassword" placeholder="Current Password" autocomplete="current-password">
+      </div>
+      <div>
+        <label for="newPassword">New Password</label>
+        <input type="password" id="newPassword" placeholder="New Password" autocomplete="new-password">
+      </div>
+      <div>
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" autocomplete="new-password">
+      </div>
+      <div>
+        <label for="recoveryEmail">Recovery Email</label>
+        <input type="email" id="recoveryEmail" placeholder="Recovery Email" autocomplete="off">
+      </div>
+      <div>
+        <label for="currentRoleDisplay">Role</label>
+        <input type="text" id="currentRoleDisplay" value="Administrator" readonly>
+      </div>
+    </div>
 
-<section class="table-section fade" id="executiveManagementSection">
+    <div style="margin-top:16px;">
+      <button type="submit" class="add-btn">
+        <i class="fa-solid fa-floppy-disk"></i> Save Settings
+      </button>
+    </div>
+  </form>
+</section>
+
+<section class="table-section fade" id="executiveManagementSection" style="margin-top:20px;">
     <h2><i class="fa-solid fa-user-tie"></i> Sales / Recovery Executives</h2>
     <p style="color:#9CA6B8;margin-bottom:16px;">This list will appear in the Customer and Recovery form dropdowns. Business Admins can add or remove entries.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
-        <input type="text" id="newExecutiveName" class="form-control" placeholder="Executive name (e.g. Ramesh)" style="max-width:280px;">
+        <input type="text" id="newExecutiveName" class="form-control" placeholder="Executive name (e.g. Ramesh)" style="max-width:280px;" autocomplete="off">
         <button type="button" class="add-btn" onclick="addExecutive()"><i class="fa-solid fa-plus"></i> Add Executive</button>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="executiveListBody">
-        </tbody>
+    <div class="table-responsive">
+      <table>
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody id="executiveListBody">
+          </tbody>
+      </table>
+    </div>
+</section>
+
+<section class="table-section fade" id="userManagementSection" data-rc-compact="1" style="margin-top:20px;">
+  <div class="summary-bar">
+    <div>
+      <h2>User Management</h2>
+      <span>Add, modify, delete and set individual user rights</span>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div>
+      <label for="newUserUsername">New Username <small>(new users start with View only)</small></label>
+      <input type="text" id="newUserUsername" placeholder="Username" autocomplete="off">
+    </div>
+    <div>
+      <label for="newUserPassword">New Password</label>
+      <input type="password" id="newUserPassword" minlength="8" autocomplete="new-password" placeholder="Minimum 8 characters">
+    </div>
+    <div>
+      <label for="newUserRole">Role</label>
+      <select id="newUserRole">
+        <option value="User">User (Custom Rights)</option>
+        <option value="Admin">Admin (Full Access)</option>
+      </select>
+    </div>
+    <div id="newUserShopWrap" style="display:none;">
+      <label for="newUserShopId">Business</label>
+      <select id="newUserShopId">
+        <option value="">Select Business</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <button type="button" class="add-btn" onclick="addUser()">
+      <i class="fa-solid fa-user-plus"></i> Add User
+    </button>
+  </div>
+
+  <br>
+  <div class="table-responsive">
+    <table id="userListTable">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="userListBody">
+      </tbody>
     </table>
+  </div>
 </section>
 
-<section class="table-section fade" id="userManagementSection" data-rc-compact="1">
+<section class="table-section fade" style="margin-top:20px;">
+  <div class="summary-bar">
+    <div>
+      <h2>Data Management</h2>
+      <span>Backup & Restore Project Data</span>
+    </div>
+  </div>
 
-<div class="summary-bar">
+  <div class="dashboard-grid">
+    <div class="card blue">
+      <i class="fa-solid fa-download"></i>
+      <h3>Offline Backup</h3>
+      <p>Create or download an encrypted business backup</p>
+      <br>
+      <button type="button" class="add-btn" onclick="backupData()">Open Offline Backup</button>
+    </div>
 
-<div>
+    <div class="card blue">
+      <i class="fa-solid fa-upload"></i>
+      <h3>Restore Backup</h3>
+      <p>Restore missing records from an encrypted backup file</p>
+      <br>
+      <a class="add-btn" href="backup.html">Open Backup &amp; Restore</a>
+    </div>
 
-<h2>
-User Management
-</h2>
+    <div class="card green superadmin-only" id="optimizeWebsiteCard" style="display:none;">
+      <i class="fa-solid fa-gauge-high"></i>
+      <h3>Optimize Website</h3>
+      <p>Clear old app cache and reload the faster version</p>
+      <br>
+      <button type="button" class="add-btn" id="optimizeWebsiteBtn" onclick="optimizeWebsite()">
+        <i class="fa-solid fa-bolt"></i> Optimize Now
+      </button>
+    </div>
 
-<span>
-Add, modify, delete and set individual user rights
-</span>
+    <div class="card orange">
+      <i class="fa-solid fa-file-export"></i>
+      <h3>Export Reports</h3>
+      <p>Export recovery CSV</p>
+      <br>
+      <button type="button" class="add-btn" onclick="exportReport()">Export Data</button>
+    </div>
 
-</div>
+    <div class="card red">
+      <i class="fa-solid fa-users"></i>
+      <h3>Manage Records</h3>
+      <p>Review customers and delete individual records with the required permission.</p>
+      <br>
+      <a class="add-btn" href="customers.html">Open Customers</a>
+    </div>
+  </div>
 
-</div>
-
-<div class="form-grid">
-
-<div>
-<label>New Username <small>(new users start with View only)</small></label>
-<input type="text" id="newUserUsername" placeholder="Username">
-</div>
-
-<div>
-<label>New Password</label>
-<input type="password" id="newUserPassword" minlength="8" autocomplete="new-password" placeholder="Minimum 8 characters">
-</div>
-
-<div>
-<label>Role</label>
-<select id="newUserRole">
-<option value="User">User (Custom Rights)</option>
-<option value="Admin">Admin (Full Access)</option>
-</select>
-</div>
-
-<div id="newUserShopWrap" style="display:none;">
-<label>Business</label>
-<select id="newUserShopId">
-<option value="">Select Business</option>
-</select>
-</div>
-
-</div>
-
-<br>
-
-<button type="button" class="add-btn" onclick="addUser()">
-<i class="fa-solid fa-user-plus"></i>
-Add User
-</button>
-
-<br><br>
-
-<table id="userListTable">
-<thead>
-<tr>
-<th>Username</th>
-<th>Role</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody id="userListBody">
-</tbody>
-</table>
-
+  <div class="content-box" style="margin-top:20px;">
+    <div class="summary-bar">
+      <div>
+        <h2>Cloud Status</h2>
+        <span>Cloud connection</span>
+      </div>
+    </div>
+    <p><strong>Database:</strong> <span id="dbStatusBadge" class="badge badge-warning">Secure Cloud</span></p>
+    <p><strong>Last Device Backup:</strong> <span id="lastBackupDate">-</span></p>
+    <p style="margin-top:10px;color:#9CA6B8;font-size:14px;">
+      All data is stored on encrypted cloud servers.
+    </p>
+  </div>
 </section>
 
-<!-- =========================
-END OF PART 3B
-========================= --><!-- =========================
-PART 4
-========================= -->
+<section class="table-section fade" style="margin-top:20px;">
+  <div class="summary-bar">
+    <div>
+      <h2>Security & Preferences</h2>
+      <span>System Security Options</span>
+    </div>
+  </div>
 
-<!-- =========================
-DATA MANAGEMENT START
-========================= -->
+  <div class="form-grid">
+    <div>
+      <label for="autoLogout">Auto Logout</label>
+      <select id="autoLogout">
+        <option value="5">5 Minutes</option>
+        <option value="10">10 Minutes</option>
+        <option value="15" selected>15 Minutes</option>
+        <option value="30">30 Minutes</option>
+        <option value="60">60 Minutes</option>
+      </select>
+    </div>
+    <div>
+      <label for="sessionTimeout">Session Timeout</label>
+      <select id="sessionTimeout">
+        <option value="30">30 Minutes</option>
+        <option value="60" selected>1 Hour</option>
+        <option value="120">2 Hours</option>
+        <option value="240">4 Hours</option>
+      </select>
+    </div>
+    <div>
+      <label for="currency">Currency</label>
+      <select id="currency">
+        <option value="INR" selected>Indian Rupee (₹)</option>
+      </select>
+    </div>
+    <div>
+      <label for="dateFormat">Date Format</label>
+      <select id="dateFormat">
+        <option value="dd-mm-yyyy" selected>DD-MM-YYYY</option>
+        <option value="mm-dd-yyyy">MM-DD-YYYY</option>
+        <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+      </select>
+    </div>
+    <div>
+      <label for="notifications">Notifications</label>
+      <select id="notifications">
+        <option value="on" selected>Enabled</option>
+        <option value="off">Disabled</option>
+      </select>
+    </div>
+    <div>
+      <label for="autoBackup">Auto Backup</label>
+      <select id="autoBackup">
+        <option value="daily" selected>Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="off">Disabled</option>
+      </select>
+    </div>
+  </div>
 
-<section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Data Management
-
-</h2>
-
-<span>
-
-Backup & Restore Project Data
-
-</span>
-
-</div>
-
-</div>
-
-<div class="dashboard-grid">
-
-<div class="card blue">
-<i class="fa-solid fa-download"></i>
-<h3>Offline Backup</h3>
-<p>Create or download an encrypted business backup</p>
-<br>
-<button type="button" class="add-btn" onclick="backupData()">
-Open Offline Backup
-</button>
-</div>
-
-<div class="card blue">
-<i class="fa-solid fa-upload"></i>
-<h3>Restore Backup</h3>
-<p>Restore missing records from an encrypted backup file</p>
-<br>
-<a class="add-btn" href="backup.html">Open Backup &amp; Restore</a>
-</div>
-
-<div class="card green superadmin-only" id="optimizeWebsiteCard" style="display:none;">
-<i class="fa-solid fa-gauge-high"></i>
-<h3>Optimize Website</h3>
-<p>Clear old app cache and reload the faster version</p>
-<br>
-<button type="button" class="add-btn" id="optimizeWebsiteBtn" onclick="optimizeWebsite()">
-<i class="fa-solid fa-bolt"></i>
-Optimize Now
-</button>
-</div>
-
-<div class="card orange">
-<i class="fa-solid fa-file-export"></i>
-<h3>Export Reports</h3>
-<p>Export recovery CSV</p>
-<br>
-<button type="button" class="add-btn" onclick="exportReport()">
-Export Data
-</button>
-</div>
-
-<div class="card red">
-<i class="fa-solid fa-users"></i>
-<h3>Manage Records</h3>
-<p>Review customers and delete individual records with the required permission.</p>
-<br>
-<a class="add-btn" href="customers.html">Open Customers</a>
-</div>
-
-</div>
-
-<div class="content-box" style="margin-top:20px;">
-<div class="summary-bar">
-<div>
-<h2>Cloud Status</h2>
-<span>Cloud connection</span>
-</div>
-</div>
-<p><strong>Database:</strong> <span id="dbStatusBadge" class="badge badge-warning">Secure Cloud</span></p>
-<p><strong>Last Device Backup:</strong> <span id="lastBackupDate">-</span></p>
-<p style="margin-top:10px;color:#9CA6B8;font-size:14px;">
-All data is stored on encrypted cloud servers.<code>customers</code>, <code>recoveries</code>, <code>users</code>, <code>settings</code>, <code>backups</code>
-</p>
-</div>
-
+  <p style="margin-top:15px;color:#94a3b8">Auto Logout applies after inactivity. Session Timeout limits the total sign-in duration.</p>
+  <button type="button" id="savePreferencesButton" class="add-btn" onclick="savePreferences()">Save Preferences</button>
 </section>
 
-<!-- =========================
-END OF PART 4
-========================= --><!-- =========================
-PART 5
-========================= -->
-
-<!-- =========================
-SECURITY SETTINGS START
-========================= -->
-
-<section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Security & Preferences
-
-</h2>
-
-<span>
-
-System Security Options
-
-</span>
-
+<div class="quick-actions settings-quick-actions" style="margin-top:20px;">
+  <a href="dashboard.html" class="action-card">
+    <i class="fa-solid fa-chart-line"></i>
+    <h4>Dashboard</h4>
+    <p>Go To Dashboard</p>
+  </a>
+  <a href="customers.html" class="action-card">
+    <i class="fa-solid fa-users"></i>
+    <h4>Customers</h4>
+    <p>Manage Customers</p>
+  </a>
+  <a href="recovery.html" class="action-card">
+    <i class="fa-solid fa-money-bill-wave"></i>
+    <h4>Recovery</h4>
+    <p>Manage Recovery</p>
+  </a>
+  <a href="reports.html" class="action-card">
+    <i class="fa-solid fa-chart-column"></i>
+    <h4>Reports</h4>
+    <p>View Reports</p>
+  </a>
 </div>
 
+<div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+  <button type="button" class="add-btn" style="background:#f59e0b;" onclick="location.reload()">
+    <i class="fa-solid fa-rotate"></i> Reset Page
+  </button>
+  <button type="button" class="add-btn" style="background:#ef4444;" onclick="logout()">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
+  </button>
 </div>
 
-<div class="form-grid">
-
-<!-- Auto Logout -->
-
-<div>
-
-<label>Auto Logout</label>
-
-<select id="autoLogout">
-
-<option value="5">5 Minutes</option>
-
-<option value="10">10 Minutes</option>
-
-<option value="15" selected>15 Minutes</option>
-
-<option value="30">30 Minutes</option>
-
-<option value="60">60 Minutes</option>
-
-</select>
-
-</div>
-
-<!-- Session Timeout -->
-
-<div>
-
-<label>Session Timeout</label>
-
-<select id="sessionTimeout">
-
-<option value="30">30 Minutes</option>
-
-<option value="60" selected>1 Hour</option>
-
-<option value="120">2 Hours</option>
-
-<option value="240">4 Hours</option>
-
-</select>
-
-</div>
-
-<!-- Default Currency -->
-
-<div>
-
-<label>Currency</label>
-
-<select id="currency">
-
-<option value="INR" selected>Indian Rupee (₹)</option>
-
-</select>
-
-</div>
-
-<!-- Date Format -->
-
-<div>
-
-<label>Date Format</label>
-
-<select id="dateFormat">
-
-<option value="dd-mm-yyyy" selected>DD-MM-YYYY</option>
-
-<option value="mm-dd-yyyy">MM-DD-YYYY</option>
-
-<option value="yyyy-mm-dd">YYYY-MM-DD</option>
-
-</select>
-
-</div>
-
-<!-- Notifications -->
-
-<div>
-
-<label>Notifications</label>
-
-<select id="notifications">
-
-<option value="on" selected>Enabled</option>
-
-<option value="off">Disabled</option>
-
-</select>
-
-</div>
-
-<!-- Auto Backup -->
-
-<div>
-
-<label>Auto Backup</label>
-
-<select id="autoBackup">
-
-<option value="daily" selected>Daily</option>
-
-<option value="weekly">Weekly</option>
-
-<option value="monthly">Monthly</option>
-
-<option value="off">Disabled</option>
-
-</select>
-
-</div>
-
-</div>
-
-<p style="margin-top:15px;color:#64748b">Auto Logout applies after inactivity. Session Timeout limits the total sign-in duration. Notifications controls the daily recovery summary. Automatic encrypted backups run on this device while the app is open.</p>
-<button type="button" id="savePreferencesButton" class="add-btn" onclick="savePreferences()">Save Preferences</button>
-</section>
-
-<!-- =========================
-END OF PART 5
-========================= --><!-- =========================
-PART 6
-========================= -->
-
-<!-- =========================
-APPLICATION INFORMATION START
-========================= -->
-
-<section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Application Information
-
-</h2>
-
-<span>
-
-System Details & Status
-
-</span>
-
-</div>
-
-</div>
-
-<div class="dashboard-grid">
-
-<div class="card blue">
-
-<i class="fa-solid fa-code"></i>
-
-<h3>Application Version</h3>
-
-<h1>Rc.0.05</h1>
-
-<small>Recountix</small>
-
-</div>
-
-<div class="card green">
-
-<i class="fa-solid fa-laptop-code"></i>
-
-<h3>Developer</h3>
-
-<h1>BK Design Hub</h1>
-
-<small>Designed & Developed</small>
-
-</div>
-
-<div class="card orange">
-
-<i class="fa-solid fa-database"></i>
-
-<h3>Database Status</h3>
-
-<h1 id="databaseStatus">
-
-Online
-
-</h1>
-
-<small>Secure Cloud Active</small>
-
-</div>
-
-<div class="card red">
-
-<i class="fa-solid fa-hard-drive"></i>
-
-<h3>Storage Usage</h3>
-
-<h1 id="storageUsage">
-
-0 MB
-
-</h1>
-
-<small>Current Data Size</small>
-
-</div>
-
-</div>
-
-<br>
-
-<div class="form-grid">
-
-<div>
-
-<label>Last Backup Date</label>
-
-<input
-
-type="text"
-
-id="lastBackup"
-
-value="No Backup Available"
-
-readonly>
-
-</div>
-
-<div>
-
-<label>Last Login</label>
-
-<input
-
-type="text"
-
-id="lastLogin"
-
-value="--"
-
-readonly>
-
-</div>
-
-<div>
-
-<label>System Status</label>
-
-<input
-
-type="text"
-
-value="Running Successfully"
-
-readonly>
-
-</div>
-
-<div>
-
-<label>License</label>
-
-<input
-
-type="text"
-
-value="Licensed Copy"
-
-readonly>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =========================
-END OF PART 6
-========================= --><!-- =========================
-PART 7
-========================= -->
-
-<!-- =========================
-QUICK ACTIONS START
-========================= --></div>
-
-<div class="quick-actions settings-quick-actions">
-
-<a href="dashboard.html" class="action-card">
-
-<i class="fa-solid fa-chart-line"></i>
-
-<h4>Dashboard</h4>
-
-<p>Go To Dashboard</p>
-
-</a>
-
-<a href="customers.html" class="action-card">
-
-<i class="fa-solid fa-users"></i>
-
-<h4>Customers</h4>
-
-<p>Manage Customers</p>
-
-</a>
-
-<a href="recovery.html" class="action-card">
-
-<i class="fa-solid fa-money-bill-wave"></i>
-
-<h4>Recovery</h4>
-
-<p>Manage Recovery</p>
-
-</a>
-
-<a href="reports.html" class="action-card">
-
-<i class="fa-solid fa-chart-column"></i>
-
-<h4>Reports</h4>
-
-<p>View Reports</p>
-
-</a>
-
-</div>
-
-<br>
-
-<div style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;">
-
-<button
-
-type="button"
-
-class="add-btn"
-
-onclick="saveSettings()">
-
-<i class="fa-solid fa-floppy-disk"></i>
-
-Save Settings
-
-</button>
-
-<button
-
-type="button"
-
-class="add-btn"
-
-style="background:#f59e0b;"
-
-onclick="location.reload()">
-
-<i class="fa-solid fa-rotate"></i>
-
-Reset Page
-
-</button>
-
-<button
-
-type="button"
-
-class="add-btn"
-
-style="background:#ef4444;"
-
-onclick="logout()">
-
-<i class="fa-solid fa-right-from-bracket"></i>
-
-Logout
-
-</button>
-
-</div>
-
-</section>
-
-<!-- =========================
-SUPPORT INFORMATION
-========================= -->
-
-<section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Support Information
-
-</h2>
-
-<span>
-
-Developer Contact
-
-</span>
-
-</div>
-
-</div>
-
-<p><strong>Application :</strong> Recountix</p>
-
-<p><strong>Company :</strong> Recountix</p>
-
-<p><strong>Developer :</strong> BK Design Hub</p>
-
-<p><strong>Version :</strong> Rc.0.05</p>
-
-<p><strong>Support :</strong> support@bkdesignhub.com</p>
-
-<p><strong>Status :</strong> Active</p>
-
-</section>
-
-<!-- =========================
-FOOTER START
-========================= -->
-
-<footer class="footer">
-
-<div>
-
-<strong>Recountix</strong>
-
-</div>
-
-<div style="margin-top:8px;">
-
-© 2026 BK Design Hub | Recountix
-
-</div>
-
-<div style="margin-top:8px;">
-
-Developed by <strong>BK Design Hub</strong>
-
-</div>
-
+<footer class="footer" style="margin-top:30px;">
+  <div><strong>Recountix</strong></div>
+  <div style="margin-top:8px;">© 2026 BK Design Hub | Recountix</div>
+  <div style="margin-top:8px;">Developed by <strong>BK Design Hub</strong></div>
 </footer>
 
-<!-- =========================
-END OF PART 7
-========================= --><!-- =========================
-PART 8
-========================= -->
-
-<!-- =========================
-MAIN CONTENT END
-========================= -->
-
 </main>
-
-<!-- =========================
-WRAPPER END
-========================= -->
-
 </div>
-
-<!-- =========================
-JAVASCRIPT
-========================= -->
-
 
 <script src="js/vendor/supabase-2.117.2.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/permissions.js?v=password-reset-1"></script>
 <script src="js/utils.js?v=preferences-1"></script>
 <script src="js/db.js?v=preferences-1"></script>
-<script src="js/auth.js?v=password-reset-1"></script><script src="js/preferences.js?v=preferences-1"></script>
+<script src="js/auth.js?v=password-reset-1"></script>
+<script src="js/preferences.js?v=preferences-1"></script>
 <script src="js/app.js?v=preferences-1"></script>
 <script src="js/company.js?v=star-wave-3"></script>
 <script src="js/excel-import.js"></script>
 
 <script>
-if(typeof checkLogin==="function"){
-
-    checkLogin();
-
-}
-
-// Load Saved Settings
-
-if(typeof loadSettings==="function"){
-
-    loadSettings();
-
-}
-
-// Update Dashboard
-
-if(typeof updateDashboard==="function"){
-
-    updateDashboard();
-
-}
-
-// Update Storage Usage
-
-if(typeof updateStorageUsage==="function"){
-
-    updateStorageUsage();
-
-}
-
-// Update Last Login
-
-const lastLogin=document.getElementById("lastLogin");
-
-if(lastLogin){
-
-    lastLogin.value=new Date().toLocaleString();
-
-}
-
-// Auto Refresh Every 30 Seconds
+if(typeof checkLogin==="function"){ checkLogin(); }
+if(typeof loadSettings==="function"){ loadSettings(); }
+if(typeof updateDashboard==="function"){ updateDashboard(); }
+if(typeof updateStorageUsage==="function"){ updateStorageUsage(); }
 
 setInterval(function(){
-
-    if(typeof refreshProject==="function"){
-
-        refreshProject();
-
-    }
-
-},30000);
-
+    if(typeof refreshProject==="function"){ refreshProject(); }
+}, 30000);
 </script>
 
 <script>
@@ -1201,7 +443,8 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 </script>
 
 <script src="js/final-suite.js?v=command-center-10"></script>
-<script src="js/offline-backup.js?v=preferences-1"></script><script src="js/i18n.js?v=2"></script>
+<script src="js/offline-backup.js?v=preferences-1"></script>
+<script src="js/i18n.js?v=2"></script>
 
 <script>
 function rxCurrentRole(){
@@ -1245,6 +488,4 @@ async function optimizeWebsite(){
 
 <script src="js/rx-design-system.js?v=ds-1"></script>
 </body>
-
 </html>
-
