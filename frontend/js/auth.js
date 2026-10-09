@@ -1,7 +1,18 @@
-
 /* Password rules are enforced here for UX; hashing is server-side bcrypt only. */
 const MIN_PASSWORD_LEN = 8;
 const MIN_SUPERADMIN_PASSWORD_LEN = 12;
+
+function authEscape(value) {
+    if (typeof escapeHtml === "function") {
+        return escapeHtml(value == null ? "" : String(value));
+    }
+    return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 
 function validatePasswordStrength(password, role) {
     const p = String(password || "");
@@ -47,7 +58,6 @@ async function sbLogin(username, password) {
     const uname = String(username || "").trim();
     if (!uname || !plain) return null;
 
-    // Preferred: secure RPC login (RLS session token)
     try {
         const { data: rpcData, error: rpcErr } = await sb.rpc("app_login", {
             p_username: uname,
@@ -74,9 +84,6 @@ async function sbLogin(username, password) {
                 }
             }
 
-            // IMPORTANT: the RPC path must enforce the same shop-status checks as
-            // the fallback path below — otherwise a deactivated / expired shop's
-            // users could still log in whenever app_login succeeds.
             if (shop && shop.is_active === false && u.role !== "super_admin") {
                 return { error: "shop_inactive", message: "This business is deactivated. Please contact Super Admin." };
             }
@@ -108,8 +115,6 @@ async function sbLogin(username, password) {
         console.warn("app_login RPC not available, fallback", rpcCatch);
     }
 
-    // Never fall back to direct table access. Authentication must be verified
-    // by the SECURITY DEFINER app_login RPC.
     throw new Error("Secure login service is unavailable. Contact the administrator.");
 }
 
@@ -143,7 +148,6 @@ async function login() {
             showLoginError(result.message || result.error);
             return;
         }
-        // Maintenance gate: allow Super Admin, block every other user while maintenance is ON.
         if (result.user.role !== "super_admin") {
             try {
                 const maintenance = await sbGetMaintenanceStatus();
@@ -177,8 +181,6 @@ async function login() {
     }
 }
 
-
-// Global maintenance guard for users who were already logged in before maintenance was enabled.
 async function enforceMaintenanceGate(options) {
     options = options || {};
     const page = String(window.location.pathname || "").toLowerCase();
@@ -186,8 +188,6 @@ async function enforceMaintenanceGate(options) {
 
     const session = (typeof getSession === "function") ? getSession() : null;
 
-    // Every protected-page session must be verified by the server. Local/session
-    // storage values alone never grant a role or access.
     if (!page.includes("login.html")) {
         if (!session || !session.isLoggedIn || !session.sessionToken) {
             try { clearSession(); } catch (_) {}
@@ -219,11 +219,8 @@ async function enforceMaintenanceGate(options) {
         }
     }
 
-    // Only a server-verified Super Admin bypasses maintenance.
     if (session && session.role === "super_admin") return false;
 
-    // Login page remains visible so Super Admin can sign in, but normal-user
-    // credentials are blocked separately in login().
     if (page.includes("login.html") && !options.forceOnLogin) return false;
 
     try {
@@ -235,15 +232,12 @@ async function enforceMaintenanceGate(options) {
             try {
                 sessionStorage.setItem("bk_maintenance_message", maintenance.message || "Our system is currently being updated. Please try again shortly.");
             } catch (_) {}
-            // Clear normal-user session so Back button cannot reopen protected pages.
             try { if (typeof clearSession === "function") clearSession(); } catch (_) {}
             window.location.replace("maintenance.html");
             return true;
         }
     } catch (e) {
         console.error("Maintenance gate check failed", e);
-        // Protected pages fail closed for non-super-admin users. This prevents
-        // an RLS/network/status-read failure from silently bypassing maintenance.
         if (!page.includes("login.html")) {
             try { sessionStorage.setItem("bk_maintenance_message", "The system status could not be verified. Please try again later."); } catch (_) {}
             try { if (typeof clearSession === "function") clearSession(); } catch (_) {}
@@ -254,8 +248,6 @@ async function enforceMaintenanceGate(options) {
     return false;
 }
 
-// Hard global maintenance gate: run independently of app.js so every protected
-// HTML page is checked even if that page's normal application init changes/fails.
 (function installGlobalMaintenanceGate(){
     const run = async function(){
         const page = String(window.location.pathname || "").toLowerCase();
@@ -264,7 +256,6 @@ async function enforceMaintenanceGate(options) {
     };
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run, { once:true });
     else setTimeout(run, 0);
-    // Re-check when user returns to the tab and periodically while logged in.
     document.addEventListener("visibilitychange", function(){ if (!document.hidden) run(); });
     setInterval(run, 15000);
 })();
@@ -280,10 +271,8 @@ function checkLogin() {
     }
 
     const role = session.role;
-    // Super Admin: customer/recovery data pages — privacy (no cross-shop customer view)
     const dataPages = ["customers.html", "recovery.html", "ptp.html", "escalations.html", "activity.html", "field-tracking.html", "reports.html"];
     if (role === "super_admin" && dataPages.some(p => page.includes(p)) && !session.shopId) {
-        // stay but privacy banner + empty data via enforceSuperAdminDataPrivacy; do not redirect forced
         try { sessionStorage.setItem("sa-privacy-customers", "1"); } catch (e) {}
     }
 
@@ -326,7 +315,7 @@ function injectSuperAdminNav() {
         const isActive = page.includes(link.href);
         li.innerHTML = `<a href="${link.href}"${isActive ? ' class="active"' : ""}>
             <i class="fa-solid ${link.icon}"></i>
-            <span>${link.label}</span>
+            <span>${authEscape(link.label)}</span>
         </a>`;
         if (logoutLi) menu.insertBefore(li, logoutLi);
         else menu.appendChild(li);
@@ -338,7 +327,6 @@ function injectSuperAdminNav() {
 function applyRoleRestrictions() {
     const session = getSession();
 
-    // Final UI identity: show the logged-in user's name on the left sidebar and topbar brand.
     try {
         const sidebar = document.querySelector(".sidebar");
         if (sidebar && !sidebar.querySelector(".vo-logged-user")) {
@@ -360,7 +348,6 @@ function applyRoleRestrictions() {
                 brand.innerHTML = '<img src="assets/logo.png" alt="Recountix"><div class="vo-topbar-brand-name">RECOUNTIX<small>BEYOND WHAT&apos;S DUE.</small></div>';
                 header.insertBefore(brand, header.firstChild);
             }
-            // Keep top headers clean and premium: no role/name chips in the upper bar.
             header.querySelectorAll(".vo-topbar-user, .user-info").forEach(function(el){ el.remove(); });
         });
     } catch (e) { console.warn("Final identity UI failed", e); }
@@ -408,7 +395,6 @@ async function logout() {
     }
 }
 
-
 function openForgotPassword() {
     const modal = document.getElementById("forgotModal");
     if (!modal) {
@@ -434,7 +420,6 @@ async function submitForgotPassword() {
     showLoginError("Contact your Business Administrator or Super Admin to reset your password securely.");
 }
 
-
 window.sbLogin = sbLogin;
 window.login = login;
 window.checkLogin = checkLogin;
@@ -446,7 +431,6 @@ window.logout = logout;
 window.openForgotPassword = openForgotPassword;
 window.closeForgotPassword = closeForgotPassword;
 window.submitForgotPassword = submitForgotPassword;
-
 
 function showLoginError(msg) {
     let box = document.getElementById("loginErrorBox");
@@ -464,4 +448,3 @@ function showLoginError(msg) {
     try { alert(msg); } catch (e) {}
 }
 window.showLoginError = showLoginError;
-
