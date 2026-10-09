@@ -19,21 +19,18 @@
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B0F17" />
-
 <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
-
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style id="rx-critical-dark">html,body{background:#0B0F17!important;color:#F8FAFC!important;}html{min-height:100%;}body{min-height:100vh;}*{box-sizing:border-box;}main,.wrapper,.main-content,.page-shell{background:#0B0F17!important;}input,select,textarea{background:#0B0F17;color:#F8FAFC;color-scheme:dark;}</style>
-
-<title>Recovery | Recountix</title><link rel="preconnect" href="https://fonts.googleapis.com" />
+<style id="rx-critical-dark">html,body{background:#0B0F17!important;color:#F8FAFC!important;}html{min-height:100%;}body{min-height:100vh;}*{box-sizing:border-box;}main,.wrapper,.main-content,.page-shell{background:#0B0F17!important;}input,select,textarea{background:#0B0F17;color:#F8FAFC;color-scheme:dark;}</style>
+<title>Recovery | Recountix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
-
-<!-- Premium SaaS 2026 visual layer; existing IDs and JS behavior are preserved --><link rel="stylesheet" href="css/boltise-dark.css?v=command-center-10"><link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
+<link rel="stylesheet" href="css/boltise-dark.css?v=command-center-10">
+<link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
 </head>
 
 <body>
@@ -42,649 +39,228 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="wrapper">
 
-<!-- =========================
-SIDEBAR START
-========================= -->
-
 <aside class="sidebar">
-
-<div class="logo">
-
-<h2>Recountix</h2>
-
-<p>Beyond What’s Due.</p>
-
-</div>
-
-<ul class="menu">
-<li><a href="dashboard.html"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
-<li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
-<li><a href="recovery.html" class="active"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
-<li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
-<li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
-<li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
-<li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
-<li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
-<li><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
-<li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li><li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
-</ul>
-
+  <div class="logo">
+    <h2>Recountix</h2>
+    <p>Beyond What’s Due.</p>
+  </div>
+  <ul class="menu">
+    <li><a href="dashboard.html"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+    <li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
+    <li><a href="recovery.html" class="active"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
+    <li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
+    <li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
+    <li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
+    <li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
+    <li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
+    <li><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+    <li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li>
+    <li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+  </ul>
 </aside>
-
-<!-- =========================
-SIDEBAR END
-========================= -->
-
-<!-- =========================
-MAIN CONTENT START
-========================= -->
 
 <main class="main-content">
 
-<!-- =========================
-END OF PART 1
-========================= --><!-- =========================
-PART 2
-========================= -->
-
-<!-- =========================
-TOPBAR START
-========================= -->
-
 <header class="topbar">
-
-<div>
-
-<h1 class="page-title">
-
-Recovery Management
-
-</h1>
-
-<p class="page-subtitle">
-
-Manage Customer Payment Recovery
-
-</p>
-
-</div>
-
-<div class="user-info">
-
-<i class="fa-solid fa-user-shield"></i>
-
-<span id="userRoleBadge">Administrator</span>
-
-</div>
-
+  <div>
+    <h1 class="page-title">Recovery Management</h1>
+    <p class="page-subtitle">Manage Customer Payment Recovery</p>
+  </div>
+  <div class="user-info">
+    <i class="fa-solid fa-user-shield"></i>
+    <span id="userRoleBadge">Administrator</span>
+  </div>
 </header>
 
-<!-- =========================
-TOPBAR END
-========================= -->
-
-<!-- =========================
-RECOVERY SUMMARY START
-========================= -->
-
 <div class="dashboard-grid">
-
-<!-- Today's Recovery -->
-
-<div class="card green">
-
-<i class="fa-solid fa-sack-dollar"></i>
-
-<h3>Today's Recovery</h3>
-
-<h1 id="todayRecovery">
-
-₹0
-
-</h1>
-
-<small>Today's Collection</small>
-
+  <div class="card green">
+    <i class="fa-solid fa-sack-dollar"></i>
+    <h3>Today's Recovery</h3>
+    <h1 id="todayRecovery">₹0</h1>
+    <small>Today's Collection</small>
+  </div>
+  <div class="card blue">
+    <i class="fa-solid fa-wallet"></i>
+    <h3>Total Recovery</h3>
+    <h1 id="totalRecovery">₹0</h1>
+    <small>Overall Collection</small>
+  </div>
+  <div class="card red">
+    <i class="fa-solid fa-hand-holding-dollar"></i>
+    <h3>Pending Amount</h3>
+    <h1 id="pendingRecovery">₹0</h1>
+    <small>Total Outstanding</small>
+  </div>
+  <div class="card orange">
+    <i class="fa-solid fa-file-invoice-dollar"></i>
+    <h3>Total Transactions</h3>
+    <h1 id="totalTransactions">0</h1>
+    <small>Recovery Entries</small>
+  </div>
 </div>
-
-<!-- Total Recovery -->
-
-<div class="card blue">
-
-<i class="fa-solid fa-wallet"></i>
-
-<h3>Total Recovery</h3>
-
-<h1 id="totalRecovery">
-
-₹0
-
-</h1>
-
-<small>Overall Collection</small>
-
-</div>
-
-<!-- Pending Recovery -->
-
-<div class="card red">
-
-<i class="fa-solid fa-hand-holding-dollar"></i>
-
-<h3>Pending Amount</h3>
-
-<h1 id="pendingRecovery">
-
-₹0
-
-</h1>
-
-<small>Total Outstanding</small>
-
-</div>
-
-<!-- Total Transactions -->
-
-<div class="card orange">
-
-<i class="fa-solid fa-file-invoice-dollar"></i>
-
-<h3>Total Transactions</h3>
-
-<h1 id="totalTransactions">
-
-0
-
-</h1>
-
-<small>Recovery Entries</small>
-
-</div>
-
-</div>
-
-<!-- =========================
-END OF PART 2
-========================= --><!-- =========================
-PART 3
-========================= -->
-
-<!-- =========================
-RECOVERY ENTRY FORM START
-========================= -->
 
 <section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Add Recovery Entry
-
-</h2>
-
-<span>
-
-Record Customer Payment
-
-</span>
-
-</div>
-
-</div>
-
-<form id="recoveryForm">
-
-<div class="form-grid">
-
-<!-- Customer -->
-
-<div>
-
-<label>Select Customer</label>
-
-<select id="recoveryCustomer" required onchange="onRecoveryCustomerChange()" oninput="onRecoveryCustomerChange()">
-
-<option value="">
-
-Select Customer
-
-</option>
-
-</select>
-
-</div>
-
-<div>
-<label>Current Outstanding (₹)</label>
-<input type="text" id="recoveryOutstanding" readonly placeholder="Select customer" style="font-weight:700;color:#b91c1c;background:#fef2f2;">
-<small id="recoveryOutHint" style="color:#73879B;">Select a customer to see pending amount</small>
-</div>
-
-<!-- Recovery Amount -->
-
-<div>
-
-<label>Recovery Amount (₹)</label>
-
-<input
-
-type="number"
-
-id="recoveryAmount" oninput="onRecoveryAmountInput()"
-
-placeholder="0 = call only (no payment)"
->
-
-</div>
-
-<!-- Recovery Date -->
-
-<div>
-
-<label>Recovery Date</label>
-
-<input
-
-type="date"
-
-id="recoveryDate"
-
-required>
-
-</div>
-
-<!-- Payment Mode -->
-
-<div>
-
-<label>Payment Mode</label>
-
-<select id="paymentMode">
-
-<option value="Cash">Cash</option>
-
-<option value="UPI">UPI</option>
-
-<option value="Bank Transfer">Bank Transfer</option>
-
-<option value="Cheque">Cheque</option>
-
-<option value="Card">Card</option>
-
-</select>
-
-</div>
-
-<!-- Receipt Number -->
-
-<div>
-
-<label>Receipt Number</label>
-
-<input
-
-type="text"
-
-id="receiptNo"
-
-placeholder="Receipt Number">
-
-</div>
-
-<!-- Collected By -->
-
-<div>
-
-<label>Collected By</label>
-
-<select id="collectedBy">
-<option value="">Select</option>
-</select>
-
-</div>
-
-<!-- Remarks -->
-
-<div class="full-width">
-
-<label>Remarks / Call Note</label>
-
-<textarea
-
-id="recoveryRemarks"
-
-rows="4"
-
-placeholder="Enter Recovery Remarks...">
-
-</textarea>
-
-</div>
-
-</div>
-
-<br>
-
-<button
-
-type="button"
-
-class="add-btn"
-
-onclick="saveRecovery()">
-
-<i class="fa-solid fa-floppy-disk"></i>
-
-Save Recovery
-
-</button>
-
-</form>
-
+  <div class="summary-bar">
+    <div>
+      <h2>Add Recovery Entry</h2>
+      <span>Record Customer Payment</span>
+    </div>
+  </div>
+
+  <form id="recoveryForm" onsubmit="event.preventDefault(); saveRecovery();">
+    <div class="form-grid">
+      <div>
+        <label for="recoveryCustomer">Select Customer *</label>
+        <select id="recoveryCustomer" required onchange="onRecoveryCustomerChange()" oninput="onRecoveryCustomerChange()">
+          <option value="">Select Customer</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="recoveryOutstanding">Current Outstanding (₹)</label>
+        <input type="text" id="recoveryOutstanding" readonly placeholder="Select customer" style="font-weight:700;color:#f43f5e;background:rgba(244,63,94,0.1);">
+        <small id="recoveryOutHint" style="color:#94a3b8;">Select a customer to see pending amount</small>
+      </div>
+
+      <div>
+        <label for="recoveryAmount">Recovery Amount (₹)</label>
+        <input type="number" id="recoveryAmount" oninput="onRecoveryAmountInput()" min="0" step="0.01" placeholder="0 = call only (no payment)">
+      </div>
+
+      <div>
+        <label for="recoveryDate">Recovery Date *</label>
+        <input type="date" id="recoveryDate" required>
+      </div>
+
+      <div>
+        <label for="paymentMode">Payment Mode</label>
+        <select id="paymentMode">
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="Cheque">Cheque</option>
+          <option value="Card">Card</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="receiptNo">Receipt Number</label>
+        <input type="text" id="receiptNo" placeholder="Receipt Number" autocomplete="off">
+      </div>
+
+      <div>
+        <label for="collectedBy">Collected By</label>
+        <select id="collectedBy">
+          <option value="">Select</option>
+        </select>
+      </div>
+
+      <div class="full-width">
+        <label for="recoveryRemarks">Remarks / Call Note</label>
+        <textarea id="recoveryRemarks" rows="4" placeholder="Enter Recovery Remarks..."></textarea>
+      </div>
+    </div>
+
+    <br>
+    <button type="submit" class="add-btn">
+      <i class="fa-solid fa-floppy-disk"></i> Save Recovery
+    </button>
+  </form>
 </section>
-
-<!-- =========================
-RECOVERY ENTRY FORM END
-========================= -->
-
-<!-- =========================
-END OF PART 3
-========================= --><!-- =========================
-PART 4
-========================= -->
-
-<!-- =========================
-RECOVERY HISTORY START
-========================= -->
 
 <section class="table-section fade">
+  <div class="summary-bar">
+    <div>
+      <h2>Recovery History</h2>
+      <span>All Customer Recovery Entries</span>
+    </div>
+  </div>
 
-<div class="summary-bar">
+  <div class="form-grid">
+    <div>
+      <label for="searchRecovery">Search Customer</label>
+      <input type="text" id="searchRecovery" class="search-box" placeholder="Search Customer..." onkeyup="searchRecovery()">
+    </div>
+    <div>
+      <label for="filterDate">Recovery Date</label>
+      <input type="date" id="filterDate" onchange="filterReportByDate()">
+    </div>
+  </div>
 
-<div>
-
-<h2>
-
-Recovery History
-
-</h2>
-
-<span>
-
-All Customer Recovery Entries
-
-</span>
-
-</div>
-
-</div>
-
-<!-- =========================
-SEARCH & FILTER
-========================= -->
-
-<div class="form-grid">
-
-<div>
-
-<label>Search Customer</label>
-
-<input
-
-type="text"
-
-id="searchRecovery"
-
-class="search-box"
-
-placeholder="Search Customer..."
-
-onkeyup="searchRecovery()">
-
-</div>
-
-<div>
-
-<label>Recovery Date</label>
-
-<input
-
-type="date"
-
-id="filterDate"
-
-onchange="filterReportByDate()">
-
-</div>
-
-</div>
-
-<br>
-
-<div class="table-responsive">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>#</th>
-
-<th>Customer</th>
-
-<th>Amount</th>
-
-<th>Payment Mode</th>
-
-<th>Receipt No.</th>
-
-<th>Date</th>
-
-<th>Collected By</th>
-
-<th>Remarks</th>
-
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody id="recoveryBody">
-
-<!-- Dynamic Recovery Data -->
-
-</tbody>
-
-</table>
-
-</div>
-
+  <br>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Amount</th>
+          <th>Payment Mode</th>
+          <th>Receipt No.</th>
+          <th>Date</th>
+          <th>Collected By</th>
+          <th>Remarks</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="recoveryBody">
+      </tbody>
+    </table>
+  </div>
 </section>
-
-<!-- =========================
-RECOVERY HISTORY END
-========================= -->
-
-<!-- =========================
-END OF PART 4
-========================= --><!-- =========================
-PART 5
-========================= -->
-
-<!-- =========================
-RECOVERY SUMMARY START
-========================= -->
 
 <section class="content-box fade">
+  <div class="summary-bar">
+    <div>
+      <h2>Recovery Summary</h2>
+      <span>Collection Overview</span>
+    </div>
+  </div>
 
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Recovery Summary
-
-</h2>
-
-<span>
-
-Collection Overview
-
-</span>
-
-</div>
-
-</div>
-
-<div class="dashboard-grid">
-
-<!-- Monthly Collection -->
-
-<div class="card green">
-
-<i class="fa-solid fa-chart-line"></i>
-
-<h3>Monthly Collection</h3>
-
-<h1 id="monthlyCollection">
-
-₹0
-
-</h1>
-
-<small>Current Month</small>
-
-</div>
-
-<!-- Total Recovery -->
-
-<div class="card blue">
-
-<i class="fa-solid fa-coins"></i>
-
-<h3>Total Recovery</h3>
-
-<h1 id="summaryRecovery">
-
-₹0
-
-</h1>
-
-<small>Lifetime Collection</small>
-
-</div>
-
-<!-- Pending Amount -->
-
-<div class="card red">
-
-<i class="fa-solid fa-wallet"></i>
-
-<h3>Pending Amount</h3>
-
-<h1 id="summaryPending">
-
-₹0
-
-</h1>
-
-<small>Outstanding Balance</small>
-
-</div>
-
-<!-- Today's Collection -->
-
-<div class="card orange">
-
-<i class="fa-solid fa-calendar-day"></i>
-
-<h3>Today's Collection</h3>
-
-<h1 id="summaryToday">
-
-₹0
-
-</h1>
-
-<small>Today's Recovery</small>
-
-</div>
-
-</div>
-
+  <div class="dashboard-grid">
+    <div class="card green">
+      <i class="fa-solid fa-chart-line"></i>
+      <h3>Monthly Collection</h3>
+      <h1 id="monthlyCollection">₹0</h1>
+      <small>Current Month</small>
+    </div>
+    <div class="card blue">
+      <i class="fa-solid fa-coins"></i>
+      <h3>Total Recovery</h3>
+      <h1 id="summaryRecovery">₹0</h1>
+      <small>Lifetime Collection</small>
+    </div>
+    <div class="card red">
+      <i class="fa-solid fa-wallet"></i>
+      <h3>Pending Amount</h3>
+      <h1 id="summaryPending">₹0</h1>
+      <small>Outstanding Balance</small>
+    </div>
+    <div class="card orange">
+      <i class="fa-solid fa-calendar-day"></i>
+      <h3>Today's Collection</h3>
+      <h1 id="summaryToday">₹0</h1>
+      <small>Today's Recovery</small>
+    </div>
+  </div>
 </section>
 
-<!-- =========================
-END OF PART 5
-========================= --><!-- =========================
-PART 6
-========================= -->
-
-<!-- =========================
-FOOTER START
-========================= -->
-
 <footer class="footer">
-
-<div>
-
-<strong>Recountix</strong>
-
-</div>
-
-<div style="margin-top:8px;">
-
-© 2026 BK Design Hub | Recountix
-
-</div>
-
-<div style="margin-top:8px;">
-
-Developed by <strong>BK Design Hub</strong>
-
-</div>
-
+  <div><strong>Recountix</strong></div>
+  <div style="margin-top:8px;">© 2026 BK Design Hub | Recountix</div>
+  <div style="margin-top:8px;">Developed by <strong>BK Design Hub</strong></div>
 </footer>
 
-<!-- =========================
-FOOTER END
-========================= -->
-
-<!-- =========================
-MAIN CONTENT END
-========================= -->
-
 </main>
-
-<!-- =========================
-WRAPPER END
-========================= -->
-
 </div>
-
-<!-- =========================
-END OF PART 6
-========================= --><!-- =========================
-PART 7
-========================= -->
-
-<!-- =========================
-JAVASCRIPT
-========================= -->
-
 
 <script src="js/vendor/supabase-2.117.2.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/permissions.js?v=rights-1"></script>
 <script src="js/utils.js?v=preferences-1"></script>
 <script src="js/db.js?v=preferences-1"></script>
-<script src="js/auth.js?v=rights-1"></script><script src="js/preferences.js?v=preferences-1"></script>
+<script src="js/auth.js?v=rights-1"></script>
+<script src="js/preferences.js?v=preferences-1"></script>
 <script src="js/app.js?v=preferences-1"></script>
 <script src="js/company.js?v=star-wave-3"></script>
 <script src="js/excel-import.js"></script>
@@ -708,7 +284,8 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 </script>
 
 <script src="js/final-suite.js?v=command-center-10"></script>
-<script src="js/offline-backup.js?v=preferences-1"></script><script src="js/i18n.js?v=2"></script>
+<script src="js/offline-backup.js?v=preferences-1"></script>
+<script src="js/i18n.js?v=2"></script>
 <script src="js/rx-design-system.js?v=ds-1"></script>
 </body>
 
