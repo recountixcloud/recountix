@@ -151,3 +151,43 @@ window.addEventListener('load',()=>{
  document.addEventListener('visibilitychange',()=>{if(!document.hidden && getSession().isLoggedIn)refresh();});
 });
 })();
+
+/* Account security is available independently of business settings rights. */
+(function () {
+ function initAccount() {
+  if (!getSession().isLoggedIn) return;
+  const menu=document.querySelector('.sidebar .menu');
+  if (!menu || document.getElementById('rxMyAccount')) return;
+  const item=document.createElement('li');
+  const button=document.createElement('button');
+  button.id='rxMyAccount';button.type='button';button.className='rx-account-control';
+  button.textContent='My Account';item.append(button);
+  menu.append(item);
+  button.onclick=function () {
+   let dialog=document.getElementById('rxOwnPassword');
+   if (!dialog) {
+    dialog=document.createElement('dialog');dialog.id='rxOwnPassword';
+    dialog.innerHTML='<form><h2>Change Password</h2><label>Current password<input name="current" type="password" autocomplete="current-password" required></label><label>New password<input name="next" type="password" autocomplete="new-password" minlength="8" required></label><label>Confirm new password<input name="confirm" type="password" autocomplete="new-password" minlength="8" required></label><p class="rx-account-error" role="alert"></p><div class="rx-dialog-actions"><button type="button" class="rx-account-cancel">Cancel</button><button type="submit">Save Password</button></div></form>';
+    document.body.append(dialog);
+    dialog.querySelector('.rx-account-cancel').onclick=()=>dialog.close();
+    dialog.querySelector('form').onsubmit=async event=>{
+     event.preventDefault();const form=event.target,error=dialog.querySelector('.rx-account-error');
+     const current=form.elements.current.value,next=form.elements.next.value;
+     error.textContent='';
+     if(next!==form.elements.confirm.value){error.textContent='Passwords do not match.';return;}
+     if(next.length<8){error.textContent='Use at least 8 characters.';return;}
+     const save=form.querySelector('[type="submit"]');if(save.disabled)return;save.disabled=true;
+     try {
+      const result=await getSupabase().rpc('app_change_own_password',{p_token:getSession().sessionToken,p_current_password:current,p_new_password:next});
+      if(result.error||result.data?.error)throw result.error||new Error(result.data.error);
+      form.reset();dialog.close();alert('Password changed. Other sessions have been signed out.');
+     }catch(e){error.textContent=String(e.message||e).includes('invalid_current_password')?'Current password is incorrect.':'Could not change password. Please try again.';}
+     finally{save.disabled=false;}
+    };
+    dialog.addEventListener('close',()=>dialog.querySelector('form').reset());
+   }
+   dialog.querySelector('.rx-account-error').textContent='';dialog.showModal();
+  };
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initAccount,{once:true});else initAccount();
+})();
