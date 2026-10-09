@@ -2598,3 +2598,35 @@ body::after,.rx-dark-shell body::after {
 @media(prefers-reduced-motion:reduce) {
  body::before,body::after,.rx-dark-shell body::before,.rx-dark-shell body::after {animation:none !important;transform:none !important;}
 }
+
+/* Match button accents to the navy/cyan background; card styles stay unchanged. */
+html body .add-btn, html body button.save-btn, html body .save-btn,
+html body .btn-primary, html body button[type="submit"], html body input[type="submit"],
+html.rx-dark-shell body .login-card .btn-primary {
+  background:linear-gradient(135deg,#087db8,#03679e) !important;
+  border-color:#38bdf8 !important;
+  color:#ffffff !important;
+  box-shadow:0 8px 22px rgba(14,165,233,.24) !important;
+}
+html body .btn-secondary, html body .btn-cancel, html body .btn-reset,
+html body .cancel-btn, html body .action-btn, html body .vo-mini-btn,
+html body .rc-view-details, html body .vo-command-btn, html body .menu-toggle {
+  background:rgba(7,42,77,.9) !important;
+  border-color:rgba(56,189,248,.45) !important;
+  color:#e0f2fe !important;
+  box-shadow:0 6px 18px rgba(2,20,48,.25) !important;
+}
+html body .vo-command-btn i, html body .vo-mini-btn i,
+html body .action-btn i, html body .rc-view-details i {
+  color:#7dd3fc !important;
+}
+html body .add-btn:hover, html body .save-btn:hover,
+html body .btn-primary:hover, html body button[type="submit"]:hover {
+  background:linear-gradient(135deg,#098ac9,#0875ae) !important;
+}
+html body .add-btn:focus-visible, html body .btn-primary:focus-visible,
+html body .btn-secondary:focus-visible, html body .vo-command-btn:focus-visible,
+html body .menu-toggle:focus-visible {
+  outline:2px solid #7dd3fc !important;
+  outline-offset:3px;
+}
