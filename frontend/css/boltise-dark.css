@@ -2630,3 +2630,24 @@ html body .menu-toggle:focus-visible {
   outline:2px solid #7dd3fc !important;
   outline-offset:3px;
 }
+
+/* Navy-blue cards coordinated with the animated background and cyan buttons. */
+html body .card,html body .content-box,html body .table-section,
+html body .analytics-panel,html body .vo-command-strip,html body .rx-nav-card,
+html body .backup-panel,html body .action-card,html body .vo-final-kpi,
+html body .vo-today-panel,html body .rx-command-panel,html body .rx-risk-panel,
+html body .rx-roadmap-panel,html body .rx-mini-card,html body .rx-module-card,
+html body .login-card,html body .rx-live-clock {
+ background:linear-gradient(155deg,rgba(9,43,77,.97),rgba(5,26,53,.97)) !important;
+ border-color:rgba(56,189,248,.28) !important;
+ box-shadow:0 18px 44px rgba(2,12,32,.32),inset 0 1px 0 rgba(125,211,252,.06) !important;
+}
+html body .card:hover,html body .rx-nav-card:hover,html body .action-card:hover {
+ border-color:rgba(56,189,248,.58) !important;
+ box-shadow:0 20px 48px rgba(2,12,32,.38),0 0 24px rgba(14,165,233,.1) !important;
+}
+html body .card > i,html body .rx-nav-card > i:first-child,
+html body .settings-quick-actions .action-card > i {
+ background:rgba(14,165,233,.14) !important;
+ color:#7dd3fc !important;
+}
