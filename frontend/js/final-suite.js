@@ -13,7 +13,15 @@ function once(id,tag,attrs){
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
   document.head.appendChild(el);
 }
-once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=clean-card-headings-20261009'});
+// Refresh an existing theme link as well as dynamically loaded pages.
+var themeHref='css/boltise-dark.css?v=heading-cleanup-20261009-2';
+var themeLink=document.querySelector('link[href*="css/boltise-dark.css"]');
+if(themeLink){
+  themeLink.setAttribute('href',themeHref);
+  document.head.appendChild(themeLink);
+}else{
+  once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:themeHref});
+}
 if(/dashboard|customers|recovery|ptp|reports|escalations/i.test(location.pathname)){
   once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
 }
