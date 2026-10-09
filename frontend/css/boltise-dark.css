@@ -2538,3 +2538,30 @@ body::after,
   body::after,
   .rx-dark-shell body::after { opacity: .5 !important; }
 }
+
+/* Compact operational layout. */
+.rx-dark-shell body { font-size:14px !important; line-height:1.5 !important; }
+.rx-dark-shell h1,.rx-dark-shell .page-title { font-size:24px !important; font-weight:600 !important; }
+.rx-dark-shell h2 { font-size:18px !important; font-weight:600 !important; }
+.rx-dark-shell h3 { font-size:16px !important; font-weight:500 !important; }
+.rx-dark-shell h4 { font-size:14px !important; font-weight:500 !important; }
+.rx-dark-shell .card,.rx-dark-shell .content-box,.rx-dark-shell .table-section,
+.rx-dark-shell .analytics-panel,.rx-dark-shell .rx-command-panel,.rx-dark-shell .rx-risk-panel,
+.rx-dark-shell .vo-today-panel,.rx-dark-shell .vo-final-kpi {
+  border-radius:8px !important; padding:16px !important; box-shadow:none !important;
+  backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+}
+.rx-dark-shell .topbar { padding:16px !important; border-radius:8px !important; box-shadow:none !important; margin-bottom:16px !important; }
+.rx-dark-shell .page-subtitle,.rx-dark-shell .summary-bar > div > span { display:none !important; }
+.rx-dark-shell .summary-bar { padding:0 0 12px !important; box-shadow:none !important; background:transparent !important; }
+.rx-dark-shell .dashboard-grid { gap:12px !important; margin-bottom:16px !important; }
+.rx-dark-shell .card h1 { font-size:28px !important; }
+.rx-dark-shell .card small { font-size:12px !important; font-weight:400 !important; }
+.rx-user-menu { min-width:140px; }
+.rx-user-menu summary { cursor:pointer; padding:10px 12px; border:1px solid #334155; border-radius:8px; min-height:44px; }
+.rx-user-menu-items { display:grid; gap:6px; padding-top:8px; }
+.rx-user-menu-items .rx-user-action { margin:0 !important; width:100% !important; max-width:none !important; min-height:44px; white-space:normal !important; }
+@media(max-width:768px) {
+  .rx-dark-shell .topbar { padding-top:72px !important; }
+  .rx-dark-shell .main-content { padding-bottom:24px !important; }
+}
