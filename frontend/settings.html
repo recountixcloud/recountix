@@ -32,10 +32,28 @@
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
-<link rel="stylesheet" href="css/boltise-dark.css?v=motion-bg-2">
+<link rel="stylesheet" href="css/boltise-dark.css?v=settings-mobile-1">
+<style>
+/* Settings forms stay visible; wide data tables scroll independently. */
+.rx-settings-page .table-section { min-width:0; }
+.rx-settings-page .form-grid > div { min-width:0; }
+@media (max-width:768px) {
+  .rx-settings-page .table-section { overflow:visible !important; }
+  .rx-settings-page .form-grid { grid-template-columns:minmax(0,1fr) !important; }
+  .rx-settings-page input,.rx-settings-page select,.rx-settings-page textarea { max-width:100% !important; min-width:0; }
+  .rx-settings-page .table-section > table { display:block; overflow-x:auto; width:100%; min-width:0 !important; -webkit-overflow-scrolling:touch; }
+  .rx-settings-page .table-section > table th,.rx-settings-page .table-section > table td { padding:12px; }
+  .rx-settings-page .table-section button:not(.menu-toggle),.rx-settings-page .table-section a.add-btn {
+    max-width:100% !important; height:auto !important; min-height:44px !important;
+    white-space:normal !important; overflow-wrap:anywhere; flex-shrink:0;
+  }
+  .rx-settings-page .table-section button > span { max-width:none !important; }
+  .rx-settings-page .dashboard-grid { grid-template-columns:minmax(0,1fr) !important; }
+}
+</style>
 </head>
 
-<body>
+<body class="rx-settings-page">
 
 <button type="button" class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -126,7 +144,7 @@ TOPBAR END
 COMPANY INFORMATION START
 ========================= -->
 
-<section class="table-section fade">
+<section class="table-section fade" data-rc-compact="1">
 
 <div class="summary-bar">
 
@@ -433,7 +451,7 @@ PART 3B - USER MANAGEMENT
 ========================= -->
 
 
-<section class="table-section fade" id="executiveManagementSection">
+<section class="table-section fade" data-rc-compact="1" id="executiveManagementSection">
     <h2><i class="fa-solid fa-user-tie"></i> Sales / Recovery Executives</h2>
     <p style="color:#9CA6B8;margin-bottom:16px;">This list will appear in the Customer and Recovery form dropdowns. Business Admins can add or remove entries.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
@@ -533,7 +551,7 @@ PART 4
 DATA MANAGEMENT START
 ========================= -->
 
-<section class="table-section fade">
+<section class="table-section fade" data-rc-compact="1">
 
 <div class="summary-bar">
 
@@ -632,7 +650,7 @@ PART 5
 SECURITY SETTINGS START
 ========================= -->
 
-<section class="table-section fade">
+<section class="table-section fade" data-rc-compact="1">
 
 <div class="summary-bar">
 
@@ -782,7 +800,7 @@ PART 6
 APPLICATION INFORMATION START
 ========================= -->
 
-<section class="table-section fade">
+<section class="table-section fade" data-rc-compact="1">
 
 <div class="summary-bar">
 
@@ -1044,7 +1062,7 @@ Logout
 SUPPORT INFORMATION
 ========================= -->
 
-<section class="table-section fade">
+<section class="table-section fade" data-rc-compact="1">
 
 <div class="summary-bar">
 
