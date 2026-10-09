@@ -2509,6 +2509,18 @@ body::after,
 }
 
 /* Expose the decorative layer through the page canvas, keeping panels opaque. */
+@media (max-width: 768px) {
+  .rx-dark-shell .vo-today-head > .vo-mini-btn {
+    flex: 0 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 44px !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    margin: 0 !important;
+  }
+}
+
 html body .wrapper,
 html body .main-content,
 html.rx-dark-shell body .wrapper,
