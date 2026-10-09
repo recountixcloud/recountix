@@ -4,7 +4,15 @@
 ========================================================== */
 
 function companyEscape(value) {
-    return escapeHtml(value == null ? "" : String(value));
+    if (typeof escapeHtml === "function") {
+        return escapeHtml(value == null ? "" : String(value));
+    }
+    return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 function fmtMoney(n) {
@@ -18,13 +26,12 @@ function fmtDate(d) {
     return dt.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-
 /** Single source of truth for license end date */
 function getEffectiveLicenseExpiry(shop, subscription) {
     const a = shop && shop.license_expiry ? String(shop.license_expiry).slice(0, 10) : "";
     const b = subscription && (subscription.end_date || subscription.endDate)
         ? String(subscription.end_date || subscription.endDate).slice(0, 10) : "";
-    if (a && b) return a >= b ? a : b; // later date wins
+    if (a && b) return a >= b ? a : b;
     return b || a || "";
 }
 
@@ -73,7 +80,7 @@ async function loadSuperDashboard() {
         }).join("") || `<tr><td colspan="7" style="text-align:center;color:#94a3b8;">No businesses found</td></tr>`;
     } catch (e) {
         console.error(e);
-        body.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#ef4444;">Failed to load: ${companyEscape(e.message || e)}</td></tr>`;
+        body.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#ef4444;">Failed to load: ${companyEscape(e.message || e)}</td></tr>`;
     }
 }
 
@@ -89,9 +96,6 @@ async function loadCompanies() {
     try {
         const rows = await sbGetSubscriptionsWithShops();
 
-        // Keep the exact rows rendered in the table available to the Edit action.
-        // Previously this cache stayed empty, so tapping the pencil could not
-        // locate the selected shop and silently returned without opening.
         allShopsCache = rows.map((r) => ({
             ...(r.shop || {}),
             plan_name: (r.subscription && r.subscription.plan_name) || (r.shop && r.shop.plan_name) || "Basic",
@@ -114,9 +118,9 @@ async function loadCompanies() {
                 ? statusBadge(status)
                 : '<span class="badge badge-danger">Inactive</span>'}</td>
             <td>
-                <button type="button" onclick="openEditShopModal('${shop.id}')" title="Edit">✏️</button>
-                <button type="button" onclick="toggleShopActiveHandler('${shop.id}', ${shop.is_active ? 'false' : 'true'})" title="Toggle">⏸️</button>
-                <button type="button" onclick="deleteShopHandler('${shop.id}')" title="Delete">🗑️</button>
+                <button type="button" onclick="openEditShopModal('${companyEscape(shop.id)}')" title="Edit">✏️</button>
+                <button type="button" onclick="toggleShopActiveHandler('${companyEscape(shop.id)}', ${shop.is_active ? 'false' : 'true'})" title="Toggle">⏸️</button>
+                <button type="button" onclick="deleteShopHandler('${companyEscape(shop.id)}')" title="Delete">🗑️</button>
             </td>
         </tr>`;
         }).join("") || `<tr><td colspan="9" style="text-align:center;color:#94a3b8;">No businesses yet</td></tr>`;
@@ -145,14 +149,14 @@ function renderCompaniesTable() {
                 ${shop.is_active && status !== "active" ? "<br>" + statusBadge(status) : ""}
             </td>
             <td>
-                <button class="btn-reset" style="border-radius:6px;padding:6px 10px;" onclick="openEditShopModal('${shop.id}')">
+                <button class="btn-reset" style="border-radius:6px;padding:6px 10px;" onclick="openEditShopModal('${companyEscape(shop.id)}')">
                     <i class="fa-solid fa-pen"></i>
                 </button>
                 <button class="btn-reset" style="border-radius:6px;padding:6px 10px;background:${shop.is_active ? "#f59e0b" : "#16a34a"};"
-                    onclick="toggleShopActiveHandler('${shop.id}', ${!shop.is_active})">
+                    onclick="toggleShopActiveHandler('${companyEscape(shop.id)}', ${!shop.is_active})">
                     <i class="fa-solid ${shop.is_active ? "fa-ban" : "fa-check"}"></i>
                 </button>
-                <button class="btn-reset" style="border-radius:6px;padding:6px 10px;background:#ef4444;" onclick="deleteShopHandler('${shop.id}')">
+                <button class="btn-reset" style="border-radius:6px;padding:6px 10px;background:#ef4444;" onclick="deleteShopHandler('${companyEscape(shop.id)}')">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
@@ -203,11 +207,11 @@ function openAddShopModal() {
 }
 
 function openEditShopModal(shopId) {
-    const shop = allShopsCache.find(s => s.id === shopId);
+    const shop = allShopsCache.find(s => String(s.id) === String(shopId));
     if (!shop) return;
 
     document.getElementById("shopModalTitle").innerText = "Edit Business";
-    document.getElementById("shopId").value = shop.id;
+    document.getElementById("shopId").value = shop.id || "";
     document.getElementById("shopName").value = shop.name || "";
     setShopFieldValue("shopBusinessType", shop.business_type || "Other");
     document.getElementById("shopCode").value = shop.code || "";
@@ -230,21 +234,30 @@ function closeShopModal() {
 }
 
 async function saveShop() {
-    const shopId = document.getElementById("shopId").value;
+    const shopId = document.getElementById("shopId").value.trim();
     const form = {
-        name: document.getElementById("shopName").value,
+        name: document.getElementById("shopName").value.trim(),
         businessType: document.getElementById("shopBusinessType") ? document.getElementById("shopBusinessType").value : "Other",
-        code: document.getElementById("shopCode").value,
-        contact: document.getElementById("shopContact").value,
-        email: document.getElementById("shopEmail").value,
-        address: document.getElementById("shopAddress").value,
+        code: document.getElementById("shopCode").value.trim(),
+        contact: document.getElementById("shopContact").value.trim(),
+        email: document.getElementById("shopEmail").value.trim(),
+        address: document.getElementById("shopAddress").value.trim(),
         plan: document.getElementById("shopPlan").value,
         licenseExpiry: document.getElementById("shopLicenseExpiry").value,
         maxUsers: document.getElementById("shopMaxUsers").value,
-        adminUsername: document.getElementById("shopAdminUsername") ? document.getElementById("shopAdminUsername").value : "",
-        adminPassword: document.getElementById("shopAdminPassword") ? document.getElementById("shopAdminPassword").value : "",
-        adminName: document.getElementById("shopAdminName") ? document.getElementById("shopAdminName").value : ""
+        adminUsername: document.getElementById("shopAdminUsername") ? document.getElementById("shopAdminUsername").value.trim() : "",
+        adminPassword: document.getElementById("shopAdminPassword") ? document.getElementById("shopAdminPassword").value.trim() : "",
+        adminName: document.getElementById("shopAdminName") ? document.getElementById("shopAdminName").value.trim() : ""
     };
+
+    if (!form.name) {
+        alert("Please enter business name");
+        return;
+    }
+    if (!shopId && !form.code) {
+        alert("Please enter business code");
+        return;
+    }
 
     try {
         if (shopId) {
@@ -330,7 +343,7 @@ async function loadSubscriptions() {
                     ? '<span class="badge badge-success">Active</span>'
                     : '<span class="badge badge-danger">Inactive</span>'}</td>
                 <td>
-                    <button class="add-btn" style="padding:8px 14px;font-size:13px;" onclick="openRenewShopById('${r.shop.id}')">
+                    <button class="add-btn" style="padding:8px 14px;font-size:13px;" onclick="openRenewShopById('${companyEscape(r.shop.id)}')">
                         <i class="fa-solid fa-rotate"></i> Renew
                     </button>
                 </td>
@@ -361,12 +374,12 @@ function closeRenewModal() {
 }
 
 async function confirmRenewSubscription() {
-    const shopId = document.getElementById("renewShopId").value;
+    const shopId = document.getElementById("renewShopId").value.trim();
     const form = {
         plan: document.getElementById("renewPlan").value,
-        amount: document.getElementById("renewAmount").value,
+        amount: Number(document.getElementById("renewAmount").value || 0),
         endDate: document.getElementById("renewEndDate").value,
-        remarks: document.getElementById("renewRemarks").value
+        remarks: document.getElementById("renewRemarks").value.trim()
     };
     if (!form.endDate) {
         alert("Please choose a new expiry date");
@@ -415,7 +428,6 @@ document.addEventListener("keydown", function (event) {
 });
 
 window.addEventListener("load", async function () {
-    // give script.js's checkLogin()/session boot a tick to run first
     setTimeout(async () => {
         if (document.getElementById("shopOverviewBody")) await loadSuperDashboard();
         if (document.getElementById("companiesBody")) await loadCompanies();
