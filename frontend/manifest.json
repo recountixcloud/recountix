@@ -2,14 +2,23 @@
   "name": "Recountix",
   "short_name": "Recountix",
   "start_url": "./login.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#0B0F17",
   "theme_color": "#0B0F17",
   "icons": [
     {
       "src": "assets/logo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "description": "Smart recovery and receivables management — Beyond What's Due."
