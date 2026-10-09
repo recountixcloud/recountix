@@ -519,7 +519,6 @@ tbody tr:hover td {
   }
 }
 
-/* Rc desktop navigation polish: dark page bands, hover-expand rail, mobile-only menu */
 .rx-dark-shell body,
 .rx-dark-shell .wrapper,
 .rx-dark-shell .main-content {
@@ -710,7 +709,6 @@ tbody tr:hover td {
   }
 }
 
-/* Rc login input contrast fix */
 .rx-dark-shell input,
 .rx-dark-shell select,
 .rx-dark-shell textarea,
@@ -746,7 +744,6 @@ tbody tr:hover td {
   opacity: 1 !important;
 }
 
-/* Rc full-app dark cleanup: remove leftover white strips and fit dense admin UI */
 .rx-dark-shell main,
 .rx-dark-shell section,
 .rx-dark-shell article,
@@ -906,7 +903,6 @@ tbody tr:hover td {
   }
 }
 
-/* Rc professional fit pass: consistent cards, forms, and mobile typography */
 .rx-dark-shell *,
 .rx-dark-shell *::before,
 .rx-dark-shell *::after {
@@ -1173,7 +1169,6 @@ tbody tr:hover td {
   }
 }
 
-/* Rc standalone pages polish: backup, check-in, portal, login, maintenance */
 .rx-dark-shell .wrap,
 .rx-dark-shell .shell,
 .rx-dark-shell .panel,
@@ -1288,7 +1283,6 @@ tbody tr:hover td {
   }
 }
 
-/* Rc login auth fit lock: prevent global dark rules from oversizing mobile login */
 html.rx-dark-shell,
 html.rx-dark-shell body {
   -webkit-text-size-adjust: 100% !important;
@@ -1476,7 +1470,6 @@ html.rx-dark-shell body:has(.login-wrap) {
   }
 }
 
-/* Rc remove leftover white glows/headers from legacy pseudo layers */
 .rx-dark-shell .card::before,
 .rx-dark-shell .card::after,
 .rx-dark-shell .content-box::before,
@@ -1551,7 +1544,6 @@ html.rx-dark-shell body:has(.login-wrap) {
   background: rgba(15, 23, 42, .72) !important;
 }
 
-/* Rc speed pass: cheaper mobile paint and lower layout cost */
 .rx-dark-shell .content-box,
 .rx-dark-shell .table-section,
 .rx-dark-shell .analytics-panel,
@@ -1626,8 +1618,6 @@ html.rx-dark-shell body:has(.login-wrap) {
   }
 }
 
-
-/* Dark header glare fix */
 .topbar {
   background: linear-gradient(180deg, rgba(17, 24, 39, .92), rgba(19, 27, 46, .9)) !important;
   border: 1px solid rgba(51, 65, 85, .78) !important;
@@ -1666,10 +1656,6 @@ html.rx-dark-shell body:has(.login-wrap) {
   }
 }
 
-
-/* Recountix live desktop sidebar emergency fix.
-   Keep the sidebar visible on desktop and laptop screens even when the base
-   responsive stylesheet switches the shell into mobile drawer mode. */
 @media screen and (min-width: 641px), screen and (hover: hover) and (pointer: fine) {
   .sidebar,
   .sidebar.open,
@@ -1704,10 +1690,6 @@ html.rx-dark-shell body:has(.login-wrap) {
   }
 }
 
-
-/* Recountix desktop sidebar labels final fix.
-   The dark theme rail mode hides menu text until hover. Super Admin desktop
-   should show side options immediately. */
 @media screen and (min-width: 641px), screen and (hover: hover) and (pointer: fine) {
   .rx-dark-shell .sidebar,
   .rx-dark-shell .sidebar.open,
