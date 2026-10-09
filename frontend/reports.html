@@ -21,19 +21,19 @@
 <meta name="theme-color" content="#0B0F17" />
 
 <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style id="rx-critical-dark">html,body{background:#0B0F17!important;color:#F8FAFC!important;}html{min-height:100%;}body{min-height:100vh;}*{box-sizing:border-box;}main,.wrapper,.main-content,.page-shell{background:#0B0F17!important;}input,select,textarea{background:#0B0F17;color:#F8FAFC;color-scheme:dark;}</style>
+<style id="rx-critical-dark">html,body{background:#0B0F17!important;color:#F8FAFC!important;}html{min-height:100%;}body{min-height:100vh;}*{box-sizing:border-box;}main,.wrapper,.main-content,.page-shell{background:#0B0F17!important;}input,select,textarea{background:#0B0F17;color:#F8FAFC;color-scheme:dark;}</style>
 
-<title>Reports | Recountix</title><link rel="preconnect" href="https://fonts.googleapis.com" />
+<title>Reports | Recountix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
-
-<!-- Premium SaaS 2026 visual layer; existing IDs and JS behavior are preserved --><link rel="stylesheet" href="css/boltise-dark.css?v=command-center-10"><link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
+<link rel="stylesheet" href="css/boltise-dark.css?v=command-center-10">
+<link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
 </head>
 
 <body>
@@ -42,798 +42,301 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="wrapper">
 
-<!-- =========================
-SIDEBAR START
-========================= -->
-
 <aside class="sidebar">
-
-<div class="logo">
-
-<h2>Recountix</h2>
-
-<p>Beyond What’s Due.</p>
-
-</div>
-
-<ul class="menu">
-<li><a href="dashboard.html"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
-<li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
-<li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
-<li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
-<li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
-<li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
-<li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
-<li><a href="reports.html" class="active"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
-<li><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
-<li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li><li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
-</ul>
-
+  <div class="logo">
+    <h2>Recountix</h2>
+    <p>Beyond What’s Due.</p>
+  </div>
+  <ul class="menu">
+    <li><a href="dashboard.html"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+    <li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
+    <li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
+    <li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
+    <li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
+    <li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
+    <li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
+    <li><a href="reports.html" class="active"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
+    <li><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+    <li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li>
+    <li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+  </ul>
 </aside>
-
-<!-- =========================
-SIDEBAR END
-========================= -->
-
-<!-- =========================
-MAIN CONTENT START
-========================= -->
 
 <main class="main-content">
 
 <div class="print-header">
-<img src="assets/logo.png" alt="Logo" style="height:60px;margin:0 auto 8px;" onerror="this.style.display='none'">
-<h1 id="printCompanyName">Recountix</h1>
-<p id="printSoftwareName">Recountix — Recovery Report</p>
-<p id="printDateLine"></p>
+  <img src="assets/logo.png" alt="Logo" style="height:60px;margin:0 auto 8px;" onerror="this.style.display='none'">
+  <h1 id="printCompanyName">Recountix</h1>
+  <p id="printSoftwareName">Recountix — Recovery Report</p>
+  <p id="printDateLine"></p>
 </div>
-
-
-<!-- =========================
-END OF PART 1
-========================= --><!-- =========================
-PART 2
-========================= -->
-
-<!-- =========================
-TOPBAR START
-========================= -->
 
 <header class="topbar">
-
-<div>
-
-<h1 class="page-title">
-
-Reports & Analytics
-
-</h1>
-
-<p class="page-subtitle">
-
-Daily, Monthly & Customer Wise Reports
-
-</p>
-
-</div>
-
-<div class="user-info">
-
-<i class="fa-solid fa-user-shield"></i>
-
-<span id="userRoleBadge">Administrator</span>
-
-</div>
-
+  <div>
+    <h1 class="page-title">Reports & Analytics</h1>
+    <p class="page-subtitle">Daily, Monthly & Customer Wise Reports</p>
+  </div>
+  <div class="user-info">
+    <i class="fa-solid fa-user-shield"></i>
+    <span id="userRoleBadge">Administrator</span>
+  </div>
 </header>
 
-<!-- =========================
-TOPBAR END
-========================= -->
-
-<!-- =========================
-REPORT SUMMARY START
-========================= -->
-
 <div class="dashboard-grid">
+  <!-- Analytics Phase 3 -->
+  <section class="content-box fade" style="margin-bottom:16px;grid-column:1/-1;">
+    <div class="summary-bar">
+      <div>
+        <h2><i class="fa-solid fa-chart-line"></i> Collection Analytics</h2>
+        <span>Recovery % · DSO · 30-day · Agent performance</span>
+      </div>
+    </div>
+    <div class="dashboard-cards" id="analyticsCards"></div>
+    <div class="table-responsive" style="margin-top:16px;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Executive / Agent</th>
+            <th>Customers</th>
+            <th>Recovered</th>
+            <th>Outstanding</th>
+          </tr>
+        </thead>
+        <tbody id="agentPerfBody">
+          <tr><td colspan="5">Open reports to load</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
+  <div class="card blue">
+    <i class="fa-solid fa-users"></i>
+    <h3>Total Customers</h3>
+    <h1 id="reportTotalCustomers">0</h1>
+    <small>Registered Customers</small>
+  </div>
 
-<!-- Analytics Phase 3 -->
-<section class="content-box fade" style="margin-bottom:16px;">
-  <div class="summary-bar"><div><h2><i class="fa-solid fa-chart-line"></i> Collection Analytics</h2>
-  <span>Recovery % · DSO · 30-day · Agent performance</span></div></div>
-  <div class="dashboard-cards" id="analyticsCards"></div>
-  <div class="table-responsive" style="margin-top:16px;">
+  <div class="card green">
+    <i class="fa-solid fa-sack-dollar"></i>
+    <h3>Total Recovery</h3>
+    <h1 id="reportTotalRecovery">₹0</h1>
+    <small>Lifetime Collection</small>
+  </div>
+
+  <div class="card orange">
+    <i class="fa-solid fa-calendar-days"></i>
+    <h3>Monthly Collection</h3>
+    <h1 id="reportMonthlyRecovery">₹0</h1>
+    <small>Current Month Collection</small>
+  </div>
+
+  <div class="card red">
+    <i class="fa-solid fa-wallet"></i>
+    <h3>Pending Recovery</h3>
+    <h1 id="reportPending">₹0</h1>
+    <small>Total Outstanding Amount</small>
+  </div>
+</div>
+
+<section class="table-section fade">
+  <div class="summary-bar">
+    <div>
+      <h2>Report Filters</h2>
+      <span>Search & Filter Recovery Reports</span>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div>
+      <label for="reportSearch">Search Customer</label>
+      <input type="text" id="reportSearch" class="search-box" placeholder="Search by Customer Name or Mobile..." onkeyup="searchReport()">
+    </div>
+    <div>
+      <label for="fromDate">From Date</label>
+      <input type="date" id="fromDate">
+    </div>
+    <div>
+      <label for="toDate">To Date</label>
+      <input type="date" id="toDate">
+    </div>
+    <div>
+      <label for="reportCustomer">Select Customer</label>
+      <select id="reportCustomer">
+        <option value="">All Customers</option>
+      </select>
+    </div>
+  </div>
+
+  <br>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <button type="button" class="add-btn" onclick="filterReport()">
+      <i class="fa-solid fa-filter"></i> Apply Filter
+    </button>
+    <button type="button" class="add-btn" style="background:#16a34a;" onclick="exportReport()">
+      <i class="fa-solid fa-file-arrow-down"></i> Export Report
+    </button>
+    <button type="button" class="add-btn" style="background:#f59e0b;" onclick="if(typeof printCleanReport==='function')printCleanReport();else window.print();">
+      <i class="fa-solid fa-print"></i> Print Report
+    </button>
+    <button type="button" class="add-btn" style="background:#64748b;" onclick="loadReports()">
+      <i class="fa-solid fa-rotate"></i> Refresh
+    </button>
+  </div>
+</section>
+
+<section class="table-section fade">
+  <div class="summary-bar">
+    <div>
+      <h2>Recovery Report</h2>
+      <span>Recovery Collection Details</span>
+    </div>
+    <span class="badge badge-success">Live Report</span>
+  </div>
+
+  <div class="table-responsive">
     <table>
-      <thead><tr><th>#</th><th>Executive / Agent</th><th>Customers</th><th>Recovered</th><th>Outstanding</th></tr></thead>
-      <tbody id="agentPerfBody"><tr><td colspan="5">Open reports to load</td></tr></tbody>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Mobile</th>
+          <th>Village</th>
+          <th>Recovery Amount</th>
+          <th>Payment Mode</th>
+          <th>Recovery Date</th>
+          <th>Collected By</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="reportBody"></tbody>
     </table>
   </div>
 </section>
-<!-- Total Customers -->
-
-<div class="card blue">
-
-<i class="fa-solid fa-users"></i>
-
-<h3>Total Customers</h3>
-
-<h1 id="reportTotalCustomers">
-
-0
-
-</h1>
-
-<small>Registered Customers</small>
-
-</div>
-
-<!-- Total Recovery -->
-
-<div class="card green">
-
-<i class="fa-solid fa-sack-dollar"></i>
-
-<h3>Total Recovery</h3>
-
-<h1 id="reportTotalRecovery">
-
-₹0
-
-</h1>
-
-<small>Lifetime Collection</small>
-
-</div>
-
-<!-- Monthly Collection -->
-
-<div class="card orange">
-
-<i class="fa-solid fa-calendar-days"></i>
-
-<h3>Monthly Collection</h3>
-
-<h1 id="reportMonthlyRecovery">
-
-₹0
-
-</h1>
-
-<small>Current Month Collection</small>
-
-</div>
-
-<!-- Pending Recovery -->
-
-<div class="card red">
-
-<i class="fa-solid fa-wallet"></i>
-
-<h3>Pending Recovery</h3>
-
-<h1 id="reportPending">
-
-₹0
-
-</h1>
-
-<small>Total Outstanding Amount</small>
-
-</div>
-
-</div>
-
-<!-- =========================
-END OF PART 2
-========================= --><!-- =========================
-PART 3
-========================= -->
-
-<!-- =========================
-SEARCH & FILTER START
-========================= -->
-
-<section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Report Filters
-
-</h2>
-
-<span>
-
-Search & Filter Recovery Reports
-
-</span>
-
-</div>
-
-</div>
-
-<div class="form-grid">
-
-<!-- Search Customer -->
-
-<div>
-
-<label>Search Customer</label>
-
-<input
-
-type="text"
-
-id="reportSearch"
-
-class="search-box"
-
-placeholder="Search by Customer Name or Mobile..."
-
-onkeyup="searchReport()">
-
-</div>
-
-<!-- From Date -->
-
-<div>
-
-<label>From Date</label>
-
-<input
-
-type="date"
-
-id="fromDate">
-
-</div>
-
-<!-- To Date -->
-
-<div>
-
-<label>To Date</label>
-
-<input
-
-type="date"
-
-id="toDate">
-
-</div>
-
-<!-- Customer Filter -->
-
-<div>
-
-<label>Select Customer</label>
-
-<select id="reportCustomer">
-
-<option value="">
-
-All Customers
-
-</option>
-
-</select>
-
-</div>
-
-</div>
-
-<br>
-
-<div style="display:flex;gap:15px;flex-wrap:wrap;">
-
-<button
-
-type="button"
-
-class="add-btn"
-
-onclick="filterReport()">
-
-<i class="fa-solid fa-filter"></i>
-
-Apply Filter
-
-</button>
-
-<button
-
-type="button"
-
-class="add-btn"
-
-style="background:#16a34a;"
-
-onclick="exportReport()">
-
-<i class="fa-solid fa-file-arrow-down"></i>
-
-Export Report
-
-</button>
-
-<button
-
-type="button"
-
-class="add-btn"
-
-style="background:#f59e0b;"
-
-onclick="if(typeof printCleanReport==='function')printCleanReport();else window.print();">
-
-<i class="fa-solid fa-print"></i>
-
-Print Report
-
-</button>
-
-<button
-
-type="button"
-
-class="add-btn"
-
-style="background:#64748b;"
-
-onclick="loadReports()">
-
-<i class="fa-solid fa-rotate"></i>
-
-Refresh
-
-</button>
-
-</div>
-
-</section>
-
-<!-- =========================
-SEARCH & FILTER END
-========================= -->
-
-<!-- =========================
-END OF PART 3
-========================= --><!-- =========================
-PART 4
-========================= -->
-
-<!-- =========================
-RECOVERY REPORT TABLE START
-========================= -->
-
-<section class="table-section fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Recovery Report
-
-</h2>
-
-<span>
-
-Recovery Collection Details
-
-</span>
-
-</div>
-
-<span class="badge badge-success">
-
-Live Report
-
-</span>
-
-</div>
-
-<div class="table-responsive">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>#</th>
-
-<th>Customer</th>
-
-<th>Mobile</th>
-
-<th>Village</th>
-
-<th>Recovery Amount</th>
-
-<th>Payment Mode</th>
-
-<th>Recovery Date</th>
-
-<th>Collected By</th>
-
-<th>Status</th>
-
-</tr>
-
-</thead>
-
-<tbody id="reportBody">
-
-<!-- Dynamic Data From script.js -->
-
-</tbody>
-
-</table>
-
-</div>
-
-</section>
-
-<!-- =========================
-RECOVERY REPORT TABLE END
-========================= -->
-
-<!-- =========================
-REPORT STATISTICS START
-========================= -->
 
 <section class="content-box fade">
+  <div class="summary-bar">
+    <div>
+      <h2>Report Statistics</h2>
+      <span>Current Report Summary</span>
+    </div>
+  </div>
 
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Report Statistics
-
-</h2>
-
-<span>
-
-Current Report Summary
-
-</span>
-
-</div>
-
-</div>
-
-<div class="dashboard-grid">
-
-<div class="card blue">
-
-<i class="fa-solid fa-list"></i>
-
-<h3>Total Records</h3>
-
-<h1 id="reportTotalRecords">
-
-0
-
-</h1>
-
-<small>Total Displayed Entries</small>
-
-</div>
-
-<div class="card green">
-
-<i class="fa-solid fa-indian-rupee-sign"></i>
-
-<h3>Total Amount</h3>
-
-<h1 id="reportAmount">
-
-₹0
-
-</h1>
-
-<small>Total Filtered Recovery</small>
-
-</div>
-
-<div class="card orange">
-
-<i class="fa-solid fa-calendar-check"></i>
-
-<h3>Today's Entries</h3>
-
-<h1 id="reportTodayEntries">
-
-0
-
-</h1>
-
-<small>Today's Recovery Count</small>
-
-</div>
-
-<div class="card red">
-
-<i class="fa-solid fa-wallet"></i>
-
-<h3>Pending Balance</h3>
-
-<h1 id="reportPendingBalance">
-
-₹0
-
-</h1>
-
-<small>Outstanding Amount</small>
-
-</div>
-
-</div>
-
+  <div class="dashboard-grid">
+    <div class="card blue">
+      <i class="fa-solid fa-list"></i>
+      <h3>Total Records</h3>
+      <h1 id="reportTotalRecords">0</h1>
+      <small>Total Displayed Entries</small>
+    </div>
+    <div class="card green">
+      <i class="fa-solid fa-indian-rupee-sign"></i>
+      <h3>Total Amount</h3>
+      <h1 id="reportAmount">₹0</h1>
+      <small>Total Filtered Recovery</small>
+    </div>
+    <div class="card orange">
+      <i class="fa-solid fa-calendar-check"></i>
+      <h3>Today's Entries</h3>
+      <h1 id="reportTodayEntries">0</h1>
+      <small>Today's Recovery Count</small>
+    </div>
+    <div class="card red">
+      <i class="fa-solid fa-wallet"></i>
+      <h3>Pending Balance</h3>
+      <h1 id="reportPendingBalance">₹0</h1>
+      <small>Outstanding Amount</small>
+    </div>
+  </div>
 </section>
-
-<!-- =========================
-REPORT STATISTICS END
-========================= -->
-
-<!-- =========================
-END OF PART 4
-========================= --><!-- =========================
-PART 5
-========================= -->
-
-<!-- =========================
-CUSTOMER WISE SUMMARY
-========================= -->
 
 <section class="content-box fade">
+  <div class="summary-bar">
+    <div>
+      <h2>Customer Wise Summary</h2>
+      <span>Top Recovery Performance</span>
+    </div>
+  </div>
 
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Customer Wise Summary
-
-</h2>
-
-<span>
-
-Top Recovery Performance
-
-</span>
-
-</div>
-
-</div>
-
-<div class="dashboard-grid">
-
-<div class="card blue">
-
-<i class="fa-solid fa-crown"></i>
-
-<h3>Top Customer</h3>
-
-<h1 id="topCustomer">
-
--
-
-</h1>
-
-<small>Highest Recovery</small>
-
-</div>
-
-<div class="card green">
-
-<i class="fa-solid fa-trophy"></i>
-
-<h3>Highest Collection</h3>
-
-<h1 id="highestCollection">
-
-₹0
-
-</h1>
-
-<small>Best Collection</small>
-
-</div>
-
-<div class="card orange">
-
-<i class="fa-solid fa-users"></i>
-
-<h3>Active Customers</h3>
-
-<h1 id="activeCustomers">
-
-0
-
-</h1>
-
-<small>Recovery Running</small>
-
-</div>
-
-<div class="card red">
-
-<i class="fa-solid fa-user-clock"></i>
-
-<h3>Pending Customers</h3>
-
-<h1 id="pendingCustomers">
-
-0
-
-</h1>
-
-<small>Need Follow-up</small>
-
-</div>
-
-</div>
-
+  <div class="dashboard-grid">
+    <div class="card blue">
+      <i class="fa-solid fa-crown"></i>
+      <h3>Top Customer</h3>
+      <h1 id="topCustomer">-</h1>
+      <small>Highest Recovery</small>
+    </div>
+    <div class="card green">
+      <i class="fa-solid fa-trophy"></i>
+      <h3>Highest Collection</h3>
+      <h1 id="highestCollection">₹0</h1>
+      <small>Best Collection</small>
+    </div>
+    <div class="card orange">
+      <i class="fa-solid fa-users"></i>
+      <h3>Active Customers</h3>
+      <h1 id="activeCustomers">0</h1>
+      <small>Recovery Running</small>
+    </div>
+    <div class="card red">
+      <i class="fa-solid fa-user-clock"></i>
+      <h3>Pending Customers</h3>
+      <h1 id="pendingCustomers">0</h1>
+      <small>Need Follow-up</small>
+    </div>
+  </div>
 </section>
-
-<!-- =========================
-MONTHLY COLLECTION SUMMARY
-========================= -->
 
 <section class="content-box fade">
+  <div class="summary-bar">
+    <div>
+      <h2>Monthly Collection Summary</h2>
+      <span>Financial Overview</span>
+    </div>
+  </div>
 
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Monthly Collection Summary
-
-</h2>
-
-<span>
-
-Financial Overview
-
-</span>
-
-</div>
-
-</div>
-
-<div class="dashboard-grid">
-
-<div class="card green">
-
-<i class="fa-solid fa-chart-line"></i>
-
-<h3>This Month</h3>
-
-<h1 id="thisMonthCollection">
-
-₹0
-
-</h1>
-
-<small>Current Month Recovery</small>
-
-</div>
-
-<div class="card blue">
-
-<i class="fa-solid fa-calendar-week"></i>
-
-<h3>This Week</h3>
-
-<h1 id="thisWeekCollection">
-
-₹0
-
-</h1>
-
-<small>Weekly Recovery</small>
-
-</div>
-
-<div class="card orange">
-
-<i class="fa-solid fa-calendar-day"></i>
-
-<h3>Today</h3>
-
-<h1 id="todayCollection">
-
-₹0
-
-</h1>
-
-<small>Today's Collection</small>
-
-</div>
-
-<div class="card red">
-
-<i class="fa-solid fa-hourglass-half"></i>
-
-<h3>Outstanding</h3>
-
-<h1 id="reportOutstanding">
-
-₹0
-
-</h1>
-
-<small>Pending Amount</small>
-
-</div>
-
-</div>
-
+  <div class="dashboard-grid">
+    <div class="card green">
+      <i class="fa-solid fa-chart-line"></i>
+      <h3>This Month</h3>
+      <h1 id="thisMonthCollection">₹0</h1>
+      <small>Current Month Recovery</small>
+    </div>
+    <div class="card blue">
+      <i class="fa-solid fa-calendar-week"></i>
+      <h3>This Week</h3>
+      <h1 id="thisWeekCollection">₹0</h1>
+      <small>Weekly Recovery</small>
+    </div>
+    <div class="card orange">
+      <i class="fa-solid fa-calendar-day"></i>
+      <h3>Today</h3>
+      <h1 id="todayCollection">₹0</h1>
+      <small>Today's Collection</small>
+    </div>
+    <div class="card red">
+      <i class="fa-solid fa-hourglass-half"></i>
+      <h3>Outstanding</h3>
+      <h1 id="reportOutstanding">₹0</h1>
+      <small>Pending Amount</small>
+    </div>
+  </div>
 </section>
-
-<!-- =========================
-END OF PART 5
-========================= --><!-- =========================
-PART 6
-========================= -->
-
-<!-- =========================
-REPORT NOTES START
-========================= -->
 
 <section class="content-box fade">
-
-<div class="summary-bar">
-
-<div>
-
-<h2>
-
-Report Notes
-
-</h2>
-
-<span>
-
-Important Instructions
-
-</span>
-
-</div>
-
-</div>
-
-<ul style="padding-left:20px;line-height:2;">
-
-<li>✔ Reports are generated automatically from saved recovery entries.</li>
-
-<li>✔ Export reports regularly for backup.</li>
-
-<li>✔ Verify pending balances before finalizing reports.</li>
-
-<li>✔ Customer-wise reports update automatically.</li>
-
-<li>✔ Dashboard statistics refresh after every recovery.</li>
-
-</ul>
-
+  <div class="summary-bar">
+    <div>
+      <h2>Report Notes</h2>
+      <span>Important Instructions</span>
+    </div>
+  </div>
+  <ul style="padding-left:20px;line-height:2;">
+    <li>✔ Reports are generated automatically from saved recovery entries.</li>
+    <li>✔ Export reports regularly for backup.</li>
+    <li>✔ Verify pending balances before finalizing reports.</li>
+    <li>✔ Customer-wise reports update automatically.</li>
+    <li>✔ Dashboard statistics refresh after every recovery.</li>
+  </ul>
 </section>
-
-<!-- =========================
-FOOTER START
-========================= -->
-
 
 <section id="cleanPrintReport" class="clean-print-report">
   <div class="cpr-header">
@@ -865,56 +368,21 @@ FOOTER START
 </section>
 
 <footer class="footer">
-
-<div>
-
-<strong>Recountix</strong>
-
-</div>
-
-<div style="margin-top:8px;">
-
-© 2026 BK Design Hub | Recountix
-
-</div>
-
-<div style="margin-top:8px;">
-
-Developed by <strong>BK Design Hub</strong>
-
-</div>
-
+  <div><strong>Recountix</strong></div>
+  <div style="margin-top:8px;">© 2026 BK Design Hub | Recountix</div>
+  <div style="margin-top:8px;">Developed by <strong>BK Design Hub</strong></div>
 </footer>
 
-<!-- =========================
-END OF PART 6
-========================= --><!-- =========================
-PART 7
-========================= -->
-
-<!-- =========================
-MAIN CONTENT END
-========================= -->
-
 </main>
-
-<!-- =========================
-WRAPPER END
-========================= -->
-
 </div>
-
-<!-- =========================
-JAVASCRIPT
-========================= -->
-
 
 <script src="js/vendor/supabase-2.117.2.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/permissions.js?v=rights-1"></script>
 <script src="js/utils.js?v=preferences-1"></script>
 <script src="js/db.js?v=preferences-1"></script>
-<script src="js/auth.js?v=rights-1"></script><script src="js/preferences.js?v=preferences-1"></script>
+<script src="js/auth.js?v=rights-1"></script>
+<script src="js/preferences.js?v=preferences-1"></script>
 <script src="js/app.js?v=preferences-1"></script>
 <script src="js/company.js?v=star-wave-3"></script>
 <script src="js/excel-import.js"></script>
@@ -947,7 +415,8 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 </script>
 
 <script src="js/final-suite.js?v=command-center-10"></script>
-<script src="js/offline-backup.js?v=preferences-1"></script><script src="js/i18n.js?v=2"></script>
+<script src="js/offline-backup.js?v=preferences-1"></script>
+<script src="js/i18n.js?v=2"></script>
 <script src="js/rx-design-system.js?v=ds-1"></script>
 </body>
 
