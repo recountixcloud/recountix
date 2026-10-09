@@ -13,7 +13,7 @@ function once(id,tag,attrs){
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
   document.head.appendChild(el);
 }
-once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=cyan-buttons-20261009'});
+once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=navy-cards-20261009'});
 if(/dashboard|customers|recovery|ptp|reports|escalations/i.test(location.pathname)){
   once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
 }
