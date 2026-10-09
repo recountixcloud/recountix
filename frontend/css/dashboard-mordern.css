@@ -2,17 +2,15 @@
    RECOUNTIX — Modern Executive Dashboard Theme (2026 Update)
    ========================================================================== */
 
-/* 1. Global Command Canvas */
 .main-content {
   background: 
-    radial-gradient(1000px 500px at 10% 0%, rgba(124, 58, 237, 0.08), transparent 60%),
-    radial-gradient(800px 400px at 90% 10%, rgba(99, 102, 241, 0.06), transparent 50%),
+    radial-gradient(1000px 500px at 10% 0%, rgba(124, 58, 237, 0.12), transparent 60%),
+    radial-gradient(800px 400px at 90% 10%, rgba(99, 102, 241, 0.08), transparent 50%),
     linear-gradient(180deg, #0B0F17 0%, #080C13 100%) !important;
 }
 
-/* 2. Topbar Header Glass Polish */
 .topbar {
-  background: rgba(17, 24, 39, 0.72) !important;
+  background: rgba(17, 24, 39, 0.75) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   backdrop-filter: blur(20px) saturate(1.2) !important;
   -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
@@ -30,7 +28,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* 3. Live Digital Clock Badge */
 .rx-live-clock {
   background: rgba(11, 15, 23, 0.75) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -47,7 +44,6 @@
   color: #C4B5FD !important;
 }
 
-/* 4. Hero KPI Metric Cards */
 .dashboard-grid {
   gap: 18px !important;
   margin-bottom: 24px !important;
@@ -55,20 +51,20 @@
 
 .card {
   position: relative !important;
-  background: linear-gradient(165deg, rgba(23, 32, 51, 0.75) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background: linear-gradient(165deg, rgba(23, 32, 51, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 20px !important;
   padding: 24px 22px !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.32) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35) !important;
   backdrop-filter: blur(16px) !important;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease !important;
   overflow: hidden !important;
 }
 
 .card:hover {
-  transform: translateY(-3px) !important;
-  border-color: rgba(167, 139, 250, 0.35) !important;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.48), 0 0 25px rgba(124, 58, 237, 0.12) !important;
+  transform: translateY(-4px) !important;
+  border-color: rgba(167, 139, 250, 0.4) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.48), 0 0 25px rgba(124, 58, 237, 0.15) !important;
 }
 
 .card > i {
@@ -109,7 +105,6 @@
   font-size: 12px !important;
 }
 
-/* 5. Mini Metric & Cashflow Grid */
 .rx-mini-card {
   background: rgba(17, 24, 39, 0.6) !important;
   border: 1px solid rgba(255, 255, 255, 0.06) !important;
@@ -120,7 +115,7 @@
 }
 
 .rx-mini-card:hover {
-  border-color: rgba(124, 58, 237, 0.28) !important;
+  border-color: rgba(124, 58, 237, 0.35) !important;
 }
 
 .rx-mini-card span {
@@ -135,14 +130,13 @@
   margin-top: 8px !important;
 }
 
-/* 6. Risk Scoring & Aging Panel Polish */
 .rx-risk-panel,
 .rx-command-panel,
 .analytics-panel,
 .vo-command-strip,
 .rx-roadmap-panel {
-  background: linear-gradient(180deg, rgba(20, 27, 45, 0.72) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background: linear-gradient(180deg, rgba(20, 27, 45, 0.75) 0%, rgba(15, 23, 42, 0.88) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 20px !important;
   backdrop-filter: blur(18px) !important;
 }
@@ -159,7 +153,6 @@
   font-size: 11.5px !important;
 }
 
-/* 7. Action Command Grid Buttons */
 .vo-command-btn {
   background: rgba(22, 31, 51, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
@@ -175,7 +168,6 @@
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35) !important;
 }
 
-/* 8. Modern Navigation Cards */
 .rx-nav-card {
   background: rgba(17, 24, 39, 0.6) !important;
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
