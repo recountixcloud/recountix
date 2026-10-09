@@ -14,7 +14,7 @@ function once(id,tag,attrs){
   document.head.appendChild(el);
 }
 // Refresh an existing theme link as well as dynamically loaded pages.
-var themeHref='css/boltise-dark.css?v=heading-cleanup-20261009-2';
+var themeHref='css/boltise-dark.css?v=original-light-green-20261009';
 var themeLink=document.querySelector('link[href*="css/boltise-dark.css"]');
 if(themeLink){
   themeLink.setAttribute('href',themeHref);
@@ -26,7 +26,7 @@ if(/dashboard|customers|recovery|ptp|reports|escalations/i.test(location.pathnam
   once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
 }
 var meta=document.querySelector('meta[name="theme-color"]');
-if(meta) meta.setAttribute('content','#0B0F17');
+if(meta) meta.setAttribute('content','#F3F7F5');
 document.documentElement.classList.add('rx-dark-shell');
 })();
 
