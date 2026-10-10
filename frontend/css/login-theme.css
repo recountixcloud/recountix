@@ -603,3 +603,145 @@ html.rx-portal:not(.rx-dark-shell):root .history,
 html.rx-portal:not(.rx-dark-shell):root .row {
   border-color:#D3EADD !important;
 }
+
+/* Accessible light-mode refinement: calm mint canvas, stronger contrast, comfortable reading. */
+html.rx-portal:not(.rx-dark-shell) {
+  --lg-bg:#F5FAF7;
+  --lg-title:#163B30;
+  --lg-text:#294D41;
+  --lg-muted:#526F63;
+  --lg-label:#23483A;
+  --lg-accent:#087F5B;
+  --lg-accent-strong:#066849;
+  --lg-input-bg:#FFFFFF;
+  --lg-input-bg-focus:#F8FFFB;
+  --lg-input-border:#B7D8C7;
+  --lg-input-text:#173D32;
+  --lg-placeholder:#71877D;
+  --lg-icon:#087F5B;
+  --lg-line:#D5E6DC;
+}
+html.rx-portal:not(.rx-dark-shell):root body {
+  background-color:#F5FAF7 !important;
+  background-image:
+    radial-gradient(ellipse at 12% 5%,rgba(182,230,208,.34),transparent 48%),
+    radial-gradient(ellipse at 90% 88%,rgba(201,239,219,.40),transparent 44%),
+    linear-gradient(135deg,#F8FCF9 0%,#EFF8F3 52%,#EAF6EF 100%) !important;
+  background-size:auto !important;
+  background-attachment:fixed !important;
+  color:#294D41 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .shell {
+  gap:24px !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .panel,
+html.rx-portal:not(.rx-dark-shell):root .result {
+  background:#FFFFFF !important;
+  background-image:linear-gradient(160deg,#FFFFFF 0%,#FBFEFC 100%) !important;
+  border:1px solid #D6E8DE !important;
+  box-shadow:0 14px 38px rgba(24,72,52,.075),0 1px 0 rgba(255,255,255,.95) inset !important;
+  color:#294D41 !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .brand .tag,
+html.rx-portal:not(.rx-dark-shell):root .chip {
+  background:#E0F4E8 !important;
+  color:#086747 !important;
+  border:1px solid #C6E8D5 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root h1,
+html.rx-portal:not(.rx-dark-shell):root h2,
+html.rx-portal:not(.rx-dark-shell):root .customer-name {
+  color:#163B30 !important;
+  -webkit-text-fill-color:#163B30 !important;
+  text-shadow:none !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .sub,
+html.rx-portal:not(.rx-dark-shell):root .note,
+html.rx-portal:not(.rx-dark-shell):root .business,
+html.rx-portal:not(.rx-dark-shell):root .empty,
+html.rx-portal:not(.rx-dark-shell):root .history {
+  color:#526F63 !important;
+  -webkit-text-fill-color:#526F63 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root label {
+  color:#23483A !important;
+  font-weight:650 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root input,
+html.rx-portal:not(.rx-dark-shell):root select,
+html.rx-portal:not(.rx-dark-shell):root textarea {
+  background:#FFFFFF !important;
+  color:#173D32 !important;
+  border:1px solid #B7D8C7 !important;
+  box-shadow:0 1px 2px rgba(20,65,45,.035) inset !important;
+}
+html.rx-portal:not(.rx-dark-shell):root input::placeholder {
+  color:#71877D !important;
+  opacity:1 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root input:focus,
+html.rx-portal:not(.rx-dark-shell):root select:focus,
+html.rx-portal:not(.rx-dark-shell):root textarea:focus {
+  outline:3px solid rgba(8,127,91,.16) !important;
+  border-color:#087F5B !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .btn {
+  color:#FFFFFF !important;
+  background:linear-gradient(135deg,#087F5B 0%,#15966C 100%) !important;
+  border:1px solid #087F5B !important;
+  box-shadow:0 7px 16px rgba(8,127,91,.17) !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .btn *,
+html.rx-portal:not(.rx-dark-shell):root .btn i {
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .cards .card {
+  background:#F8FCF9 !important;
+  border:1px solid #D6E8DE !important;
+  box-shadow:none !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .cards .card span {
+  color:#526F63 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .cards .card strong {
+  color:#163B30 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .cards .card.paid strong {
+  color:#087F5B !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .cards .card.pending strong {
+  color:#A65B12 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .rx-login-theme {
+  background:#FFFFFF !important;
+  border:1px solid #CDE3D6 !important;
+  color:#23483A !important;
+  box-shadow:0 3px 12px rgba(24,72,52,.07) !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .rx-login-theme span,
+html.rx-portal:not(.rx-dark-shell):root .rx-login-theme i {
+  color:#23483A !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .error {
+  color:#A32135 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root a {
+  color:#087F5B;
+}
+html.rx-portal:not(.rx-dark-shell):root a:focus-visible,
+html.rx-portal:not(.rx-dark-shell):root button:focus-visible {
+  outline:3px solid #15966C !important;
+  outline-offset:3px !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.rx-portal:not(.rx-dark-shell) *,
+  html.rx-portal:not(.rx-dark-shell) *::before,
+  html.rx-portal:not(.rx-dark-shell) *::after {
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
