@@ -29,7 +29,7 @@
 <link rel="stylesheet" href="css/boltise-dark.css?v=command-center-10">
 <link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
 <link rel="stylesheet" href="css/dashboard-mordern.css?v=20261009-1">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
@@ -377,13 +377,12 @@
   }
   window.refreshRecoveryCommandCenter = refreshRecoveryCommandCenter;
   window.refreshLiveRecoveryMetrics = refreshLiveRecoveryMetrics;
+  // Load dashboard recovery metrics once per page visit. Previous delayed retries
+  // duplicated the same Supabase reads several times during initial rendering.
   document.addEventListener('DOMContentLoaded', function(){
     refreshRecoveryCommandCenter();
     refreshLiveRecoveryMetrics();
-    window.setTimeout(function(){refreshRecoveryCommandCenter();refreshLiveRecoveryMetrics();}, 1200);
-    window.setTimeout(function(){refreshRecoveryCommandCenter();refreshLiveRecoveryMetrics();}, 3000);
-  });
-  window.addEventListener('load', function(){ window.setTimeout(function(){refreshRecoveryCommandCenter();refreshLiveRecoveryMetrics();}, 800); });
+  }, {once:true});
 })();
 </script>
 
