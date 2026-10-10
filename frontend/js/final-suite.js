@@ -26,7 +26,7 @@ function applyTheme(theme){
   if(meta) meta.setAttribute('content',dark?'#1A2236':'#F3F7F5');
   var btn=document.getElementById('rxThemeToggle');
   if(btn){
-    btn.innerHTML=dark?'<i class="fa-solid fa-sun" aria-hidden="true"></i><span>Light mode</span>':'<i class="fa-solid fa-moon" aria-hidden="true"></i><span>Dark mode</span>';
+    btn.innerHTML='<span class="rx-theme-choice '+(!dark?'is-active':'')+'"><i class="fa-solid fa-sun" aria-hidden="true"></i><span>Light</span></span><span class="rx-theme-choice '+(dark?'is-active':'')+'"><i class="fa-solid fa-moon" aria-hidden="true"></i><span>Dark</span></span>';
     btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
     btn.title=dark?'Switch to light mode':'Switch to dark mode';
     btn.setAttribute('aria-pressed',String(dark));
