@@ -49,3 +49,123 @@
     width: 100% !important;
   }
 }
+
+/* Final light-mode sidebar rail fix: icons stay visible, labels never get clipped. */
+@media screen and (min-width: 768px) {
+  html:not(.rx-dark-shell) body .sidebar,
+  html:not(.rx-dark-shell) body .sidebar.open,
+  html:not(.rx-dark-shell) body .sidebar[aria-hidden="true"] {
+    width: 76px !important;
+    min-width: 76px !important;
+    max-width: 76px !important;
+    padding: 16px 8px !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    background: linear-gradient(180deg,#FFFFFF 0%,#EAF7F0 100%) !important;
+    border-right: 1px solid #C9E5D6 !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .logo {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 48px !important;
+    padding: 8px 0 !important;
+    overflow: hidden !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .logo h2,
+  html:not(.rx-dark-shell) body .sidebar .logo p,
+  html:not(.rx-dark-shell) body .sidebar .menu a span {
+    display: none !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu {
+    margin: 12px 0 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu li {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 0 !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu li > a {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 46px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    border-radius: 11px !important;
+    color: #153D32 !important;
+    text-decoration: none !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu li > a > i,
+  html:not(.rx-dark-shell) body .sidebar .menu li > a > .fa,
+  html:not(.rx-dark-shell) body .sidebar .menu li > a > .fas,
+  html:not(.rx-dark-shell) body .sidebar .menu li > a > .far,
+  html:not(.rx-dark-shell) body .sidebar .menu li > a > .fab {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 0 0 24px !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #087F5B !important;
+    font-size: 17px !important;
+    line-height: 1 !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu li > a.active,
+  html:not(.rx-dark-shell) body .sidebar .menu li > a[aria-current="page"] {
+    background: #DDF5E8 !important;
+    color: #075C45 !important;
+    box-shadow: inset 3px 0 #087F5B, 0 3px 8px rgba(8,127,91,.08) !important;
+  }
+  html:not(.rx-dark-shell) body .main-content {
+    margin-left: 76px !important;
+    width: calc(100% - 76px) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar:hover,
+  html:not(.rx-dark-shell) body .sidebar:focus-within {
+    width: 256px !important;
+    min-width: 256px !important;
+    max-width: 256px !important;
+    box-shadow: 16px 0 32px rgba(21,61,50,.14) !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar:hover .logo,
+  html:not(.rx-dark-shell) body .sidebar:focus-within .logo {
+    justify-content: flex-start !important;
+    padding: 8px 10px !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar:hover .logo h2,
+  html:not(.rx-dark-shell) body .sidebar:hover .logo p,
+  html:not(.rx-dark-shell) body .sidebar:focus-within .logo h2,
+  html:not(.rx-dark-shell) body .sidebar:focus-within .logo p,
+  html:not(.rx-dark-shell) body .sidebar:hover .menu a span,
+  html:not(.rx-dark-shell) body .sidebar:focus-within .menu a span {
+    display: inline !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar:hover .menu li > a,
+  html:not(.rx-dark-shell) body .sidebar:focus-within .menu li > a {
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    padding: 0 12px !important;
+  }
+}
+@media screen and (max-width: 767px) {
+  html:not(.rx-dark-shell) body .sidebar .menu li > a > i {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #087F5B !important;
+  }
+}
