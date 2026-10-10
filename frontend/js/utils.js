@@ -272,3 +272,51 @@ window.showToast = showToast;
   window.RecountixModal={open,close};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
+
+
+/* Robust mobile navigation fallback: delegated events work even if page scripts initialize late. */
+(function () {
+  if (window.__rxMobileNavFixInstalled) return;
+  window.__rxMobileNavFixInstalled = true;
+  function mobile() { return window.matchMedia ? window.matchMedia('(max-width: 767px)').matches : window.innerWidth < 768; }
+  function drawer(open) {
+    var side = document.querySelector('.sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    var btn = document.getElementById('menuToggle');
+    if (!side) return;
+    var show = mobile() && !!open;
+    side.classList.toggle('open', show);
+    side.setAttribute('aria-hidden', show ? 'false' : (mobile() ? 'true' : 'false'));
+    side.inert = mobile() && !show;
+    if (overlay) overlay.classList.toggle('show', show);
+    document.documentElement.classList.toggle('sidebar-open', show);
+    document.body.classList.toggle('sidebar-open', show);
+    document.body.style.overflow = show ? 'hidden' : '';
+    if (btn) {
+      btn.setAttribute('aria-expanded', show ? 'true' : 'false');
+      btn.setAttribute('aria-label', show ? 'Close menu' : 'Open menu');
+      btn.textContent = show ? '✕' : '☰';
+    }
+  }
+  function init() {
+    var btn = document.getElementById('menuToggle');
+    var side = document.querySelector('.sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (!btn || !side) return;
+    drawer(false);
+    btn.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      drawer(!side.classList.contains('open'));
+    });
+    if (overlay) overlay.addEventListener('click', function () { drawer(false); });
+    side.addEventListener('click', function (e) {
+      var link = e.target.closest('a[href]');
+      if (link) drawer(false);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') drawer(false); });
+    window.addEventListener('resize', function () { if (!mobile()) drawer(false); });
+    window.addEventListener('pageshow', function () { drawer(false); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true});
+  else init();
+})();
