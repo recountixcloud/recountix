@@ -23,7 +23,7 @@ function applyTheme(theme){
   document.documentElement.classList.toggle('rx-dark-shell',dark);
   document.documentElement.dataset.rxTheme=dark?'dark':'light';
   var meta=document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute('content',dark?'#0B0F17':'#F3F7F5');
+  if(meta) meta.setAttribute('content',dark?'#1A2236':'#F3F7F5');
   var btn=document.getElementById('rxThemeToggle');
   if(btn){
     btn.innerHTML=dark?'<i class="fa-solid fa-sun" aria-hidden="true"></i><span>Light mode</span>':'<i class="fa-solid fa-moon" aria-hidden="true"></i><span>Dark mode</span>';
