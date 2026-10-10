@@ -546,3 +546,60 @@ html.rx-portal.rx-dark-shell:root .history,
 html.rx-portal.rx-dark-shell:root .row {
   border-color:#29384B !important;
 }
+
+/* Customer portal light mode: soft mint texture, subtle depth, and crisp surfaces. */
+html.rx-portal:not(.rx-dark-shell) {
+  --lg-bg:#F4FBF7;
+  --lg-bg-image:
+    radial-gradient(circle at 1px 1px, rgba(8,111,79,.075) 1px, transparent 1.5px),
+    radial-gradient(780px 420px at 0% 0%, rgba(167,227,211,.48), transparent 68%),
+    radial-gradient(680px 420px at 100% 100%, rgba(88,190,151,.18), transparent 66%),
+    linear-gradient(145deg,#F8FCF9 0%,#EAF8F0 48%,#E0F4E9 100%);
+  background-color:#F4FBF7;
+}
+html.rx-portal:not(.rx-dark-shell):root body {
+  background-color:#F4FBF7 !important;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(8,111,79,.075) 1px, transparent 1.5px),
+    radial-gradient(780px 420px at 0% 0%, rgba(167,227,211,.48), transparent 68%),
+    radial-gradient(680px 420px at 100% 100%, rgba(88,190,151,.18), transparent 66%),
+    linear-gradient(145deg,#F8FCF9 0%,#EAF8F0 48%,#E0F4E9 100%) !important;
+  background-size:18px 18px, auto, auto, auto !important;
+  background-attachment:fixed !important;
+  color:#173D32 !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .panel,
+html.rx-portal:not(.rx-dark-shell):root .result {
+  background:rgba(255,255,255,.92) !important;
+  background-image:linear-gradient(145deg,rgba(255,255,255,.98),rgba(244,252,247,.94)) !important;
+  border:1px solid #CDE8D9 !important;
+  box-shadow:0 22px 55px rgba(22,91,64,.12),0 1px 0 rgba(255,255,255,.95) inset !important;
+  -webkit-backdrop-filter:blur(12px) !important;
+  backdrop-filter:blur(12px) !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .cards .card {
+  background:linear-gradient(145deg,#FFFFFF 0%,#F0FAF4 100%) !important;
+  border:1px solid #D3EADD !important;
+  box-shadow:0 5px 16px rgba(22,91,64,.055) !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .rx-login-theme {
+  background:rgba(255,255,255,.88) !important;
+  border:1px solid #CDE8D9 !important;
+  color:#174B3A !important;
+  box-shadow:0 5px 15px rgba(22,91,64,.08) !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .rx-login-theme i {
+  color:#087F5B !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .btn {
+  background:linear-gradient(135deg,#087F5B 0%,#20A878 100%) !important;
+  box-shadow:0 10px 22px rgba(8,127,91,.20) !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .chip {
+  background:#DDF5E8 !important;
+  color:#087F5B !important;
+}
+html.rx-portal:not(.rx-dark-shell):root .history,
+html.rx-portal:not(.rx-dark-shell):root .row {
+  border-color:#D3EADD !important;
+}
