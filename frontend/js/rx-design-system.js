@@ -31,7 +31,19 @@
     var menu = document.querySelector('.sidebar .menu');
     if (!menu || menu.querySelector('.rx-collapse-btn')) return;
     menu.querySelectorAll('a').forEach(function (a) {
-      var s = a.querySelector('span');
+      var s = a.querySelector('.rx-sidebar-label, span');
+      if (!s) {
+        // Wrap plain link text so collapsed mode can hide labels without hiding icons.
+        Array.prototype.slice.call(a.childNodes).forEach(function (n) {
+          if (n.nodeType === 3 && n.textContent.trim()) {
+            var label = document.createElement('span');
+            label.className = 'rx-sidebar-label';
+            label.textContent = n.textContent.replace(/\\s+/g, ' ').trim();
+            a.replaceChild(label, n);
+          }
+        });
+        s = a.querySelector('.rx-sidebar-label, span');
+      }
       if (s && !a.title) a.title = s.textContent.trim();
     });
     var li = document.createElement('li');
