@@ -17,9 +17,39 @@ once('rxBoltiseDarkTheme','link',{rel:'stylesheet',href:'css/boltise-dark.css?v=
 if(/dashboard|customers|recovery|ptp|reports|escalations/i.test(location.pathname)){
   once('rxRecoveryComplianceScript','script',{src:'js/recovery-compliance.js?v=command-center-1',defer:'defer'});
 }
-var meta=document.querySelector('meta[name="theme-color"]');
-if(meta) meta.setAttribute('content','#0B0F17');
-document.documentElement.classList.add('rx-dark-shell');
+var THEME_KEY='recountix_theme';
+function applyTheme(theme){
+  var dark=theme==='dark';
+  document.documentElement.classList.toggle('rx-dark-shell',dark);
+  document.documentElement.dataset.rxTheme=dark?'dark':'light';
+  var meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content',dark?'#0B0F17':'#F3F7F5');
+  var btn=document.getElementById('rxThemeToggle');
+  if(btn){
+    btn.innerHTML=dark?'<i class="fa-solid fa-sun" aria-hidden="true"></i><span>Light mode</span>':'<i class="fa-solid fa-moon" aria-hidden="true"></i><span>Dark mode</span>';
+    btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+    btn.title=dark?'Switch to light mode':'Switch to dark mode';
+    btn.setAttribute('aria-pressed',String(dark));
+  }
+}
+var savedTheme='light';
+try{savedTheme=localStorage.getItem(THEME_KEY)==='dark'?'dark':'light';}catch(e){}
+applyTheme(savedTheme);
+function installThemeToggle(){
+  var topbar=document.querySelector('.topbar');
+  if(!topbar||document.getElementById('rxThemeToggle'))return;
+  var btn=document.createElement('button');
+  btn.type='button';btn.id='rxThemeToggle';btn.className='rx-theme-toggle';
+  btn.addEventListener('click',function(){
+    var next=document.documentElement.classList.contains('rx-dark-shell')?'light':'dark';
+    try{localStorage.setItem(THEME_KEY,next);}catch(e){}
+    applyTheme(next);
+  });
+  topbar.appendChild(btn);
+  applyTheme(document.documentElement.classList.contains('rx-dark-shell')?'dark':'light');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installThemeToggle,{once:true});
+else installThemeToggle();
 })();
 
 /* Recountix – Final Combined Suite */
