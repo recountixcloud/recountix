@@ -437,7 +437,8 @@ function showLoginError(msg) {
     if (!box) {
         box = document.createElement("div");
         box.id = "loginErrorBox";
-        box.style.cssText = "margin-top:14px;padding:12px 14px;border-radius:12px;background:#fef2f2;color:#b91c1c;font-size:13px;text-align:left;border:1px solid #fecaca;white-space:pre-line;";
+        box.className = "login-error";
+        box.setAttribute("role", "alert");
         const card = document.querySelector(".login-card") || document.body;
         const btn = document.getElementById("loginBtn");
         if (btn && btn.parentNode) btn.parentNode.insertBefore(box, btn.nextSibling);
@@ -445,6 +446,5 @@ function showLoginError(msg) {
     }
     box.textContent = msg;
     box.style.display = "block";
-    try { alert(msg); } catch (e) {}
 }
 window.showLoginError = showLoginError;

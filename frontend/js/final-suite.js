@@ -32,12 +32,26 @@ function applyTheme(theme){
     btn.setAttribute('aria-pressed',String(dark));
   }
 }
-var savedTheme='light';
-try{savedTheme=localStorage.getItem(THEME_KEY)==='dark'?'dark':'light';}catch(e){}
+var savedTheme=null;
+try{savedTheme=localStorage.getItem(THEME_KEY);}catch(e){}
+if(savedTheme!=='dark'&&savedTheme!=='light'){
+  savedTheme=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
 applyTheme(savedTheme);
+function toggleTheme(){
+  var next=document.documentElement.classList.contains('rx-dark-shell')?'light':'dark';
+  try{localStorage.setItem(THEME_KEY,next);}catch(e){}
+  applyTheme(next);
+}
 function installThemeToggle(){
+  var existing=document.getElementById('rxThemeToggle');
+  if(existing&&!document.querySelector('.topbar')){ /* toggle placed in the page markup (e.g. login.html) */
+    if(!existing.dataset.rxBound){existing.dataset.rxBound='1';existing.addEventListener('click',toggleTheme);}
+    applyTheme(document.documentElement.classList.contains('rx-dark-shell')?'dark':'light');
+    return;
+  }
   var topbar=document.querySelector('.topbar');
-  if(!topbar||document.getElementById('rxThemeToggle'))return;
+  if(!topbar||existing)return;
   var btn=document.createElement('button');
   btn.type='button';btn.id='rxThemeToggle';btn.className='rx-theme-toggle';
   btn.addEventListener('click',function(){
