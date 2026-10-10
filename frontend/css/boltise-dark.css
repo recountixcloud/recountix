@@ -1975,3 +1975,70 @@ html:not(.rx-dark-shell) .rx-theme-toggle {
 @media (prefers-reduced-motion: reduce) {
   html body .sidebar { transition: none !important; }
 }
+
+
+/* Mobile-first drawer and complete dashboard fit (2026-10). */
+@media screen and (max-width: 767px) {
+  html body .sidebar,
+  html body .sidebar.open,
+  html body .sidebar[aria-hidden="true"] {
+    position: fixed !important;
+    top: 0 !important; bottom: 0 !important; left: 0 !important; right: auto !important;
+    width: min(86vw, 320px) !important; min-width: 0 !important; max-width: calc(100vw - 48px) !important;
+    height: 100vh !important; height: 100dvh !important;
+    padding: 72px 14px 24px !important;
+    overflow-y: auto !important; overflow-x: hidden !important;
+    transform: translate3d(-105%,0,0) !important;
+    visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;
+    z-index: 3000 !important; transition: transform .24s ease, visibility .24s ease, opacity .2s ease !important;
+  }
+  html body .sidebar.open {
+    transform: translate3d(0,0,0) !important;
+    visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+  }
+  html body .sidebar .menu a { min-height: 46px !important; font-size: 15px !important; }
+  html body .menu-toggle {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    position: fixed !important; left: 12px !important; top: 12px !important;
+    width: 46px !important; height: 46px !important; padding: 0 !important;
+    z-index: 3100 !important; border: 1px solid rgba(255,255,255,.18) !important;
+    border-radius: 12px !important; background: #28344D !important; color: #fff !important;
+    font-size: 23px !important; touch-action: manipulation !important;
+  }
+  html body .sidebar-overlay {
+    display: block !important; position: fixed !important; inset: 0 !important;
+    z-index: 2900 !important; background: rgba(4,8,18,.68) !important;
+    opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
+  }
+  html body .sidebar-overlay.show {
+    opacity: 1 !important; visibility: visible !important; pointer-events: auto !important;
+  }
+  html body .main-content,
+  html body .rx-dark-shell .main-content {
+    margin: 0 !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+    padding: 70px 12px 24px !important; overflow-x: hidden !important;
+  }
+  html body .topbar { padding: 12px !important; margin-bottom: 12px !important; gap: 10px !important; }
+  html body .topbar .page-title { font-size: clamp(20px, 5.5vw, 27px) !important; line-height: 1.2 !important; }
+  html body .dashboard-grid,
+  html body .dashboard-cards,
+  html body .form-grid,
+  html body .backup-grid {
+    display: grid !important; grid-template-columns: minmax(0,1fr) !important;
+    width: 100% !important; max-width: 100% !important; gap: 12px !important;
+  }
+  html body .card, html body .content-box, html body .table-section,
+  html body .analytics-panel, html body .backup-panel {
+    min-width: 0 !important; max-width: 100% !important; padding: 15px !important;
+  }
+  html body .table-responsive, html body .table-wrap, html body .table-section {
+    max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important;
+  }
+  html body table { min-width: 620px; }
+  html body input, html body select, html body textarea { max-width: 100% !important; min-width: 0 !important; }
+  html.sidebar-open, html body.sidebar-open { overflow: hidden !important; }
+}
+@media screen and (min-width: 768px) {
+  html body .sidebar { transform: translateX(0) !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+  html body .menu-toggle, html body .sidebar-overlay { display: none !important; }
+}
