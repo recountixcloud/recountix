@@ -1,0 +1,375 @@
+/* Recountix — login page theme (light + dark).
+   Loaded LAST on login.html. Scoped to html.rx-login:root so no other page is affected.
+   Theme is driven by the existing html.rx-dark-shell class (set by js/final-suite.js). */
+
+/* ---------- Tokens ---------- */
+html.rx-login {
+  color-scheme: light;
+  --lg-bg: #F0FBF7;
+  --lg-bg-image:
+    radial-gradient(1100px 520px at 12% -8%, rgba(167, 227, 211, .70), transparent 60%),
+    radial-gradient(900px 520px at 105% 108%, rgba(15, 118, 110, .26), transparent 55%),
+    linear-gradient(160deg, #F0FBF7 0%, #CBEDE3 58%, #A9E0D0 100%);
+  --lg-card: rgba(255, 255, 255, .80);
+  --lg-card-border: rgba(255, 255, 255, .95);
+  --lg-card-shadow: 0 24px 64px rgba(8, 61, 53, .16), 0 2px 0 rgba(255, 255, 255, .9) inset;
+  --lg-title: #083D35;
+  --lg-text: #123C36;
+  --lg-muted: #4F6B65;
+  --lg-label: #083D35;
+  --lg-accent: #0B5D4F;
+  --lg-accent-strong: #0F766E;
+  --lg-input-bg: #F0FBF7;
+  --lg-input-bg-focus: #FFFFFF;
+  --lg-input-border: #A9CFC3;
+  --lg-input-text: #123C36;
+  --lg-placeholder: #5B7771;
+  --lg-icon: #3F7F73;
+  --lg-ring: rgba(15, 118, 110, .24);
+  --lg-badge-bg: #D5F2EA;
+  --lg-btn: linear-gradient(135deg, #0A5A4C 0%, #0E8B6C 100%);
+  --lg-btn-hover: linear-gradient(135deg, #084A3E 0%, #0B7A5E 100%);
+  --lg-btn-shadow: 0 12px 28px rgba(11, 93, 79, .28);
+  --lg-btn-text: #FFFFFF;
+  --lg-toggle-bg: rgba(255, 255, 255, .85);
+  --lg-toggle-border: #B8DCCF;
+  --lg-toggle-text: #083D35;
+  --lg-secure: #2F7D55;
+  --lg-err-bg: #FEF2F2;
+  --lg-err-text: #B91C1C;
+  --lg-err-border: #FECACA;
+}
+
+html.rx-login.rx-dark-shell {
+  color-scheme: dark;
+  --lg-bg: #0B0F17;
+  --lg-bg-image:
+    radial-gradient(900px 520px at 8% -10%, rgba(124, 58, 237, .20), transparent 60%),
+    radial-gradient(800px 520px at 100% 108%, rgba(16, 185, 129, .12), transparent 55%),
+    linear-gradient(180deg, #0B0F17 0%, #090D14 100%);
+  --lg-card: rgba(17, 24, 39, .86);
+  --lg-card-border: #243044;
+  --lg-card-shadow: 0 24px 64px rgba(0, 0, 0, .55), 0 1px 0 rgba(255, 255, 255, .05) inset;
+  --lg-title: #F8FAFC;
+  --lg-text: #E2E8F0;
+  --lg-muted: #9AA8BC;
+  --lg-label: #E2E8F0;
+  --lg-accent: #A78BFA;
+  --lg-accent-strong: #C4B5FD;
+  --lg-input-bg: #0B0F17;
+  --lg-input-bg-focus: #0E1422;
+  --lg-input-border: #334155;
+  --lg-input-text: #F8FAFC;
+  --lg-placeholder: #7C8BA1;
+  --lg-icon: #8B9BB3;
+  --lg-ring: rgba(139, 92, 246, .35);
+  --lg-badge-bg: rgba(124, 58, 237, .18);
+  --lg-btn: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%);
+  --lg-btn-hover: linear-gradient(135deg, #6D28D9 0%, #4F46E5 100%);
+  --lg-btn-shadow: 0 12px 28px rgba(99, 102, 241, .30);
+  --lg-btn-text: #FFFFFF;
+  --lg-toggle-bg: rgba(17, 24, 39, .85);
+  --lg-toggle-border: #334155;
+  --lg-toggle-text: #E2E8F0;
+  --lg-secure: #34D399;
+  --lg-err-bg: rgba(244, 63, 94, .12);
+  --lg-err-text: #FDA4AF;
+  --lg-err-border: rgba(244, 63, 94, .38);
+}
+
+/* ---------- Page ----------
+   Selectors use html.rx-login:root so they outrank the app-wide ":root:root .card" rules in rx-design-system.css. */
+html.rx-login:root,
+html.rx-login:root body.login-page {
+  background: var(--lg-bg) !important;
+  color: var(--lg-text) !important;
+}
+html.rx-login:root body.login-page {
+  background-image: var(--lg-bg-image) !important;
+  background-attachment: fixed !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom)) !important;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+  transition: background-color .25s ease, color .25s ease;
+}
+html.rx-login:root .login-wrap {
+  width: 100% !important;
+  max-width: 424px !important;
+  margin: auto !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+/* ---------- Logo ---------- */
+html.rx-login:root .recountix-login-brand { margin: 0 0 24px !important; justify-content: center !important; }
+html.rx-login:root .recountix-login-brand img {
+  display: block;
+  width: min(72vw, 264px) !important;
+  max-height: 96px !important;
+  height: auto !important;
+  object-fit: contain;
+}
+html.rx-login:root .recountix-login-brand .logo-dark { display: none !important; }
+html.rx-login.rx-dark-shell:root .recountix-login-brand .logo-light { display: none !important; }
+/* Original logo has a white background, so on dark we show it on a clean white chip. */
+html.rx-login.rx-dark-shell:root .recountix-login-brand .logo-dark {
+  display: block !important;
+  background: #FFFFFF;
+  padding: 8px 16px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+}
+
+/* ---------- Card ---------- */
+html.rx-login:root .login-card {
+  background: var(--lg-card) !important;
+  border: 1px solid var(--lg-card-border) !important;
+  box-shadow: var(--lg-card-shadow) !important;
+  border-radius: 24px !important;
+  padding: 32px 32px 24px !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  transform: none !important;
+  transition: background-color .25s ease, border-color .25s ease;
+}
+html.rx-login:root .login-card:hover { transform: none !important; box-shadow: var(--lg-card-shadow) !important; }
+html.rx-login:root .login-card::before,
+html.rx-login:root .login-card::after { display: none !important; }
+
+html.rx-login:root .login-card .icon-badge {
+  width: 48px !important; height: 48px !important;
+  border-radius: 14px !important;
+  margin: 0 0 16px !important;
+  font-size: 18px !important;
+  background: var(--lg-badge-bg) !important;
+  color: var(--lg-accent) !important;
+}
+html.rx-login:root .login-card .icon-badge i { color: var(--lg-accent) !important; }
+
+html.rx-login:root .login-card h1.title {
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif !important;
+  font-size: 28px !important;
+  line-height: 1.2 !important;
+  font-weight: 700 !important;
+  letter-spacing: -.01em !important;
+  color: var(--lg-title) !important;
+  margin: 0 0 8px !important;
+}
+html.rx-login:root .login-card p.subtitle {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: var(--lg-muted) !important;
+  margin: 0 0 24px !important;
+}
+
+/* ---------- Form ---------- */
+html.rx-login:root .login-card label:not(.remember) {
+  display: block !important;
+  font-size: 14px !important;
+  line-height: 1.3 !important;
+  font-weight: 600 !important;
+  color: var(--lg-label) !important;
+  margin: 0 0 8px !important;
+}
+html.rx-login:root .login-card label .req { color: var(--lg-accent-strong) !important; }
+
+html.rx-login:root .login-card .field-wrap { position: relative !important; margin: 0 0 16px !important; }
+html.rx-login:root .login-card .field-wrap i.leading {
+  color: var(--lg-icon) !important;
+  left: 16px !important;
+  font-size: 15px !important;
+}
+html.rx-login:root .login-card .field-wrap input {
+  width: 100% !important;
+  height: 48px !important; min-height: 48px !important; max-height: 48px !important;
+  padding: 0 48px 0 44px !important;
+  border: 1.5px solid var(--lg-input-border) !important;
+  border-radius: 12px !important;
+  background: var(--lg-input-bg) !important;
+  background-image: none !important;
+  color: var(--lg-input-text) !important;
+  -webkit-text-fill-color: var(--lg-input-text) !important;
+  caret-color: var(--lg-accent) !important;
+  font-size: 16px !important;
+  line-height: normal !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+html.rx-login:root .login-card .field-wrap input::placeholder {
+  color: var(--lg-placeholder) !important;
+  -webkit-text-fill-color: var(--lg-placeholder) !important;
+  opacity: 1 !important;
+  font-size: 15px !important;
+  line-height: normal !important;
+}
+html.rx-login:root .login-card .field-wrap input:hover { border-color: var(--lg-accent-strong) !important; }
+html.rx-login:root .login-card .field-wrap input:focus {
+  background: var(--lg-input-bg-focus) !important;
+  border-color: var(--lg-accent-strong) !important;
+  box-shadow: 0 0 0 4px var(--lg-ring) !important;
+}
+html.rx-login:root .login-card .field-wrap input:-webkit-autofill,
+html.rx-login:root .login-card .field-wrap input:-webkit-autofill:hover,
+html.rx-login:root .login-card .field-wrap input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--lg-input-bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--lg-input-bg) inset !important;
+  -webkit-text-fill-color: var(--lg-input-text) !important;
+  caret-color: var(--lg-accent) !important;
+  border-color: var(--lg-accent-strong) !important;
+}
+
+html.rx-login:root .login-card .field-wrap button.eye-btn {
+  right: 6px !important;
+  width: 36px !important; height: 36px !important; min-height: 36px !important;
+  border-radius: 10px !important;
+  color: var(--lg-icon) !important;
+  background: transparent !important;
+}
+html.rx-login:root .login-card .field-wrap button.eye-btn:hover {
+  color: var(--lg-accent-strong) !important;
+  background: var(--lg-badge-bg) !important;
+}
+
+html.rx-login:root .login-card .row-between {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px 16px !important;
+  margin: 0 0 24px !important;
+}
+html.rx-login:root .login-card .remember {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 24px !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--lg-muted) !important;
+  cursor: pointer;
+}
+html.rx-login:root .login-card .remember input {
+  width: 16px !important; height: 16px !important; min-height: 16px !important;
+  margin: 0 !important; padding: 0 !important;
+  accent-color: var(--lg-accent-strong);
+  -webkit-text-fill-color: initial !important;
+}
+html.rx-login:root .login-card .forgot-link {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--lg-accent) !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+}
+html.rx-login:root .login-card .forgot-link:hover { color: var(--lg-accent-strong) !important; text-decoration: underline; }
+
+html.rx-login:root .login-card .btn-primary,
+html.rx-login:root .login-card #loginBtn {
+  width: 100% !important;
+  height: 48px !important; min-height: 48px !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  background: var(--lg-btn) !important;
+  color: var(--lg-btn-text) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  box-shadow: var(--lg-btn-shadow) !important;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+html.rx-login:root .login-card .btn-primary:hover:not(:disabled) {
+  background: var(--lg-btn-hover) !important;
+  transform: translateY(-1px) !important;
+}
+html.rx-login:root .login-card .btn-primary:active:not(:disabled) { transform: translateY(0) !important; }
+html.rx-login:root .login-card .btn-primary:disabled { opacity: .75; cursor: progress; }
+
+html.rx-login:root .login-card .secure-note {
+  margin-top: 16px !important;
+  font-size: 12px !important;
+  color: var(--lg-muted) !important;
+}
+html.rx-login:root .login-card .secure-note i { color: var(--lg-secure) !important; }
+
+html.rx-login:root .login-card .back-link { color: var(--lg-muted) !important; font-size: 14px !important; }
+html.rx-login:root .login-card .back-link:hover { color: var(--lg-title) !important; }
+
+/* Error box (created by showLoginError in js/auth.js) */
+html.rx-login:root .login-error {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--lg-err-bg);
+  color: var(--lg-err-text);
+  border: 1px solid var(--lg-err-border);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+  white-space: pre-line;
+}
+
+/* ---------- Footer ---------- */
+html.rx-login:root .footer-note {
+  margin-top: 16px !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  color: var(--lg-muted) !important;
+  text-align: center;
+}
+html.rx-login:root .footer-note a.footer-link {
+  color: var(--lg-accent) !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+html.rx-login:root .footer-note a.footer-link:hover { color: var(--lg-accent-strong) !important; text-decoration: underline; }
+
+/* ---------- Theme toggle ---------- */
+html.rx-login:root .rx-login-theme {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 10;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; min-width: 44px; padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--lg-toggle-border);
+  background: var(--lg-toggle-bg);
+  color: var(--lg-toggle-text);
+  font: 600 14px/1 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .10);
+  transition: background-color .2s ease, border-color .2s ease, transform .15s ease;
+}
+html.rx-login:root .rx-login-theme:hover { transform: translateY(-1px); border-color: var(--lg-accent-strong); }
+html.rx-login:root .rx-login-theme i { color: var(--lg-accent); font-size: 15px; }
+
+/* ---------- Keyboard focus ---------- */
+html.rx-login:root .login-card button:focus-visible,
+html.rx-login:root .login-card a:focus-visible,
+html.rx-login:root .footer-note a:focus-visible,
+html.rx-login:root .rx-login-theme:focus-visible,
+html.rx-login:root .login-card .remember input:focus-visible {
+  outline: 3px solid var(--lg-accent-strong) !important;
+  outline-offset: 2px !important;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 480px) {
+  html.rx-login:root body.login-page { align-items: flex-start !important; padding-top: max(72px, calc(env(safe-area-inset-top) + 64px)) !important; }
+  html.rx-login:root .login-card { padding: 24px 20px 20px !important; border-radius: 20px !important; }
+  html.rx-login:root .login-card h1.title { font-size: 24px !important; }
+  html.rx-login:root .rx-login-theme { padding: 0; width: 44px; }
+  html.rx-login:root .rx-login-theme span { display: none; }
+  html.rx-login:root .login-card .remember,
+  html.rx-login:root .login-card .forgot-link { min-height: 44px !important; display: inline-flex !important; align-items: center; }
+  html.rx-login:root .login-card .row-between { margin-bottom: 16px !important; }
+}
+@media (max-height: 640px) and (min-width: 481px) {
+  html.rx-login:root body.login-page { align-items: flex-start !important; }
+}
