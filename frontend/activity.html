@@ -30,9 +30,13 @@
 <link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
 <link rel="stylesheet" href="css/boltise-dark.css?v=mobile-fix-20261010">
 <link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
+
+<style id="rx-mobile-emergency-fix">
+@media(max-width:767px){html body button#menuToggle{display:flex!important;position:fixed!important;left:12px!important;top:12px!important;width:48px!important;height:48px!important;align-items:center!important;justify-content:center!important;z-index:2147483001!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;background:#28344d!important;color:#fff!important;border:1px solid #64748b!important;border-radius:12px!important;font-size:25px!important}html body .sidebar{position:fixed!important;inset:0 auto 0 0!important;width:min(86vw,320px)!important;max-width:calc(100vw - 48px)!important;height:100vh!important;height:100dvh!important;overflow-y:auto!important;z-index:2147483000!important;transform:translateX(-110%)!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}html body .sidebar.rx-force-open{transform:translateX(0)!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}html body #sidebarOverlay{position:fixed!important;inset:0!important;z-index:2147482999!important;background:rgba(4,8,18,.68)!important;display:block!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}html body #sidebarOverlay.rx-force-show{visibility:visible!important;opacity:1!important;pointer-events:auto!important}html body .main-content{margin-left:0!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:72px 12px 24px!important;overflow-x:hidden!important}}
+</style>
 </head>
 <body>
-<button type="button" class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+<button type="button" class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" onclick="window.rxForceToggleMenu(event)">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="wrapper">
 <aside class="sidebar">
