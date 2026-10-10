@@ -1,11 +1,23 @@
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="rx-login">
 <head>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
 <meta name="color-scheme" content="light dark">
-
-  <meta name="supported-color-schemes" content="dark" />
+  <meta name="theme-color" content="#F3F7F5">
+  <script>
+    /* Apply saved theme before first paint (no light/dark flash). Falls back to the system setting. */
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('recountix_theme'); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      }
+      var h = document.documentElement;
+      h.classList.toggle('rx-dark-shell', t === 'dark');
+      h.dataset.rxTheme = t;
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -192,12 +204,18 @@
   </style>
   <link rel="stylesheet" href="css/boltise-dark.css?v=theme-switch-3">
   <link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
+  <link rel="stylesheet" href="css/login-theme.css?v=login-theme-1">
 </head>
-<body>
+<body class="login-page">
+
+  <button id="rxThemeToggle" type="button" class="rx-login-theme" aria-pressed="false" aria-label="Switch theme">
+    <i class="fa-solid fa-moon" aria-hidden="true"></i><span>Dark mode</span>
+  </button>
 
   <div class="login-wrap">
     <div class="brand-row recountix-login-brand">
-      <img src="assets/recountix-logo.png?v=login-logo-20261003" loading="eager" decoding="async" alt="Recountix — Beyond What’s Due." />
+      <img class="logo-light" src="assets/recountix-logo-transparent.png?v=login-theme-1" loading="eager" decoding="async" alt="Recountix — Beyond What’s Due." />
+      <img class="logo-dark" src="assets/recountix-logo.png?v=login-logo-20261003" loading="eager" decoding="async" alt="" aria-hidden="true" />
     </div>
 
     <div class="card login-card">
@@ -253,7 +271,7 @@
       </div>
     </div>
 
-    <div class="footer-note"><a href="customer-portal.html" style="color:#0B5D4F;font-weight:800;text-decoration:none;">Customer Portal</a></div>
+    <div class="footer-note"><a class="footer-link" href="customer-portal.html">Customer Portal</a></div>
     <div class="footer-note">© 2026 Recountix · Beyond What’s Due.</div>
   </div>
 
