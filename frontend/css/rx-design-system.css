@@ -699,3 +699,180 @@ html:not(.rx-dark-shell) body textarea::placeholder {
     display: none !important;
   }
 }
+
+
+/* ==========================================================================
+   RECOUNTIX PREMIUM MINT PASS — global polish, contrast and tactile controls
+   CSS-only: preserves page markup, forms, data logic and existing handlers.
+   ========================================================================== */
+:root {
+  --rx-mint-50:#F2FBF6;
+  --rx-mint-100:#E5F6EC;
+  --rx-mint-200:#CBEADB;
+  --rx-mint-500:#15966D;
+  --rx-mint-600:#087F5B;
+  --rx-mint-700:#086449;
+  --rx-ink:#173D32;
+  --rx-ink-soft:#38584F;
+  --rx-line:#D3E7DD;
+}
+html:not(.rx-dark-shell) {
+  color-scheme: light;
+  --brand-500:#15966D;
+  --brand-600:#087F5B;
+  --brand-700:#086449;
+  --bg:#F0F9F4;
+  --surface:#FFFFFF;
+  --border:#D3E7DD;
+  --ink:#173D32;
+  --ink-2:#38584F;
+}
+html:not(.rx-dark-shell) body {
+  color:#173D32 !important;
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(190,232,211,.28),transparent 42%),
+    radial-gradient(ellipse at 96% 18%,rgba(212,241,226,.34),transparent 36%),
+    linear-gradient(145deg,#F4FBF7 0%,#EDF8F2 48%,#F7FCF9 100%) !important;
+  background-attachment:fixed !important;
+}
+html:not(.rx-dark-shell) body :is(h1,h2,h3,h4,h5,h6,.page-title,.section-title,.card-title,.modal-title) {
+  color:#173D32 !important;
+  -webkit-text-fill-color:#173D32;
+}
+html:not(.rx-dark-shell) body :is(p,li,td,th,label,.page-subtitle,.helper,.hint,.form-text,.text-muted,.stat-label,.description) {
+  color:#38584F;
+}
+html:not(.rx-dark-shell) body :is(.card,.content-box,.table-section,.summary-card,.stat-card,.metric-card,.form-card,.panel,.modal-content,.modal,.settings-card,.customer-card,.dashboard-card,.report-card,.section-card) {
+  background-color:rgba(255,255,255,.96) !important;
+  border:1px solid #D3E7DD !important;
+  box-shadow:0 2px 4px rgba(22,75,54,.035),0 8px 22px rgba(22,75,54,.055),inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+html:not(.rx-dark-shell) body :is(button,.btn,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],.menu-toggle) {
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease !important;
+}
+html:not(.rx-dark-shell) body :is(.btn-primary,.btn-success,.add-btn,.action-btn,.save-btn,button[type="submit"],input[type="submit"],.primary-btn,.btn-main,.export-btn,.customer-toolbar button) {
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+  font-weight:650 !important;
+  text-shadow:0 1px 1px rgba(0,52,35,.12) !important;
+  border:1px solid #087F5B !important;
+  border-top-color:#65C9A3 !important;
+  border-radius:10px !important;
+  background:linear-gradient(180deg,#1BA879 0%,#0D8A63 54%,#087F5B 100%) !important;
+  box-shadow:0 3px 0 #C5E5D6,0 6px 13px rgba(8,100,73,.17),inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+html:not(.rx-dark-shell) body :is(.btn-primary,.btn-success,.add-btn,.action-btn,.save-btn,button[type="submit"],input[type="submit"],.primary-btn,.btn-main,.export-btn,.customer-toolbar button) * {
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+}
+html:not(.rx-dark-shell) body :is(.btn-primary,.btn-success,.add-btn,.action-btn,.save-btn,button[type="submit"],input[type="submit"],.primary-btn,.btn-main,.export-btn,.customer-toolbar button):hover {
+  filter:brightness(1.035) !important;
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 #C5E5D6,0 9px 17px rgba(8,100,73,.2),inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+html:not(.rx-dark-shell) body :is(.btn-primary,.btn-success,.add-btn,.action-btn,.save-btn,button[type="submit"],input[type="submit"],.primary-btn,.btn-main,.export-btn,.customer-toolbar button):active {
+  transform:translateY(2px);
+  box-shadow:0 1px 0 #C5E5D6,0 3px 7px rgba(8,100,73,.13) !important;
+}
+html:not(.rx-dark-shell) body :is(button,.btn,[role="button"],input[type="button"],input[type="reset"]):focus-visible,
+html:not(.rx-dark-shell) body :is(input,select,textarea):focus-visible {
+  outline:3px solid rgba(21,150,109,.25) !important;
+  outline-offset:2px !important;
+}
+html:not(.rx-dark-shell) body :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) {
+  color:#173D32 !important;
+  -webkit-text-fill-color:#173D32 !important;
+  background-color:#FFFFFF !important;
+  border:1px solid #C9DED4 !important;
+  border-radius:9px !important;
+  box-shadow:inset 0 1px 2px rgba(22,75,54,.035) !important;
+}
+html:not(.rx-dark-shell) body :is(input,textarea)::placeholder {
+  color:#70877D !important;
+  -webkit-text-fill-color:#70877D !important;
+  opacity:1 !important;
+}
+html:not(.rx-dark-shell) body :is(th,thead) {
+  color:#214C3E !important;
+  background:#E5F6EC !important;
+}
+html:not(.rx-dark-shell) body table {
+  border-color:#D3E7DD !important;
+}
+html:not(.rx-dark-shell) body .sidebar {
+  background:linear-gradient(180deg,#FFFFFF 0%,#F2FBF6 100%) !important;
+  border-right:1px solid #D3E7DD !important;
+  box-shadow:4px 0 22px rgba(22,75,54,.045) !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a {
+  color:#294F43 !important;
+  border:1px solid transparent !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a i,
+html:not(.rx-dark-shell) body .sidebar .menu a svg {
+  color:#087F5B !important;
+  -webkit-text-fill-color:#087F5B !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a:hover,
+html:not(.rx-dark-shell) body .sidebar .menu a.active {
+  color:#086449 !important;
+  background:linear-gradient(135deg,#DFF5E9,#CFF0DF) !important;
+  border-color:#B6E4CE !important;
+  box-shadow:inset 3px 0 0 #15966D,0 2px 7px rgba(8,100,73,.07) !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a:hover *,
+html:not(.rx-dark-shell) body .sidebar .menu a.active * {
+  color:#086449 !important;
+  -webkit-text-fill-color:#086449 !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:0 !important;
+  padding:10px 6px !important;
+  overflow:visible !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a i,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a svg,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a .fa-solid,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a .fa-regular,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a .fa-brands {
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:22px !important;
+  min-width:22px !important;
+  font-size:17px !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  color:#087F5B !important;
+  -webkit-text-fill-color:#087F5B !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a span,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .logo p {
+  display:none !important;
+}
+html:not(.rx-dark-shell) body .menu-toggle {
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+  background:linear-gradient(145deg,#15966D,#087F5B) !important;
+  border:1px solid #087F5B !important;
+  box-shadow:0 3px 0 #C5E5D6,0 7px 16px rgba(8,100,73,.2) !important;
+}
+html:not(.rx-dark-shell) body :is(.topbar,.page-title-wrap,.header-card,.heading-card,.module-header,.card-header,.table-header,.list-header) {
+  color:#173D32 !important;
+  background:linear-gradient(100deg,rgba(238,250,243,.98),rgba(255,255,255,.98)) !important;
+  border-color:#D3E7DD !important;
+}
+html:not(.rx-dark-shell) body :is(.badge,.pill,.status-badge) {
+  font-weight:600;
+}
+@media (max-width:767px) {
+  html:not(.rx-dark-shell) body { background-attachment:scroll !important; }
+  html:not(.rx-dark-shell) body :is(.card,.content-box,.table-section,.summary-card,.stat-card,.metric-card,.form-card,.panel,.modal-content,.settings-card,.customer-card,.dashboard-card,.report-card,.section-card) {
+    box-shadow:0 2px 4px rgba(22,75,54,.035),0 5px 14px rgba(22,75,54,.055),inset 0 1px 0 rgba(255,255,255,.9) !important;
+  }
+}
