@@ -2042,3 +2042,196 @@ html:not(.rx-dark-shell) .rx-theme-toggle {
   html body .sidebar { transform: translateX(0) !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
   html body .menu-toggle, html body .sidebar-overlay { display: none !important; }
 }
+
+
+/* Recountix theme refinement: deeper dark surfaces + consistent mint-green light mode.
+   Scoped to the existing theme switch; does not change page structure or data logic. */
+html.rx-dark-shell {
+  --rx-bg:#090F1B;
+  --rx-surface:#111B2B;
+  --rx-surface-2:#172338;
+  --rx-row:#1B2A40;
+  --rx-border:#2B3A52;
+  --rx-border-soft:#202D42;
+  --rx-text:#F5F8FC;
+  --rx-muted:#A4B2C7;
+  --rx-subtle:#7789A4;
+  --brand-950:#090F1B;
+  --brand-900:#0E1726;
+  --brand-800:#111B2B;
+  --brand-700:#172338;
+  --brand-600:#1D2B42;
+  --brand-500:#22C99A;
+  --bg:#090F1B;
+  --surface:#111B2B;
+  --border:#2B3A52;
+  --border-soft:#202D42;
+  color-scheme:dark;
+}
+html.rx-dark-shell body,
+html.rx-dark-shell .wrapper {
+  background:#090F1B !important;
+  color:#F5F8FC !important;
+}
+html.rx-dark-shell body::before {
+  background:radial-gradient(circle at 16% 0%,rgba(16,185,129,.08),transparent 25rem),
+             linear-gradient(180deg,#090F1B 0%,#070B13 100%) !important;
+}
+html.rx-dark-shell .sidebar {
+  background:linear-gradient(180deg,#111B2B 0%,#0B1220 100%) !important;
+  border-right-color:#25334A !important;
+}
+html.rx-dark-shell .card,
+html.rx-dark-shell .content-box,
+html.rx-dark-shell .table-section,
+html.rx-dark-shell .analytics-panel,
+html.rx-dark-shell .vo-command-strip,
+html.rx-dark-shell .rx-nav-card,
+html.rx-dark-shell .backup-panel,
+html.rx-dark-shell .action-card,
+html.rx-dark-shell .vo-final-kpi,
+html.rx-dark-shell .vo-today-panel,
+html.rx-dark-shell .rx-command-panel,
+html.rx-dark-shell .rx-risk-panel,
+html.rx-dark-shell .rx-roadmap-panel {
+  background:linear-gradient(180deg,#111B2B 0%,#141F31 100%) !important;
+  border-color:#2B3A52 !important;
+  box-shadow:0 14px 38px rgba(0,0,0,.28) !important;
+}
+html.rx-dark-shell .topbar {
+  background:rgba(9,15,27,.96) !important;
+  border-bottom-color:#202D42 !important;
+}
+html.rx-dark-shell button,
+html.rx-dark-shell .btn,
+html.rx-dark-shell .add-btn,
+html.rx-dark-shell .menu-toggle {
+  color:#F5F8FC;
+}
+
+/* Light mode is a complete mint-green theme for the page, navigation, cards and controls. */
+html:not(.rx-dark-shell) {
+  --rx-bg:#F0FAF5;
+  --rx-surface:#FFFFFF;
+  --rx-surface-2:#E2F5EB;
+  --rx-row:#F5FBF7;
+  --rx-border:#C9E5D6;
+  --rx-border-soft:#D9EDE2;
+  --rx-text:#153D32;
+  --rx-muted:#527468;
+  --rx-subtle:#718C80;
+  --brand-950:#F0FAF5;
+  --brand-900:#E5F6EC;
+  --brand-800:#D7F0E2;
+  --brand-700:#15966D;
+  --brand-600:#087F5B;
+  --brand-500:#087F5B;
+  --brand-400:#35B98B;
+  --brand-300:#8ADBB8;
+  --brand-100:#E2F5EB;
+  --ink:#153D32;
+  --ink-soft:#527468;
+  --ink-faint:#718C80;
+  --bg:#F0FAF5;
+  --surface:#FFFFFF;
+  --border:#C9E5D6;
+  --border-soft:#D9EDE2;
+  color-scheme:light;
+}
+html:not(.rx-dark-shell) body,
+html:not(.rx-dark-shell) .wrapper {
+  background:#F0FAF5 !important;
+  color:#153D32 !important;
+}
+html:not(.rx-dark-shell) body::before {
+  background:radial-gradient(circle at 12% 0%,rgba(110,231,183,.24),transparent 27rem),
+             radial-gradient(circle at 92% 10%,rgba(167,243,208,.22),transparent 25rem),
+             linear-gradient(180deg,#F7FCF9 0%,#EAF7F0 100%) !important;
+}
+html:not(.rx-dark-shell) .sidebar {
+  background:linear-gradient(180deg,#FFFFFF 0%,#EAF7F0 100%) !important;
+  border-right:1px solid #C9E5D6 !important;
+  box-shadow:8px 0 28px rgba(21,61,50,.07) !important;
+}
+html:not(.rx-dark-shell) .sidebar .logo h2,
+html:not(.rx-dark-shell) .sidebar .menu a,
+html:not(.rx-dark-shell) .page-title,
+html:not(.rx-dark-shell) h1,
+html:not(.rx-dark-shell) h2,
+html:not(.rx-dark-shell) h3,
+html:not(.rx-dark-shell) h4,
+html:not(.rx-dark-shell) h5,
+html:not(.rx-dark-shell) h6,
+html:not(.rx-dark-shell) .card h1,
+html:not(.rx-dark-shell) .card h3,
+html:not(.rx-dark-shell) .content-box,
+html:not(.rx-dark-shell) .table-section,
+html:not(.rx-dark-shell) .analytics-head h2,
+html:not(.rx-dark-shell) .summary-bar h2 {
+  color:#153D32 !important;
+}
+html:not(.rx-dark-shell) .page-subtitle,
+html:not(.rx-dark-shell) .summary-bar span,
+html:not(.rx-dark-shell) .content-box p,
+html:not(.rx-dark-shell) .analytics-head p,
+html:not(.rx-dark-shell) .card small,
+html:not(.rx-dark-shell) small {
+  color:#527468 !important;
+}
+html:not(.rx-dark-shell) .sidebar .menu a:hover,
+html:not(.rx-dark-shell) .sidebar .menu a.active {
+  background:#DDF5E8 !important;
+  color:#075C45 !important;
+}
+html:not(.rx-dark-shell) .sidebar .menu a:hover i,
+html:not(.rx-dark-shell) .sidebar .menu a.active i,
+html:not(.rx-dark-shell) .sidebar .logo p {
+  color:#087F5B !important;
+}
+html:not(.rx-dark-shell) .topbar {
+  background:rgba(247,252,249,.96) !important;
+  border-bottom:1px solid #D9EDE2 !important;
+  box-shadow:0 4px 18px rgba(21,61,50,.035) !important;
+}
+html:not(.rx-dark-shell) .card,
+html:not(.rx-dark-shell) .content-box,
+html:not(.rx-dark-shell) .table-section,
+html:not(.rx-dark-shell) .analytics-panel,
+html:not(.rx-dark-shell) .vo-command-strip,
+html:not(.rx-dark-shell) .rx-nav-card,
+html:not(.rx-dark-shell) .backup-panel,
+html:not(.rx-dark-shell) .action-card,
+html:not(.rx-dark-shell) .vo-final-kpi,
+html:not(.rx-dark-shell) .vo-today-panel,
+html:not(.rx-dark-shell) .rx-command-panel,
+html:not(.rx-dark-shell) .rx-risk-panel,
+html:not(.rx-dark-shell) .rx-roadmap-panel {
+  background:linear-gradient(180deg,#FFFFFF 0%,#F4FBF7 100%) !important;
+  border:1px solid #C9E5D6 !important;
+  box-shadow:0 10px 28px rgba(21,61,50,.055) !important;
+}
+html:not(.rx-dark-shell) button,
+html:not(.rx-dark-shell) .btn,
+html:not(.rx-dark-shell) .add-btn,
+html:not(.rx-dark-shell) .menu-toggle,
+html:not(.rx-dark-shell) .rx-theme-toggle {
+  background:linear-gradient(135deg,#087F5B,#20A878) !important;
+  border-color:#087F5B !important;
+  color:#FFFFFF !important;
+}
+html:not(.rx-dark-shell) input,
+html:not(.rx-dark-shell) select,
+html:not(.rx-dark-shell) textarea {
+  background:#FFFFFF !important;
+  color:#153D32 !important;
+  border-color:#C9E5D6 !important;
+}
+html:not(.rx-dark-shell) table th {
+  background:#E5F6EC !important;
+  color:#153D32 !important;
+}
+html:not(.rx-dark-shell) table td {
+  color:#244D40;
+  border-color:#D9EDE2 !important;
+}
+html:not(.rx-dark-shell) .sidebar-overlay.show { background:rgba(13,49,38,.32) !important; }
