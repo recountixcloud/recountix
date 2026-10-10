@@ -474,3 +474,75 @@ html.rx-portal:root .panel button:focus-visible { outline: 3px solid var(--lg-ac
   html.rx-portal:root .rx-login-theme { padding: 0; width: 44px; }
   html.rx-portal:root .rx-login-theme span { display: none; }
 }
+
+/* Customer portal dark mode: true near-black surfaces with high-contrast text. */
+html.rx-portal.rx-dark-shell {
+  --lg-bg:#070B12;
+  --lg-bg-image:
+    radial-gradient(900px 520px at 8% -10%,rgba(16,185,129,.10),transparent 60%),
+    radial-gradient(800px 520px at 100% 108%,rgba(20,184,166,.07),transparent 55%),
+    linear-gradient(180deg,#070B12 0%,#03060B 100%);
+  --lg-card:#101722;
+  --lg-card-border:#263344;
+  --lg-card-shadow:0 24px 64px rgba(0,0,0,.62),0 1px 0 rgba(255,255,255,.035) inset;
+  --lg-title:#F8FAFC;
+  --lg-text:#E7EEF7;
+  --lg-muted:#A8B6C8;
+  --lg-label:#E7EEF7;
+  --lg-accent:#34D399;
+  --lg-accent-strong:#6EE7B7;
+  --lg-input-bg:#0A111C;
+  --lg-input-bg-focus:#111C2A;
+  --lg-input-border:#34465B;
+  --lg-input-text:#F8FAFC;
+  --lg-placeholder:#91A1B6;
+  --lg-icon:#6EE7B7;
+  --lg-ring:rgba(52,211,153,.22);
+  --lg-badge-bg:#12372D;
+  --lg-btn:linear-gradient(135deg,#087F5B 0%,#059669 100%);
+  --lg-btn-hover:linear-gradient(135deg,#066849 0%,#047857 100%);
+  --lg-btn-shadow:0 12px 28px rgba(0,0,0,.32);
+  --lg-btn-text:#FFFFFF;
+  --lg-toggle-bg:#111B28;
+  --lg-toggle-border:#34465B;
+  --lg-toggle-text:#E7EEF7;
+  --lg-secure:#6EE7B7;
+  --lg-subcard:#0B121D;
+  --lg-line:#29384B;
+  --lg-neg:#FDA4AF;
+  --lg-pos:#6EE7B7;
+  --lg-chip-bg:#12372D;
+}
+html.rx-portal.rx-dark-shell:root body {
+  background:#070B12 !important;
+  color:#E7EEF7 !important;
+}
+html.rx-portal.rx-dark-shell:root .panel,
+html.rx-portal.rx-dark-shell:root .result {
+  background:#101722 !important;
+  background-image:linear-gradient(155deg,#111A27 0%,#0C131E 100%) !important;
+  border-color:#263344 !important;
+  box-shadow:0 24px 64px rgba(0,0,0,.62) !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+html.rx-portal.rx-dark-shell:root .cards .card {
+  background:#0B121D !important;
+  border-color:#29384B !important;
+}
+html.rx-portal.rx-dark-shell:root .rx-login-theme {
+  background:#111B28 !important;
+  border-color:#34465B !important;
+  color:#E7EEF7 !important;
+}
+html.rx-portal.rx-dark-shell:root .rx-login-theme i {
+  color:#6EE7B7 !important;
+}
+html.rx-portal.rx-dark-shell:root .chip {
+  background:#12372D !important;
+  color:#6EE7B7 !important;
+}
+html.rx-portal.rx-dark-shell:root .history,
+html.rx-portal.rx-dark-shell:root .row {
+  border-color:#29384B !important;
+}
