@@ -1751,3 +1751,123 @@ html.rx-dark-shell body:has(.login-wrap) {
     width: calc(100% - var(--sidebar-w, 256px)) !important;
   }
 }
+
+
+/* Compact, consistent page headers: retain the page title only. */
+.topbar {
+  padding: 8px 0 12px !important;
+  min-height: 0 !important;
+  margin-bottom: 12px !important;
+  align-items: center !important;
+}
+.topbar .page-title {
+  font-size: clamp(22px, 2vw, 28px) !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+}
+.topbar .page-subtitle,
+.topbar .rx-eyebrow,
+.topbar .eyebrow,
+.topbar .page-description { display:none !important; }
+.rx-theme-toggle {
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  min-height:40px !important;
+  padding:8px 12px !important;
+  border-radius:10px !important;
+  border:1px solid var(--border,#DDE9E4) !important;
+  background:var(--surface,#fff) !important;
+  color:var(--ink,#0E211D) !important;
+  box-shadow:none !important;
+  font:600 13px/1.2 'Inter',system-ui,sans-serif !important;
+  cursor:pointer !important;
+  white-space:nowrap !important;
+}
+.rx-theme-toggle i { color:var(--brand-700,#0B5D4F) !important; }
+@media(max-width:640px) {
+  .topbar { padding:6px 0 10px !important; margin-bottom:8px !important; gap:8px !important; }
+  .topbar .page-title { font-size:22px !important; }
+  .rx-theme-toggle { min-height:40px !important; padding:8px 10px !important; }
+  .rx-theme-toggle span { display:none !important; }
+}
+
+/* Light mode is the original light-green Recountix theme. */
+html:not(.rx-dark-shell),
+html:not(.rx-dark-shell) body,
+html:not(.rx-dark-shell) .wrapper {
+  background:var(--bg,#F3F7F5) !important;
+  color:var(--ink,#0E211D) !important;
+}
+html:not(.rx-dark-shell) body::before { display:none !important; }
+html:not(.rx-dark-shell) .main-content { background:transparent !important; }
+html:not(.rx-dark-shell) .sidebar {
+  background:linear-gradient(190deg,#0A332C 0%,#062420 100%) !important;
+  border-right:0 !important;
+  box-shadow:none !important;
+}
+html:not(.rx-dark-shell) .sidebar .menu a { color:rgba(255,255,255,.78) !important; }
+html:not(.rx-dark-shell) .sidebar .menu a:hover,
+html:not(.rx-dark-shell) .sidebar .menu a.active {
+  background:rgba(18,167,122,.18) !important;
+  color:#fff !important;
+}
+html:not(.rx-dark-shell) .topbar .page-title,
+html:not(.rx-dark-shell) h1,
+html:not(.rx-dark-shell) h2,
+html:not(.rx-dark-shell) h3,
+html:not(.rx-dark-shell) h4,
+html:not(.rx-dark-shell) h5,
+html:not(.rx-dark-shell) h6 { color:var(--ink,#0E211D) !important; }
+html:not(.rx-dark-shell) .card,
+html:not(.rx-dark-shell) .content-box,
+html:not(.rx-dark-shell) .table-section,
+html:not(.rx-dark-shell) .analytics-panel,
+html:not(.rx-dark-shell) .backup-panel,
+html:not(.rx-dark-shell) .action-card,
+html:not(.rx-dark-shell) .vo-final-kpi,
+html:not(.rx-dark-shell) .vo-today-panel,
+html:not(.rx-dark-shell) .rx-command-panel,
+html:not(.rx-dark-shell) .rx-risk-panel,
+html:not(.rx-dark-shell) .rx-roadmap-panel,
+html:not(.rx-dark-shell) .rx-live-clock {
+  background:var(--surface,#fff) !important;
+  color:var(--ink,#0E211D) !important;
+  border-color:var(--border,#DDE9E4) !important;
+  box-shadow:var(--shadow-sm,0 2px 8px rgba(10,45,38,.06)) !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+html:not(.rx-dark-shell) p,
+html:not(.rx-dark-shell) small,
+html:not(.rx-dark-shell) .page-subtitle,
+html:not(.rx-dark-shell) .summary-bar span,
+html:not(.rx-dark-shell) .content-box p,
+html:not(.rx-dark-shell) .footer { color:var(--ink-soft,#4C6660) !important; }
+html:not(.rx-dark-shell) input,
+html:not(.rx-dark-shell) select,
+html:not(.rx-dark-shell) textarea,
+html:not(.rx-dark-shell) .search-box,
+html:not(.rx-dark-shell) .form-control {
+  background:#fff !important;
+  color:var(--ink,#0E211D) !important;
+  border-color:var(--border,#DDE9E4) !important;
+}
+html:not(.rx-dark-shell) table,
+html:not(.rx-dark-shell) td { background:#fff !important; color:var(--ink,#0E211D) !important; }
+html:not(.rx-dark-shell) thead,
+html:not(.rx-dark-shell) th { background:#E4F8EF !important; color:#0A332C !important; }
+html:not(.rx-dark-shell) .add-btn,
+html:not(.rx-dark-shell) button.save-btn,
+html:not(.rx-dark-shell) .btn-primary,
+html:not(.rx-dark-shell) button[type="submit"] {
+  background:linear-gradient(135deg,#0D7A65,#12A77A) !important;
+  color:#fff !important;
+  box-shadow:none !important;
+}
+html:not(.rx-dark-shell) .rx-theme-toggle {
+  background:#E4F8EF !important;
+  color:#0A332C !important;
+  border-color:#B8DCCF !important;
+}
