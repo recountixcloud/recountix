@@ -499,3 +499,106 @@ html:not(.rx-dark-shell):root:root .topbar h2 {
   -webkit-text-fill-color:#153D32 !important;
   text-shadow:none !important;
 }
+
+/* Accessibility pass: high-contrast light theme and reliable responsive sidebar. */
+html:not(.rx-dark-shell) body {
+  color: #173B32 !important;
+  background-color: #EFF8F3 !important;
+}
+html:not(.rx-dark-shell) body :is(p, span, label, small, li, td, th, .helper, .hint, .page-subtitle, .stat-label, .card small) {
+  color: #38584F;
+}
+html:not(.rx-dark-shell) body :is(h1,h2,h3,h4,h5,h6,.page-title,.card h1,.card h2,.card h3,.summary-bar h2) {
+  color: #123D31 !important;
+}
+html:not(.rx-dark-shell) body :is(input,select,textarea) {
+  color: #173B32 !important;
+  background-color: #FFFFFF !important;
+  border-color: #B9D5C8 !important;
+}
+html:not(.rx-dark-shell) body :is(input,select,textarea)::placeholder {
+  color: #657F75 !important;
+  opacity: 1 !important;
+}
+html:not(.rx-dark-shell) body :is(button,.add-btn,.btn,[type="button"],[type="submit"]) {
+  color: #FFFFFF;
+  text-shadow: none !important;
+}
+html:not(.rx-dark-shell) body .card,
+html:not(.rx-dark-shell) body .table-section,
+html:not(.rx-dark-shell) body .content-box,
+html:not(.rx-dark-shell) body .rx-panel {
+  box-shadow: 0 5px 16px rgba(16,75,54,.10), 0 1px 3px rgba(16,75,54,.07) !important;
+  border-color: #D0E5D9 !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a,
+html:not(.rx-dark-shell) body .sidebar .menu a span {
+  color: #173B32 !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a i {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: #087F5B !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a.active,
+html:not(.rx-dark-shell) body .sidebar .menu a[aria-current="page"] {
+  color: #064C3B !important;
+  background: #DDF5E8 !important;
+}
+@media (max-width: 767px) {
+  html:not(.rx-dark-shell) body .sidebar {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: min(82vw, 300px) !important;
+    max-width: calc(100vw - 48px) !important;
+    height: 100dvh !important;
+    transform: translateX(-110%) !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: 2147483000 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 72px 12px 24px !important;
+    background: linear-gradient(180deg,#FFFFFF 0%,#EAF7F0 100%) !important;
+    box-shadow: 10px 0 30px rgba(16,75,54,.16) !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar.rx-force-open,
+  html:not(.rx-dark-shell) body .sidebar.open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .logo h2,
+  html:not(.rx-dark-shell) body .sidebar .logo p,
+  html:not(.rx-dark-shell) body .sidebar .menu a span {
+    display: inline !important;
+    color: #173B32 !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu a {
+    min-height: 44px !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    padding: 10px 12px !important;
+    white-space: normal !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu a i {
+    flex: 0 0 22px !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    font-size: 17px !important;
+  }
+  html:not(.rx-dark-shell) body .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    overflow-x: clip !important;
+  }
+}
