@@ -6,11 +6,11 @@
   background: 
     radial-gradient(1000px 500px at 10% 0%, rgba(124, 58, 237, 0.12), transparent 60%),
     radial-gradient(800px 400px at 90% 10%, rgba(99, 102, 241, 0.08), transparent 50%),
-    linear-gradient(180deg, #0B0F17 0%, #080C13 100%) !important;
+    linear-gradient(180deg, #1A2236 0%, #151C2D 100%) !important;
 }
 
 .topbar {
-  background: rgba(17, 24, 39, 0.75) !important;
+  background: rgba(35, 46, 69, 0.75) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   backdrop-filter: blur(20px) saturate(1.2) !important;
   -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
@@ -29,7 +29,7 @@
 }
 
 .rx-live-clock {
-  background: rgba(11, 15, 23, 0.75) !important;
+  background: rgba(26, 34, 54, 0.75) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 14px !important;
   padding: 10px 18px !important;
@@ -51,7 +51,7 @@
 
 .card {
   position: relative !important;
-  background: linear-gradient(165deg, rgba(23, 32, 51, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
+  background: linear-gradient(165deg, rgba(38, 50, 76, 0.8) 0%, rgba(31, 42, 64, 0.9) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 20px !important;
   padding: 24px 22px !important;
@@ -106,7 +106,7 @@
 }
 
 .rx-mini-card {
-  background: rgba(17, 24, 39, 0.6) !important;
+  background: rgba(35, 46, 69, 0.6) !important;
   border: 1px solid rgba(255, 255, 255, 0.06) !important;
   border-radius: 16px !important;
   padding: 18px !important;
@@ -135,7 +135,7 @@
 .analytics-panel,
 .vo-command-strip,
 .rx-roadmap-panel {
-  background: linear-gradient(180deg, rgba(20, 27, 45, 0.75) 0%, rgba(15, 23, 42, 0.88) 100%) !important;
+  background: linear-gradient(180deg, rgba(33, 44, 68, 0.75) 0%, rgba(31, 42, 64, 0.88) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 20px !important;
   backdrop-filter: blur(18px) !important;
@@ -154,7 +154,7 @@
 }
 
 .vo-command-btn {
-  background: rgba(22, 31, 51, 0.65) !important;
+  background: rgba(36, 48, 75, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
   border-radius: 14px !important;
   padding: 14px 16px !important;
@@ -162,14 +162,14 @@
 }
 
 .vo-command-btn:hover {
-  background: rgba(30, 41, 69, 0.85) !important;
+  background: rgba(46, 59, 90, 0.85) !important;
   border-color: rgba(124, 58, 237, 0.45) !important;
   transform: translateY(-2px) !important;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35) !important;
 }
 
 .rx-nav-card {
-  background: rgba(17, 24, 39, 0.6) !important;
+  background: rgba(35, 46, 69, 0.6) !important;
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
   border-radius: 16px !important;
   padding: 18px 20px !important;
@@ -179,5 +179,5 @@
 .rx-nav-card:hover {
   border-color: rgba(99, 102, 241, 0.4) !important;
   transform: translateY(-2px) !important;
-  background: rgba(23, 32, 53, 0.75) !important;
+  background: rgba(38, 50, 78, 0.75) !important;
 }

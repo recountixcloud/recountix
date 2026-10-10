@@ -3,7 +3,8 @@
    Theme is driven by the existing html.rx-dark-shell class (set by js/final-suite.js). */
 
 /* ---------- Tokens ---------- */
-html.rx-login {
+html.rx-login,
+html.rx-portal {
   color-scheme: light;
   --lg-bg: #F0FBF7;
   --lg-bg-image:
@@ -38,16 +39,22 @@ html.rx-login {
   --lg-err-bg: #FEF2F2;
   --lg-err-text: #B91C1C;
   --lg-err-border: #FECACA;
+  --lg-subcard: #FFFFFF;
+  --lg-line: #D3E8E1;
+  --lg-neg: #B42318;
+  --lg-pos: #087443;
+  --lg-chip-bg: #E4F8EF;
 }
 
-html.rx-login.rx-dark-shell {
+html.rx-login.rx-dark-shell,
+html.rx-portal.rx-dark-shell {
   color-scheme: dark;
-  --lg-bg: #0B0F17;
+  --lg-bg: #1A2236;
   --lg-bg-image:
     radial-gradient(900px 520px at 8% -10%, rgba(124, 58, 237, .20), transparent 60%),
     radial-gradient(800px 520px at 100% 108%, rgba(16, 185, 129, .12), transparent 55%),
-    linear-gradient(180deg, #0B0F17 0%, #090D14 100%);
-  --lg-card: rgba(17, 24, 39, .86);
+    linear-gradient(180deg, #1A2236 0%, #151C2D 100%);
+  --lg-card: rgba(35, 46, 69, .86);
   --lg-card-border: #243044;
   --lg-card-shadow: 0 24px 64px rgba(0, 0, 0, .55), 0 1px 0 rgba(255, 255, 255, .05) inset;
   --lg-title: #F8FAFC;
@@ -56,9 +63,9 @@ html.rx-login.rx-dark-shell {
   --lg-label: #E2E8F0;
   --lg-accent: #A78BFA;
   --lg-accent-strong: #C4B5FD;
-  --lg-input-bg: #0B0F17;
+  --lg-input-bg: #1A2236;
   --lg-input-bg-focus: #0E1422;
-  --lg-input-border: #334155;
+  --lg-input-border: #44536F;
   --lg-input-text: #F8FAFC;
   --lg-placeholder: #7C8BA1;
   --lg-icon: #8B9BB3;
@@ -68,13 +75,18 @@ html.rx-login.rx-dark-shell {
   --lg-btn-hover: linear-gradient(135deg, #6D28D9 0%, #4F46E5 100%);
   --lg-btn-shadow: 0 12px 28px rgba(99, 102, 241, .30);
   --lg-btn-text: #FFFFFF;
-  --lg-toggle-bg: rgba(17, 24, 39, .85);
-  --lg-toggle-border: #334155;
+  --lg-toggle-bg: rgba(35, 46, 69, .85);
+  --lg-toggle-border: #44536F;
   --lg-toggle-text: #E2E8F0;
   --lg-secure: #34D399;
   --lg-err-bg: rgba(244, 63, 94, .12);
   --lg-err-text: #FDA4AF;
   --lg-err-border: rgba(244, 63, 94, .38);
+  --lg-subcard: #2B3752;
+  --lg-line: #3A4A66;
+  --lg-neg: #FDA4AF;
+  --lg-pos: #6EE7B7;
+  --lg-chip-bg: rgba(16, 185, 129, .16);
 }
 
 /* ---------- Page ----------
@@ -328,7 +340,8 @@ html.rx-login:root .footer-note a.footer-link {
 html.rx-login:root .footer-note a.footer-link:hover { color: var(--lg-accent-strong) !important; text-decoration: underline; }
 
 /* ---------- Theme toggle ---------- */
-html.rx-login:root .rx-login-theme {
+html.rx-login:root .rx-login-theme,
+html.rx-portal:root .rx-login-theme {
   position: fixed;
   top: max(16px, env(safe-area-inset-top));
   right: max(16px, env(safe-area-inset-right));
@@ -346,14 +359,17 @@ html.rx-login:root .rx-login-theme {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .10);
   transition: background-color .2s ease, border-color .2s ease, transform .15s ease;
 }
-html.rx-login:root .rx-login-theme:hover { transform: translateY(-1px); border-color: var(--lg-accent-strong); }
-html.rx-login:root .rx-login-theme i { color: var(--lg-accent); font-size: 15px; }
+html.rx-login:root .rx-login-theme:hover,
+html.rx-portal:root .rx-login-theme:hover { transform: translateY(-1px); border-color: var(--lg-accent-strong); }
+html.rx-login:root .rx-login-theme i,
+html.rx-portal:root .rx-login-theme i { color: var(--lg-accent); font-size: 15px; }
 
 /* ---------- Keyboard focus ---------- */
 html.rx-login:root .login-card button:focus-visible,
 html.rx-login:root .login-card a:focus-visible,
 html.rx-login:root .footer-note a:focus-visible,
 html.rx-login:root .rx-login-theme:focus-visible,
+html.rx-portal:root .rx-login-theme:focus-visible,
 html.rx-login:root .login-card .remember input:focus-visible {
   outline: 3px solid var(--lg-accent-strong) !important;
   outline-offset: 2px !important;
@@ -372,4 +388,89 @@ html.rx-login:root .login-card .remember input:focus-visible {
 }
 @media (max-height: 640px) and (min-width: 481px) {
   html.rx-login:root body.login-page { align-items: flex-start !important; }
+}
+
+/* =====================================================================
+   Customer Portal (customer-portal.html) — same tokens, html.rx-portal
+   ===================================================================== */
+html.rx-portal:root,
+html.rx-portal:root body {
+  background: var(--lg-bg) !important;
+  color: var(--lg-text) !important;
+}
+html.rx-portal:root body {
+  background-image: var(--lg-bg-image) !important;
+  background-attachment: fixed !important;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+  padding: max(72px, calc(env(safe-area-inset-top) + 64px)) 16px max(24px, env(safe-area-inset-bottom)) !important;
+}
+html.rx-portal:root .panel,
+html.rx-portal:root .result {
+  background: var(--lg-card) !important;
+  border: 1px solid var(--lg-card-border) !important;
+  box-shadow: var(--lg-card-shadow) !important;
+  border-radius: 24px !important;
+  transition: background-color .25s ease, border-color .25s ease;
+}
+html.rx-portal:root .panel { padding: 32px !important; }
+html.rx-portal:root .brand img { width: 200px !important; max-width: 80% !important; height: auto !important; }
+html.rx-portal:root .brand .logo-dark { display: none !important; }
+html.rx-portal.rx-dark-shell:root .brand .logo-light { display: none !important; }
+html.rx-portal.rx-dark-shell:root .brand .logo-dark {
+  display: block !important; background: #FFFFFF; padding: 8px 14px; border-radius: 14px; width: 200px !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .3);
+}
+html.rx-portal:root .tag { color: var(--lg-accent) !important; font-size: 12px !important; font-weight: 700 !important; letter-spacing: .14em !important; margin-top: 12px !important; }
+html.rx-portal:root h1 { color: var(--lg-title) !important; font-size: 30px !important; line-height: 1.2 !important; margin: 20px 0 8px !important; }
+html.rx-portal:root .sub { color: var(--lg-muted) !important; font-size: 14px !important; line-height: 1.6 !important; margin: 0 0 24px !important; }
+html.rx-portal:root label { color: var(--lg-label) !important; font-size: 14px !important; font-weight: 600 !important; letter-spacing: 0 !important; margin: 16px 0 8px !important; display: block !important; }
+html.rx-portal:root #portalForm input {
+  width: 100% !important; height: 48px !important; min-height: 48px !important; max-height: 48px !important;
+  padding: 0 16px !important; border: 1.5px solid var(--lg-input-border) !important; border-radius: 12px !important;
+  background: var(--lg-input-bg) !important; background-image: none !important;
+  color: var(--lg-input-text) !important; -webkit-text-fill-color: var(--lg-input-text) !important;
+  caret-color: var(--lg-accent) !important; font-size: 16px !important; line-height: normal !important;
+  box-shadow: none !important; outline: none !important;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+html.rx-portal:root #portalForm input::placeholder { color: var(--lg-placeholder) !important; -webkit-text-fill-color: var(--lg-placeholder) !important; opacity: 1 !important; font-size: 15px !important; }
+html.rx-portal:root #portalForm input:hover { border-color: var(--lg-accent-strong) !important; }
+html.rx-portal:root #portalForm input:focus { background: var(--lg-input-bg-focus) !important; border-color: var(--lg-accent-strong) !important; box-shadow: 0 0 0 4px var(--lg-ring) !important; }
+html.rx-portal:root .btn {
+  width: 100% !important; height: 48px !important; min-height: 48px !important; margin-top: 24px !important;
+  border: 0 !important; border-radius: 12px !important; background: var(--lg-btn) !important; color: var(--lg-btn-text) !important;
+  font-size: 15px !important; font-weight: 700 !important; box-shadow: var(--lg-btn-shadow) !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important;
+}
+html.rx-portal:root .btn:hover:not(:disabled) { background: var(--lg-btn-hover) !important; transform: translateY(-1px) !important; }
+html.rx-portal:root .note { color: var(--lg-muted) !important; font-size: 12px !important; margin-top: 16px !important; }
+html.rx-portal:root .login-link { color: var(--lg-accent) !important; font-size: 14px !important; font-weight: 600 !important; margin-top: 16px !important; }
+html.rx-portal:root .login-link:hover { color: var(--lg-accent-strong) !important; text-decoration: underline; }
+html.rx-portal:root .empty { color: var(--lg-muted) !important; }
+html.rx-portal:root .empty i { color: var(--lg-accent) !important; }
+html.rx-portal:root .lang button { background: var(--lg-input-bg) !important; border: 1px solid var(--lg-input-border) !important; color: var(--lg-accent) !important; min-height: 36px; }
+html.rx-portal:root .lang button.active { background: var(--lg-btn) !important; color: #fff !important; border-color: transparent !important; }
+html.rx-portal:root .customer-name { color: var(--lg-title) !important; }
+html.rx-portal:root .business, html.rx-portal:root .row small { color: var(--lg-muted) !important; }
+html.rx-portal:root .chip { background: var(--lg-chip-bg) !important; color: var(--lg-pos) !important; }
+html.rx-portal:root .cards .card {
+  background: var(--lg-subcard) !important; border: 1px solid var(--lg-line) !important; border-radius: 16px !important;
+  box-shadow: none !important; transform: none !important; padding: 16px !important;
+}
+html.rx-portal:root .cards .card span { color: var(--lg-muted) !important; }
+html.rx-portal:root .cards .card strong { color: var(--lg-title) !important; }
+html.rx-portal:root .cards .pending strong { color: var(--lg-neg) !important; }
+html.rx-portal:root .cards .paid strong { color: var(--lg-pos) !important; }
+html.rx-portal:root .history { border-top: 1px solid var(--lg-line) !important; }
+html.rx-portal:root .history h2 { color: var(--lg-title) !important; }
+html.rx-portal:root .row { border-bottom: 1px solid var(--lg-line) !important; color: var(--lg-text) !important; }
+html.rx-portal:root .error { background: var(--lg-err-bg) !important; color: var(--lg-err-text) !important; border: 1px solid var(--lg-err-border) !important; }
+html.rx-portal:root .panel a:focus-visible,
+html.rx-portal:root .panel button:focus-visible { outline: 3px solid var(--lg-accent-strong) !important; outline-offset: 2px !important; }
+@media (max-width: 850px) {
+  html.rx-portal:root body { padding-top: max(72px, calc(env(safe-area-inset-top) + 64px)) !important; }
+  html.rx-portal:root .panel { padding: 24px 20px !important; }
+  html.rx-portal:root h1 { font-size: 26px !important; }
+  html.rx-portal:root .rx-login-theme { padding: 0; width: 44px; }
+  html.rx-portal:root .rx-login-theme span { display: none; }
 }

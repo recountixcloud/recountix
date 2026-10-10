@@ -1,15 +1,15 @@
 /* Recountix Boltise-inspired dark command-center theme.
    Loaded after the legacy unified CSS so existing selectors and JS keep working. */
 :root {
-  --rx-bg: #0B0F17;
-  --rx-surface: #111827;
-  --rx-surface-2: #131B2E;
-  --rx-row: #1E293B;
-  --rx-border: #334155;
-  --rx-border-soft: #1E293B;
+  --rx-bg: #1A2236;
+  --rx-surface: #232E45;
+  --rx-surface-2: #28344D;
+  --rx-row: #2E3B56;
+  --rx-border: #44536F;
+  --rx-border-soft: #2E3B56;
   --rx-text: #F8FAFC;
-  --rx-muted: #94A3B8;
-  --rx-subtle: #64748B;
+  --rx-muted: #AAB7CB;
+  --rx-subtle: #8393AC;
   --rx-violet: #7C3AED;
   --rx-indigo: #6366F1;
   --rx-emerald: #10B981;
@@ -17,8 +17,8 @@
   --rx-rose: #F43F5E;
 
   --brand-950: var(--rx-bg);
-  --brand-900: #0F172A;
-  --brand-800: #111827;
+  --brand-900: #1F2A40;
+  --brand-800: #232E45;
   --brand-700: var(--rx-indigo);
   --brand-600: var(--rx-violet);
   --brand-500: var(--rx-violet);
@@ -65,7 +65,7 @@ body::before {
     radial-gradient(circle at 18% 8%, rgba(124, 58, 237, .18), transparent 26rem),
     radial-gradient(circle at 88% 12%, rgba(99, 102, 241, .13), transparent 24rem),
     radial-gradient(circle at 72% 82%, rgba(16, 185, 129, .08), transparent 24rem),
-    linear-gradient(180deg, #0B0F17 0%, #090D14 100%);
+    linear-gradient(180deg, #1A2236 0%, #151C2D 100%);
 }
 
 .wrapper,
@@ -82,13 +82,13 @@ body::before {
 }
 
 .sidebar {
-  background: linear-gradient(180deg, rgba(17, 24, 39, .96), rgba(11, 15, 23, .98)) !important;
-  border-right: 1px solid rgba(51, 65, 85, .72) !important;
+  background: linear-gradient(180deg, rgba(35, 46, 69, .96), rgba(26, 34, 54, .98)) !important;
+  border-right: 1px solid rgba(68, 83, 111, .72) !important;
   box-shadow: 20px 0 60px rgba(0, 0, 0, .22) !important;
 }
 
 .sidebar .logo {
-  border-bottom-color: rgba(51, 65, 85, .8) !important;
+  border-bottom-color: rgba(68, 83, 111, .8) !important;
 }
 
 .sidebar .logo h2::before {
@@ -117,8 +117,8 @@ body::before {
 }
 
 .menu-toggle {
-  background: rgba(17, 24, 39, .92) !important;
-  border: 1px solid rgba(51, 65, 85, .9) !important;
+  background: rgba(35, 46, 69, .92) !important;
+  border: 1px solid rgba(68, 83, 111, .9) !important;
   color: var(--rx-text) !important;
   box-shadow: 0 18px 40px rgba(0, 0, 0, .36) !important;
 }
@@ -168,8 +168,8 @@ small {
 .rx-command-panel,
 .rx-risk-panel,
 .rx-roadmap-panel {
-  background: linear-gradient(180deg, rgba(17, 24, 39, .92), rgba(19, 27, 46, .9)) !important;
-  border: 1px solid rgba(51, 65, 85, .78) !important;
+  background: linear-gradient(180deg, rgba(35, 46, 69, .92), rgba(40, 52, 77, .9)) !important;
+  border: 1px solid rgba(68, 83, 111, .78) !important;
   border-radius: 16px !important;
   box-shadow: 0 22px 55px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255, 255, 255, .035) !important;
   backdrop-filter: blur(18px) saturate(1.15) !important;
@@ -253,8 +253,8 @@ button[type="submit"] {
 .cancel-btn,
 .action-btn,
 .vo-command-btn {
-  background: rgba(30, 41, 59, .74) !important;
-  border-color: rgba(51, 65, 85, .84) !important;
+  background: rgba(46, 59, 86, .74) !important;
+  border-color: rgba(68, 83, 111, .84) !important;
   color: var(--rx-text) !important;
 }
 
@@ -267,8 +267,8 @@ select,
 textarea,
 .search-box,
 .form-control {
-  background: rgba(11, 15, 23, .72) !important;
-  border-color: rgba(51, 65, 85, .88) !important;
+  background: rgba(26, 34, 54, .72) !important;
+  border-color: rgba(68, 83, 111, .88) !important;
   color: var(--rx-text) !important;
 }
 
@@ -287,28 +287,28 @@ textarea:focus,
 
 .table-responsive,
 .table-wrap {
-  border-color: rgba(51, 65, 85, .78) !important;
+  border-color: rgba(68, 83, 111, .78) !important;
 }
 
 table,
 td {
-  background: rgba(17, 24, 39, .8) !important;
+  background: rgba(35, 46, 69, .8) !important;
   color: var(--rx-text) !important;
 }
 
 thead,
 th {
-  background: rgba(30, 41, 59, .92) !important;
+  background: rgba(46, 59, 86, .92) !important;
   color: var(--rx-muted) !important;
-  border-bottom-color: rgba(51, 65, 85, .84) !important;
+  border-bottom-color: rgba(68, 83, 111, .84) !important;
 }
 
 td {
-  border-bottom-color: rgba(30, 41, 59, .86) !important;
+  border-bottom-color: rgba(46, 59, 86, .86) !important;
 }
 
 tbody tr:hover td {
-  background: rgba(30, 41, 59, .68) !important;
+  background: rgba(46, 59, 86, .68) !important;
 }
 
 .badge {
@@ -378,10 +378,10 @@ tbody tr:hover td {
 }
 
 .rx-status-pill {
-  border: 1px solid rgba(51, 65, 85, .9);
+  border: 1px solid rgba(68, 83, 111, .9);
   border-radius: 999px;
   color: var(--rx-muted);
-  background: rgba(30, 41, 59, .62);
+  background: rgba(46, 59, 86, .62);
   padding: 7px 10px;
   font-size: 11px;
   font-weight: 800;
@@ -389,8 +389,8 @@ tbody tr:hover td {
 }
 
 .rx-mini-card {
-  background: rgba(11, 15, 23, .62);
-  border: 1px solid rgba(51, 65, 85, .78);
+  background: rgba(26, 34, 54, .62);
+  border: 1px solid rgba(68, 83, 111, .78);
   border-radius: 14px;
   padding: 15px;
   min-width: 0;
@@ -423,7 +423,7 @@ tbody tr:hover td {
   gap: 12px;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(51, 65, 85, .62);
+  border-bottom: 1px solid rgba(68, 83, 111, .62);
 }
 
 .rx-aging-row:last-child {
@@ -455,10 +455,10 @@ tbody tr:hover td {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border: 1px solid rgba(51, 65, 85, .78);
+  border: 1px solid rgba(68, 83, 111, .78);
   border-radius: 16px;
   padding: 16px;
-  background: rgba(11, 15, 23, .58);
+  background: rgba(26, 34, 54, .58);
 }
 
 .rx-module-card i {
@@ -541,8 +541,8 @@ tbody tr:hover td {
 .rx-dark-shell [class*="hero"],
 .rx-dark-shell [class*="banner"]:not(.rx-ad-slot):not(#recountixAdSlot) {
   background:
-    linear-gradient(135deg, rgba(17, 24, 39, .96), rgba(15, 23, 42, .9)) !important;
-  border: 1px solid rgba(51, 65, 85, .72) !important;
+    linear-gradient(135deg, rgba(35, 46, 69, .96), rgba(31, 42, 64, .9)) !important;
+  border: 1px solid rgba(68, 83, 111, .72) !important;
   border-radius: 16px !important;
   color: var(--rx-text) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045), 0 22px 60px rgba(0, 0, 0, .24) !important;
@@ -716,7 +716,7 @@ tbody tr:hover td {
 .rx-dark-shell .login-card input,
 .rx-dark-shell .auth-card input,
 .rx-dark-shell .form-group input {
-  background-color: rgba(11, 15, 23, .86) !important;
+  background-color: rgba(26, 34, 54, .86) !important;
   background-image: none !important;
   color: #F8FAFC !important;
   caret-color: #A78BFA !important;
@@ -727,8 +727,8 @@ tbody tr:hover td {
 .rx-dark-shell input:-webkit-autofill:hover,
 .rx-dark-shell input:-webkit-autofill:focus,
 .rx-dark-shell input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #0B0F17 inset !important;
-  box-shadow: 0 0 0 1000px #0B0F17 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #1A2236 inset !important;
+  box-shadow: 0 0 0 1000px #1A2236 inset !important;
   -webkit-text-fill-color: #F8FAFC !important;
   caret-color: #A78BFA !important;
   border-color: rgba(124, 58, 237, .72) !important;
@@ -786,8 +786,8 @@ tbody tr:hover td {
 .rx-dark-shell [class*="toolbar"],
 .rx-dark-shell [class*="Toolbar"] {
   background:
-    linear-gradient(135deg, rgba(17, 24, 39, .97), rgba(19, 27, 46, .92)) !important;
-  border-color: rgba(51, 65, 85, .76) !important;
+    linear-gradient(135deg, rgba(35, 46, 69, .97), rgba(40, 52, 77, .92)) !important;
+  border-color: rgba(68, 83, 111, .76) !important;
   color: var(--rx-text) !important;
 }
 
@@ -1188,8 +1188,8 @@ tbody tr:hover td {
 }
 
 .rx-dark-shell .shell {
-  background: linear-gradient(180deg, rgba(17, 24, 39, .95), rgba(19, 27, 46, .9)) !important;
-  border: 1px solid rgba(51, 65, 85, .78) !important;
+  background: linear-gradient(180deg, rgba(35, 46, 69, .95), rgba(40, 52, 77, .9)) !important;
+  border: 1px solid rgba(68, 83, 111, .78) !important;
   box-shadow: 0 24px 70px rgba(0, 0, 0, .34) !important;
 }
 
@@ -1200,8 +1200,8 @@ tbody tr:hover td {
 .rx-dark-shell .profile-card,
 .rx-dark-shell body > .card,
 .rx-dark-shell .wrap > .card {
-  background: linear-gradient(180deg, rgba(17, 24, 39, .94), rgba(19, 27, 46, .9)) !important;
-  border: 1px solid rgba(51, 65, 85, .78) !important;
+  background: linear-gradient(180deg, rgba(35, 46, 69, .94), rgba(40, 52, 77, .9)) !important;
+  border: 1px solid rgba(68, 83, 111, .78) !important;
   color: var(--rx-text) !important;
   border-radius: 18px !important;
   box-shadow: 0 22px 60px rgba(0, 0, 0, .32) !important;
@@ -1209,8 +1209,8 @@ tbody tr:hover td {
 
 .rx-dark-shell .lang button,
 .rx-dark-shell .delete-btn {
-  background: rgba(15, 23, 42, .88) !important;
-  border: 1px solid rgba(51, 65, 85, .82) !important;
+  background: rgba(31, 42, 64, .88) !important;
+  border: 1px solid rgba(68, 83, 111, .82) !important;
   color: var(--rx-text) !important;
 }
 
@@ -1223,7 +1223,7 @@ tbody tr:hover td {
 .rx-dark-shell .backup-status,
 .rx-dark-shell .auto-backup-state,
 .rx-dark-shell .error {
-  border: 1px solid rgba(51, 65, 85, .76) !important;
+  border: 1px solid rgba(68, 83, 111, .76) !important;
   color: var(--rx-text) !important;
 }
 
@@ -1520,7 +1520,7 @@ html.rx-dark-shell body:has(.login-wrap) {
 .rx-dark-shell .backup-panel .summary-bar,
 .rx-dark-shell .backup-panel .panel-head,
 .rx-dark-shell .backup-panel .backup-head {
-  background: linear-gradient(135deg, rgba(17, 24, 39, .96), rgba(15, 23, 42, .9)) !important;
+  background: linear-gradient(135deg, rgba(35, 46, 69, .96), rgba(31, 42, 64, .9)) !important;
   border: 0 !important;
   color: var(--rx-text) !important;
   box-shadow: none !important;
@@ -1532,16 +1532,16 @@ html.rx-dark-shell body:has(.login-wrap) {
 .rx-dark-shell .content-box,
 .rx-dark-shell .table-section {
   background:
-    linear-gradient(180deg, rgba(17, 24, 39, .94), rgba(19, 27, 46, .9)) !important;
+    linear-gradient(180deg, rgba(35, 46, 69, .94), rgba(40, 52, 77, .9)) !important;
 }
 
 .rx-dark-shell ::-webkit-scrollbar-thumb {
   background: rgba(100, 116, 139, .72) !important;
-  border: 3px solid rgba(15, 23, 42, .98) !important;
+  border: 3px solid rgba(31, 42, 64, .98) !important;
 }
 
 .rx-dark-shell ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, .72) !important;
+  background: rgba(31, 42, 64, .72) !important;
 }
 
 .rx-dark-shell .content-box,
@@ -1572,7 +1572,7 @@ html.rx-dark-shell body:has(.login-wrap) {
 
 @media (max-width: 900px) {
   .rx-dark-shell body::before {
-    background: linear-gradient(180deg, #0B0F17 0%, #090D14 100%) !important;
+    background: linear-gradient(180deg, #1A2236 0%, #151C2D 100%) !important;
   }
 
   .rx-dark-shell .rx-live-clock,
@@ -1619,8 +1619,8 @@ html.rx-dark-shell body:has(.login-wrap) {
 }
 
 .topbar {
-  background: linear-gradient(180deg, rgba(17, 24, 39, .92), rgba(19, 27, 46, .9)) !important;
-  border: 1px solid rgba(51, 65, 85, .78) !important;
+  background: linear-gradient(180deg, rgba(35, 46, 69, .92), rgba(40, 52, 77, .9)) !important;
+  border: 1px solid rgba(68, 83, 111, .78) !important;
   border-radius: 16px !important;
   box-shadow: 0 22px 55px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255, 255, 255, .035) !important;
   overflow: hidden !important;
@@ -1650,8 +1650,8 @@ html.rx-dark-shell body:has(.login-wrap) {
 }
 @media (max-width: 640px) {
   .topbar {
-    background: linear-gradient(180deg, rgba(17, 24, 39, .94), rgba(19, 27, 46, .92)) !important;
-    border-color: rgba(51, 65, 85, .82) !important;
+    background: linear-gradient(180deg, rgba(35, 46, 69, .94), rgba(40, 52, 77, .92)) !important;
+    border-color: rgba(68, 83, 111, .82) !important;
     box-shadow: 0 18px 46px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .035) !important;
   }
 }
