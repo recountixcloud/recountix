@@ -467,24 +467,19 @@ async function optimizeWebsite(){
   const btn=document.getElementById('optimizeWebsiteBtn');
   const old=btn?btn.innerHTML:'';
   try{
-    if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Optimizing...';}
-    if('caches' in window){
-      const keys=await caches.keys();
-      await Promise.all(keys.map(k=>caches.delete(k)));
-    }
+    if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Updating speed cache...';}
     if('serviceWorker' in navigator){
       const regs=await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r=>r.unregister()));
+      await Promise.all(regs.map(reg=>reg.update().catch(()=>{})));
     }
     sessionStorage.setItem('rx_optimized_at', new Date().toISOString());
-    alert('Website optimized. Fresh fast version will load now.');
+    alert('Speed cache refreshed. Reload the website once to apply the faster asset cache.');
     location.reload();
   }catch(e){
-    alert('Optimize failed: '+(e&&e.message?e.message:e));
+    alert('Speed refresh failed: '+(e&&e.message?e.message:e));
     if(btn){btn.disabled=false;btn.innerHTML=old;}
   }
-}
-</script>
+}</script>
 
 <script src="js/rx-design-system.js?v=ds-1"></script>
 </body>
