@@ -602,3 +602,100 @@ html:not(.rx-dark-shell) body .sidebar .menu a[aria-current="page"] {
     overflow-x: clip !important;
   }
 }
+
+
+/* LIGHT MODE FIX v3: readable action-button text across every page. */
+html:not(.rx-dark-shell) body button,
+html:not(.rx-dark-shell) body button *,
+html:not(.rx-dark-shell) body .add-btn,
+html:not(.rx-dark-shell) body .add-btn *,
+html:not(.rx-dark-shell) body .btn,
+html:not(.rx-dark-shell) body .btn *,
+html:not(.rx-dark-shell) body .action-btn,
+html:not(.rx-dark-shell) body .action-btn *,
+html:not(.rx-dark-shell) body input[type="button"],
+html:not(.rx-dark-shell) body input[type="submit"],
+html:not(.rx-dark-shell) body input[type="reset"] {
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: none !important;
+}
+html:not(.rx-dark-shell) body .add-btn,
+html:not(.rx-dark-shell) body .btn-primary,
+html:not(.rx-dark-shell) body .btn-success,
+html:not(.rx-dark-shell) body .action-btn,
+html:not(.rx-dark-shell) body button[type="submit"],
+html:not(.rx-dark-shell) body button.save-btn,
+html:not(.rx-dark-shell) body .customer-toolbar button,
+html:not(.rx-dark-shell) body #agingFilterBar button {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+html:not(.rx-dark-shell) body .add-btn *,
+html:not(.rx-dark-shell) body .btn-primary *,
+html:not(.rx-dark-shell) body .btn-success *,
+html:not(.rx-dark-shell) body .action-btn *,
+html:not(.rx-dark-shell) body button[type="submit"] *,
+html:not(.rx-dark-shell) body button.save-btn *,
+html:not(.rx-dark-shell) body #agingFilterBar button * {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+html:not(.rx-dark-shell) body .rc-view-details,
+html:not(.rx-dark-shell) body .rc-compact-actions button,
+html:not(.rx-dark-shell) body .table-section .summary-bar button {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  background: linear-gradient(135deg,#087F5B,#20A878) !important;
+  border: 1px solid #087F5B !important;
+  box-shadow: 0 4px 0 rgba(8,100,69,.14),0 8px 16px rgba(24,83,59,.14) !important;
+}
+html:not(.rx-dark-shell) body :is(p,span,small,label,td,th,.page-subtitle,.helper,.hint,.stat-label,.form-text,.text-muted) {
+  color: #38584F;
+  -webkit-text-fill-color: currentColor;
+}
+html:not(.rx-dark-shell) body input::placeholder,
+html:not(.rx-dark-shell) body textarea::placeholder {
+  color: #60796F !important;
+  -webkit-text-fill-color: #60796F !important;
+  opacity: 1 !important;
+}
+
+/* Keep the collapsed desktop rail genuinely icon-only; expanded mode gets full labels. */
+@media (min-width: 768px) {
+  html:not(.rx-dark-shell) body:not(.rx-collapsed) .sidebar {
+    width: var(--sidebar-w,248px) !important;
+    min-width: var(--sidebar-w,248px) !important;
+    max-width: var(--sidebar-w,248px) !important;
+  }
+  html:not(.rx-dark-shell) body:not(.rx-collapsed) .main-content {
+    margin-left: var(--sidebar-w,248px) !important;
+    width: calc(100% - var(--sidebar-w,248px)) !important;
+  }
+  html:not(.rx-dark-shell) body.rx-collapsed .sidebar {
+    width: var(--sidebar-w-collapsed,64px) !important;
+    min-width: var(--sidebar-w-collapsed,64px) !important;
+    max-width: var(--sidebar-w-collapsed,64px) !important;
+  }
+  html:not(.rx-dark-shell) body.rx-collapsed .main-content {
+    margin-left: var(--sidebar-w-collapsed,64px) !important;
+    width: calc(100% - var(--sidebar-w-collapsed,64px)) !important;
+  }
+  html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a i,
+  html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a .fa-solid,
+  html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a .fa-regular,
+  html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a .fa-brands {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    color: #087F5B !important;
+    -webkit-text-fill-color: #087F5B !important;
+    font-size: 17px !important;
+  }
+  html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a span,
+  html:not(.rx-dark-shell) body.rx-collapsed .sidebar .logo p {
+    display: none !important;
+  }
+}
