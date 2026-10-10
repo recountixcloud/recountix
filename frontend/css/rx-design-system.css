@@ -876,3 +876,96 @@ html:not(.rx-dark-shell) body :is(.badge,.pill,.status-badge) {
     box-shadow:0 2px 4px rgba(22,75,54,.035),0 5px 14px rgba(22,75,54,.055),inset 0 1px 0 rgba(255,255,255,.9) !important;
   }
 }
+
+
+/* Accessibility/contrast hotfix — light theme, shared by all frontend pages.
+   Keep this block last so page-specific component rules cannot mute text. */
+html:not(.rx-dark-shell) body {
+  color: #173D32 !important;
+  background-color: #F0FAF5 !important;
+}
+html:not(.rx-dark-shell) body :is(h1,h2,h3,h4,h5,h6,p,label,small,span,li,td,th,.form-label,.card-title,.card-text,.text-muted,.subtitle,.description) {
+  color: #24483D;
+}
+html:not(.rx-dark-shell) body :is(input,select,textarea) {
+  color: #173D32 !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #B9D8CA !important;
+}
+html:not(.rx-dark-shell) body :is(input,select,textarea)::placeholder {
+  color: #61786F !important;
+  opacity: 1 !important;
+}
+html:not(.rx-dark-shell) body :is(button,.btn,a.btn,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]) {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  text-shadow: 0 1px 1px rgba(0,45,31,.18) !important;
+}
+html:not(.rx-dark-shell) body :is(button,.btn,a.btn,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]) :is(span,i,strong,b,svg) {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+html:not(.rx-dark-shell) body :is(.btn-success,.btn-primary,.btn-green,.save-btn,.action-btn,.menu-toggle,button[type="submit"],input[type="submit"]) {
+  background: linear-gradient(145deg,#087F5B 0%,#11966B 55%,#087653 100%) !important;
+  border: 1px solid #087653 !important;
+  box-shadow: 0 3px 0 #C0DED0,0 6px 14px rgba(8,83,59,.18),inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+html:not(.rx-dark-shell) body :is(.btn-success,.btn-primary,.btn-green,.save-btn,.action-btn,button[type="submit"],input[type="submit"]):hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+html:not(.rx-dark-shell) body :is(.card,.content-box,.table-section,.summary-card,.stat-card,.metric-card,.form-card,.panel,.modal-content,.settings-card,.customer-card,.dashboard-card,.report-card,.section-card) {
+  background: linear-gradient(145deg,#FFFFFF 0%,#FBFEFC 100%) !important;
+  color: #173D32 !important;
+  border: 1px solid #D0E5DA !important;
+  box-shadow: 0 2px 5px rgba(22,75,54,.045),0 8px 20px rgba(22,75,54,.075),inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+html:not(.rx-dark-shell) body :is(.card,.content-box,.table-section,.summary-card,.stat-card,.metric-card,.form-card,.panel,.modal-content,.settings-card,.customer-card,.dashboard-card,.report-card,.section-card) :is(h1,h2,h3,h4,h5,h6,p,label,small,span,li,td,th,.form-label,.card-title,.card-text,.text-muted,.subtitle,.description) {
+  color: #24483D !important;
+}
+html:not(.rx-dark-shell) body .sidebar {
+  background: linear-gradient(180deg,#FFFFFF 0%,#EAF7F0 100%) !important;
+  border-right: 1px solid #C7E2D4 !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a {
+  display: flex !important;
+  align-items: center !important;
+  color: #24483D !important;
+  gap: 10px !important;
+}
+html:not(.rx-dark-shell) body .sidebar .menu a i,
+html:not(.rx-dark-shell) body .sidebar .menu a svg,
+html:not(.rx-dark-shell) body .sidebar .menu a .icon {
+  display: inline-flex !important;
+  flex: 0 0 22px !important;
+  width: 22px !important;
+  min-width: 22px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: #087F5B !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a,
+html:not(.rx-dark-shell) body.sidebar-collapsed .sidebar .menu a,
+html:not(.rx-dark-shell) body .sidebar.collapsed .menu a {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a :is(span,.menu-text,.label),
+html:not(.rx-dark-shell) body.sidebar-collapsed .sidebar .menu a :is(span,.menu-text,.label),
+html:not(.rx-dark-shell) body .sidebar.collapsed .menu a :is(span,.menu-text,.label) {
+  display: none !important;
+}
+@media (max-width: 767px) {
+  html:not(.rx-dark-shell) body .sidebar .menu a {
+    color: #24483D !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar .menu a i,
+  html:not(.rx-dark-shell) body .sidebar .menu a svg {
+    color: #087F5B !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
