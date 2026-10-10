@@ -1,5 +1,5 @@
 /* Recountix performance service worker: cache static assets, refresh page HTML. */
-const CACHE_NAME = 'recountix-assets-20261010-4';
+const CACHE_NAME = 'recountix-assets-20261010-5';
 const CORE = ['./', './index.html', './login.html', './dashboard.html', './manifest.json'];
 
 self.addEventListener('install', event => {

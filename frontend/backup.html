@@ -16,7 +16,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co wss://niroqvhpyrwulzwiyctl.supabase.co; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0B0F17">
+<meta name="theme-color" content="#1A2236">
 <title>Offline Backup | Recountix</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,12 +28,12 @@
 <link rel="stylesheet" href="css/rx-design-system.css?v=ds-1">
 <style>
 .backup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.backup-panel{background:linear-gradient(180deg, rgba(17, 24, 39, .92), rgba(19, 27, 46, .9));border:1px solid rgba(51, 65, 85, .78);border-radius:18px;padding:22px;box-shadow:0 12px 34px rgba(0,0,0,.3)}
+.backup-panel{background:linear-gradient(180deg, rgba(35, 46, 69, .92), rgba(40, 52, 77, .9));border:1px solid rgba(68, 83, 111, .78);border-radius:18px;padding:22px;box-shadow:0 12px 34px rgba(0,0,0,.3)}
 .backup-panel h2{margin:0 0 7px;color:#F8FAFC}
 .backup-panel p{color:#94A3B8}
 .backup-panel label{display:block;margin:13px 0 6px;font-weight:700;color:#94A3B8}
 .backup-panel input,.backup-panel select{width:100%}
-.backup-status{margin:16px 0;padding:13px 15px;border-radius:12px;background:rgba(30, 41, 59, .62);border:1px solid rgba(51, 65, 85, .9);color:#F8FAFC}
+.backup-status{margin:16px 0;padding:13px 15px;border-radius:12px;background:rgba(46, 59, 86, .62);border:1px solid rgba(68, 83, 111, .9);color:#F8FAFC}
 .backup-status.success{background:rgba(16, 185, 129, .14);color:#6EE7B7;border-color:rgba(16, 185, 129, .4)}
 .backup-status.error{background:rgba(244, 63, 94, .12);color:#FDA4AF;border-color:rgba(244, 63, 94, .4)}
 .backup-note{margin-top:16px;font-size:12px;color:#64748B}
@@ -43,7 +43,7 @@
 .delete-btn{border:1px solid rgba(244, 63, 94, .6);background:rgba(244, 63, 94, .12);color:#FDA4AF;border-radius:8px;padding:9px 12px;font-weight:700;cursor:pointer}
 .delete-btn:hover{background:rgba(244, 63, 94, .24)}
 @media(max-width:760px){.backup-actions{min-width:170px}}
-.auto-backup-state{margin-top:12px;padding:10px 12px;border-radius:9px;background:rgba(30, 41, 59, .62);color:#F8FAFC;font-size:13px;font-weight:700;border:1px solid rgba(51, 65, 85, .8)}
+.auto-backup-state{margin-top:12px;padding:10px 12px;border-radius:9px;background:rgba(46, 59, 86, .62);color:#F8FAFC;font-size:13px;font-weight:700;border:1px solid rgba(68, 83, 111, .8)}
 .auto-backup-state.success{background:rgba(16, 185, 129, .14);color:#6EE7B7}
 .auto-backup-state.failed{background:rgba(244, 63, 94, .12);color:#FDA4AF}
 .auto-backup-state.waiting,.auto-backup-state.pending{background:rgba(245, 158, 11, .14);color:#FCD34D}
