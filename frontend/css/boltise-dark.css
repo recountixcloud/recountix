@@ -2235,3 +2235,54 @@ html:not(.rx-dark-shell) table td {
   border-color:#D9EDE2 !important;
 }
 html:not(.rx-dark-shell) .sidebar-overlay.show { background:rgba(13,49,38,.32) !important; }
+
+/* Theme switcher: show both Light and Dark choices side-by-side. */
+.rx-theme-toggle {
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:4px !important;
+  padding:4px !important;
+  min-height:40px !important;
+  border:1px solid #D0E1D8 !important;
+  border-radius:13px !important;
+  background:#E8F3ED !important;
+  color:#244D40 !important;
+  box-shadow:0 3px 10px rgba(20,65,45,.08) !important;
+  cursor:pointer !important;
+  white-space:nowrap !important;
+}
+.rx-theme-toggle .rx-theme-choice {
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  min-height:30px !important;
+  padding:5px 10px !important;
+  border-radius:9px !important;
+  color:#365D4F !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+  line-height:1 !important;
+}
+.rx-theme-toggle .rx-theme-choice i { font-size:13px !important; }
+.rx-theme-toggle .rx-theme-choice.is-active {
+  color:#FFFFFF !important;
+  background:#087F5B !important;
+  box-shadow:0 2px 6px rgba(8,127,91,.2) !important;
+}
+html.rx-dark-shell .rx-theme-toggle {
+  background:#111B2B !important;
+  border-color:#334155 !important;
+  color:#E2E8F0 !important;
+  box-shadow:0 3px 12px rgba(0,0,0,.24) !important;
+}
+html.rx-dark-shell .rx-theme-toggle .rx-theme-choice { color:#B7C4D8 !important; }
+html.rx-dark-shell .rx-theme-toggle .rx-theme-choice.is-active {
+  color:#FFFFFF !important;
+  background:#475569 !important;
+  box-shadow:0 2px 7px rgba(0,0,0,.22) !important;
+}
+@media(max-width:767px) {
+  .rx-theme-toggle { min-height:38px !important; gap:2px !important; padding:3px !important; }
+  .rx-theme-toggle .rx-theme-choice { padding:5px 7px !important; gap:4px !important; font-size:11px !important; }
+}
