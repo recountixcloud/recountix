@@ -324,3 +324,34 @@ window.showToast = showToast;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true});
   else init();
 })();
+
+
+/* Inline menu-button compatibility for mobile pages using onclick="rxForceToggleMenu(event)". */
+window.rxForceToggleMenu = function (event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+  }
+  var side = document.querySelector('.sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var btn = document.getElementById('menuToggle');
+  if (!side) return;
+  var opening = !side.classList.contains('rx-force-open');
+  side.classList.toggle('rx-force-open', opening);
+  side.classList.toggle('open', opening);
+  side.setAttribute('aria-hidden', opening ? 'false' : 'true');
+  if ('inert' in side) side.inert = !opening;
+  if (overlay) {
+    overlay.classList.toggle('rx-force-show', opening);
+    overlay.classList.toggle('show', opening);
+  }
+  document.documentElement.classList.toggle('sidebar-open', opening);
+  document.body.classList.toggle('sidebar-open', opening);
+  document.body.style.overflow = opening ? 'hidden' : '';
+  if (btn) {
+    btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    btn.setAttribute('aria-label', opening ? 'Close menu' : 'Open menu');
+    btn.textContent = opening ? '✕' : '☰';
+  }
+};
