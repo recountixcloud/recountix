@@ -35,7 +35,25 @@ function nums(m){return String(m||'').replace(/\D/g,'').slice(-10)}
 function waUrl(c){const m=nums(c.mobile);const text=`Hello ${c.name||''}, your pending amount is ${money(c.outstanding)}. Please contact us regarding payment or follow-up.`;return m?'https://wa.me/91'+m+'?text='+encodeURIComponent(text):'#'}
 function applyRoleUI(){const role=String(session().role||'user').toLowerCase();document.body.dataset.role=role;document.querySelectorAll('.menu a').forEach(a=>{const h=(a.getAttribute('href')||'').toLowerCase();if((role==='user'||role==='agent'||role==='field_agent')&&((h.includes('settings.html')&&!(window.rxCan&&rxCan('settings')))||h.includes('companies.html')||h.includes('subscription.html')))a.closest('li')?.classList.add('vo-role-hidden')});}
 function metrics(){const list=(typeof customers!=='undefined'&&Array.isArray(customers))?customers:[];const rec=(typeof recoveries!=='undefined'&&Array.isArray(recoveries))?recoveries:[];const t=day();let overdue=0,follow=0,out=0;list.forEach(c=>{out+=Number(c.outstanding||0);const f=String(c.followup||c.dueDate||'').slice(0,10);if(f===t)follow++;if(f&&f<t&&Number(c.outstanding||0)>0)overdue++});let recovered=rec.filter(r=>String(r.date||r.recovery_date||'').slice(0,10)===t).reduce((a,r)=>a+Number(r.amount||0),0);return{list,rec,t,overdue,follow,out,recovered}}
-async function ptpMetrics(){try{if(typeof sbGetPtp!=='function')return{today:0,broken:0,rows:[]};const sid=session().shopId||null;if(!sid)return{today:0,broken:0,rows:[]};const rows=await sbGetPtp(sid,'all');const t=day();return{today:rows.filter(x=>String(x.promised_date).slice(0,10)===t&&String(x.status||'open')==='open').length,broken:rows.filter(x=>String(x.promised_date).slice(0,10)<t&&String(x.status||'open')==='open').length,rows}}catch(e){return{today:0,broken:0,rows:[]}}}
+let __rxPtpMetricsCache=null,__rxPtpMetricsAt=0,__rxPtpMetricsPending=null;
+async function ptpMetrics(force=false){
+  const now=Date.now();
+  if(!force&&__rxPtpMetricsCache&&now-__rxPtpMetricsAt<60000)return __rxPtpMetricsCache;
+  if(__rxPtpMetricsPending)return __rxPtpMetricsPending;
+  __rxPtpMetricsPending=(async()=>{
+    try{
+      if(typeof sbGetPtp!=='function')return{today:0,broken:0,rows:[]};
+      const sid=session().shopId||null;
+      if(!sid)return{today:0,broken:0,rows:[]};
+      const rows=await sbGetPtp(sid,'all');
+      const t=day();
+      return{today:rows.filter(x=>String(x.promised_date).slice(0,10)===t&&String(x.status||'open')==='open').length,broken:rows.filter(x=>String(x.promised_date).slice(0,10)<t&&String(x.status||'open')==='open').length,rows};
+    }catch(e){return __rxPtpMetricsCache||{today:0,broken:0,rows:[]};}
+    finally{__rxPtpMetricsAt=Date.now();}
+  })();
+  try{__rxPtpMetricsCache=await __rxPtpMetricsPending;return __rxPtpMetricsCache;}
+  finally{__rxPtpMetricsPending=null;}
+}
 async function enhanceDashboard(){if(!document.getElementById('totalCustomers'))return;const m=metrics(),p=await ptpMetrics();let k=document.getElementById('voFinalKpis');if(!k){k=document.createElement('section');k.id='voFinalKpis';k.className='vo-final-kpis';const anchor=document.querySelector('.dashboard-grid');anchor?.insertAdjacentElement('afterend',k)}k.innerHTML=`<div class="vo-final-kpi danger"><span>Overdue Accounts</span><strong>${m.overdue}</strong><small>Follow-up date already passed</small></div><div class="vo-final-kpi warn"><span>Promise to Pay Today</span><strong>${p.today}</strong><small>Commitments due today</small></div><div class="vo-final-kpi danger"><span>Missed Promises</span><strong>${p.broken}</strong><small>Open PTP past promised date</small></div>`;
 let panel=document.getElementById('voTodayPanel');if(!panel){panel=document.createElement('section');panel.id='voTodayPanel';panel.className='vo-today-panel';const cmd=document.querySelector('.vo-command-strip')||k;cmd.insertAdjacentElement('afterend',panel)}
 const rows=m.list.filter(c=>{const f=String(c.followup||c.dueDate||'').slice(0,10);return Number(c.outstanding||0)>0&&(f===m.t||f<m.t)}).sort((a,b)=>String(a.followup||'').localeCompare(String(b.followup||''))).slice(0,12);
@@ -57,8 +75,15 @@ async function run(){
   if(document.getElementById('totalCustomers')) await enhanceDashboard();
 }
 window.addEventListener('load',()=>idle(run,450));
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&document.getElementById('totalCustomers')) idle(enhanceDashboard,250)});
-if(document.getElementById('totalCustomers')) setInterval(()=>{if(!document.hidden)enhanceDashboard()},60000);
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&document.getElementById('totalCustomers')){
+    // Repaint from memory when returning to the tab; PTP results are cached for 60 seconds.
+    idle(enhanceDashboard,250);
+  }
+});
+if(document.getElementById('totalCustomers')) setInterval(()=>{
+  if(!document.hidden&&!document.querySelector('[data-rx-editing="true"]')) idle(enhanceDashboard,100);
+},120000);
 })();
 
 /* Recountix Rc.0.05 — Compact data views: overview first, details on demand */
