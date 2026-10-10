@@ -1871,3 +1871,107 @@ html:not(.rx-dark-shell) .rx-theme-toggle {
   color:#0A332C !important;
   border-color:#B8DCCF !important;
 }
+
+
+/* Recountix mobile drawer fix — keep the sidebar closed until the menu is tapped.
+   This final override intentionally takes precedence over older desktop pointer rules. */
+@media screen and (max-width: 640px) {
+  html body .sidebar,
+  html body .sidebar.open,
+  html body .sidebar[aria-hidden="true"] {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: min( min(86vw, 320px), calc(100vw - 56px) ) !important;
+    min-width: 0 !important;
+    max-width: calc(100vw - 56px) !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    transform: translateX(-110%) !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: 1200 !important;
+    transition: transform .25s ease, opacity .2s ease, visibility .2s ease !important;
+  }
+
+  html body .sidebar.open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  html body .menu-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: fixed !important;
+    left: 14px !important;
+    top: 14px !important;
+    width: 44px !important;
+    height: 44px !important;
+    z-index: 1300 !important;
+  }
+
+  html body .sidebar-overlay {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1190 !important;
+    background: rgba(8, 13, 27, .58) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  html body .sidebar-overlay.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  html body .main-content,
+  html body .rx-dark-shell .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 72px 14px 28px !important;
+    overflow-x: clip !important;
+  }
+
+  html body .wrapper {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: clip !important;
+  }
+
+  html body .topbar {
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  html body .dashboard-grid,
+  html body .rx-metric-grid,
+  html body .rx-risk-grid,
+  html body .dashboard-analytics,
+  html body .vo-command-grid,
+  html body .rx-roadmap-grid,
+  html body .rx-dashboard-nav {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  html.sidebar-open,
+  html body.sidebar-open {
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body .sidebar { transition: none !important; }
+}
