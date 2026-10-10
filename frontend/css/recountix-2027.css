@@ -470,3 +470,63 @@ tbody tr:hover td{ background:var(--bg) !important; }
 .rx-ad-cta{ align-self:center; position:relative; z-index:3; margin-right:18px; padding:9px 14px; border-radius:var(--radius-sm); background:var(--brand-700); color:#fff; font-size:12px; font-weight:800; white-space:nowrap; }
 .rx-ad-media{ display:none; position:absolute; inset:0; overflow:hidden; background:var(--brand-100); }
 .rx-ad-image{ display:block; width:100%; height:100
+
+
+/* Recountix usability patch — responsive buttons, clean labels, report landscape */
+button, input[type="button"], input[type="submit"], input[type="reset"],
+.btn, .action-btn, .vo-command-btn {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+button, input[type="button"], input[type="submit"], input[type="reset"],
+.btn, .action-btn {
+  line-height: 1.25;
+}
+@media (max-width: 760px) {
+  button, input[type="button"], input[type="submit"], input[type="reset"],
+  .btn, .action-btn, .vo-command-btn {
+    white-space: normal !important;
+    min-height: 44px;
+    max-width: 100%;
+  }
+  .button-group, .btn-group, .form-actions, .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+  .button-group > *, .btn-group > *, .form-actions > *, .action-buttons > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+/* Remove low-priority explanatory microcopy inside action buttons. */
+button small, .btn small, .action-btn small, .vo-command-btn small,
+button .button-hint, .btn .button-hint, .action-btn .button-hint {
+  display: none !important;
+}
+/* Collection Analytics: wide, landscape-style workspace on desktop. */
+@media (min-width: 1000px) {
+  .analytics-landscape,
+  .dashboard-grid > .content-box:has(#analyticsCards) {
+    width: 100%;
+    max-width: 100%;
+  }
+  #analyticsCards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .dashboard-grid > .content-box:has(#analyticsCards) .table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+@media (max-width: 999px) {
+  #analyticsCards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  #analyticsCards { grid-template-columns: minmax(0, 1fr); }
+}
