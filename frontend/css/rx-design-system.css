@@ -334,3 +334,107 @@ body.rx-collapsed{ --sidebar-w:var(--sidebar-w-collapsed); }
   :root:root *::before,
   :root:root *::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
 }
+
+/* Light-mode readability fix: sidebar navigation and its icon/round backgrounds.
+   Intentionally scoped to light mode so the dark theme remains unchanged. */
+html:not(.rx-dark-shell):root:root .sidebar,
+html:not(.rx-dark-shell):root:root .sidebar .menu {
+  color:#153D32 !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu li {
+  background:transparent !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a,
+html:not(.rx-dark-shell):root:root .sidebar .menu a:link,
+html:not(.rx-dark-shell):root:root .sidebar .menu a:visited {
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  min-height:42px !important;
+  margin:3px 6px !important;
+  padding:10px 12px !important;
+  border-radius:10px !important;
+  background:transparent !important;
+  color:#244D40 !important;
+  text-shadow:none !important;
+  box-shadow:none !important;
+  font-weight:500 !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a span {
+  color:#244D40 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  text-shadow:none !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a i,
+html:not(.rx-dark-shell):root:root .sidebar .menu a svg {
+  flex:0 0 20px !important;
+  width:20px !important;
+  color:#087F5B !important;
+  fill:currentColor !important;
+  opacity:1 !important;
+  filter:none !important;
+  text-shadow:none !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a:hover {
+  background:#E7F7EE !important;
+  color:#075C45 !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a:hover span,
+html:not(.rx-dark-shell):root:root .sidebar .menu a:hover i {
+  color:#075C45 !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a.active,
+html:not(.rx-dark-shell):root:root .sidebar .menu a[aria-current="page"] {
+  background:#D7F2E3 !important;
+  color:#064E3B !important;
+  box-shadow:inset 3px 0 0 #0B966B !important;
+  font-weight:700 !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a.active span,
+html:not(.rx-dark-shell):root:root .sidebar .menu a.active i,
+html:not(.rx-dark-shell):root:root .sidebar .menu a[aria-current="page"] span,
+html:not(.rx-dark-shell):root:root .sidebar .menu a[aria-current="page"] i {
+  color:#064E3B !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .logo h2 {
+  color:#153D32 !important;
+  text-shadow:none !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .logo p {
+  color:#527468 !important;
+}
+html:not(.rx-dark-shell):root:root .rx-collapse-btn,
+html:not(.rx-dark-shell):root:root .rx-collapse-btn button {
+  background:#DDF5E8 !important;
+  border-color:#B9E4CD !important;
+  color:#075C45 !important;
+}
+html:not(.rx-dark-shell):root:root .rx-collapse-btn button:hover {
+  background:#C9EEDB !important;
+  color:#064E3B !important;
+}
+html:not(.rx-dark-shell):root:root .rx-collapse-btn button i,
+html:not(.rx-dark-shell):root:root .rx-collapse-btn button span {
+  color:inherit !important;
+}
+/* Replace dim charcoal KPI tiles with readable pale-green surfaces in light mode. */
+html:not(.rx-dark-shell):root:root .vo-kpi,
+html:not(.rx-dark-shell):root:root .vo-final-kpi,
+html:not(.rx-dark-shell):root:root .vo-today-panel,
+html:not(.rx-dark-shell):root:root .rx-kpi,
+html:not(.rx-dark-shell):root:root .kpi-card {
+  background:linear-gradient(180deg,#FFFFFF 0%,#EAF7F0 100%) !important;
+  border:1px solid #C9E5D6 !important;
+  color:#153D32 !important;
+  box-shadow:0 8px 22px rgba(21,61,50,.07) !important;
+}
+html:not(.rx-dark-shell):root:root .vo-kpi *,
+html:not(.rx-dark-shell):root:root .vo-final-kpi *,
+html:not(.rx-dark-shell):root:root .vo-today-panel *,
+html:not(.rx-dark-shell):root:root .rx-kpi *,
+html:not(.rx-dark-shell):root:root .kpi-card * {
+  text-shadow:none !important;
+}
