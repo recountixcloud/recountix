@@ -267,3 +267,72 @@ html:not(.rx-dark-shell) .sidebar .menu a:hover {
   color:#064E3B !important;
   -webkit-text-fill-color:#064E3B !important;
 }
+
+/* Light-mode readability correction for the feature/action cards shown on mobile. */
+html:not(.rx-dark-shell) .rx-nav-card,
+html:not(.rx-dark-shell) .rx-nav-card:hover,
+html:not(.rx-dark-shell) .vo-command-btn,
+html:not(.rx-dark-shell) .vo-command-btn:hover,
+html:not(.rx-dark-shell) .action-card,
+html:not(.rx-dark-shell) .feature-card,
+html:not(.rx-dark-shell) .command-card,
+html:not(.rx-dark-shell) .quick-action-card {
+  background:#FFFFFF !important;
+  background-image:linear-gradient(145deg,#FFFFFF 0%,#EAF8F0 100%) !important;
+  border:1px solid #B9E4CD !important;
+  color:#153D32 !important;
+  opacity:1 !important;
+  filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+  box-shadow:0 6px 18px rgba(21,61,50,.08) !important;
+}
+html:not(.rx-dark-shell) .rx-nav-card *,
+html:not(.rx-dark-shell) .vo-command-btn *,
+html:not(.rx-dark-shell) .action-card *,
+html:not(.rx-dark-shell) .feature-card *,
+html:not(.rx-dark-shell) .command-card *,
+html:not(.rx-dark-shell) .quick-action-card * {
+  color:#244D40 !important;
+  -webkit-text-fill-color:#244D40 !important;
+  text-shadow:none !important;
+  opacity:1 !important;
+  filter:none !important;
+}
+html:not(.rx-dark-shell) .rx-nav-card h1,
+html:not(.rx-dark-shell) .rx-nav-card h2,
+html:not(.rx-dark-shell) .rx-nav-card h3,
+html:not(.rx-dark-shell) .rx-nav-card h4,
+html:not(.rx-dark-shell) .rx-nav-card strong,
+html:not(.rx-dark-shell) .rx-nav-card b,
+html:not(.rx-dark-shell) .rx-nav-card a,
+html:not(.rx-dark-shell) .vo-command-btn strong,
+html:not(.rx-dark-shell) .action-card h3,
+html:not(.rx-dark-shell) .feature-card h3 {
+  color:#075C45 !important;
+  -webkit-text-fill-color:#075C45 !important;
+}
+html:not(.rx-dark-shell) .rx-nav-card .icon,
+html:not(.rx-dark-shell) .rx-nav-card i,
+html:not(.rx-dark-shell) .rx-nav-card svg,
+html:not(.rx-dark-shell) .vo-command-btn i,
+html:not(.rx-dark-shell) .vo-command-btn svg {
+  color:#087F5B !important;
+  fill:currentColor !important;
+  opacity:1 !important;
+  filter:none !important;
+}
+/* Make text in all light-mode cards legible, including cards with inline colors. */
+html:not(.rx-dark-shell) .card,
+html:not(.rx-dark-shell) .content-box,
+html:not(.rx-dark-shell) .analytics-panel,
+html:not(.rx-dark-shell) .backup-panel {
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+html:not(.rx-dark-shell) .card p,
+html:not(.rx-dark-shell) .card span,
+html:not(.rx-dark-shell) .content-box p,
+html:not(.rx-dark-shell) .analytics-panel p {
+  text-shadow:none !important;
+}
