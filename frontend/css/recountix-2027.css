@@ -566,3 +566,18 @@ button .button-hint, .btn .button-hint, .action-btn .button-hint {
   max-width: 100%;
   min-width: 0;
 }
+
+
+/* Performance override: keep the existing light-green palette/cards, reduce GPU-heavy glass blur. */
+.main-content { background-attachment: scroll !important; }
+.topbar, .content-box, .table-section, .backup-panel,
+.vo-final-kpi, .vo-today-panel {
+  -webkit-backdrop-filter: blur(8px) saturate(1.08) !important;
+  backdrop-filter: blur(8px) saturate(1.08) !important;
+}
+@media (max-width: 640px) {
+  .topbar, .content-box, .table-section, .card, .backup-panel {
+    -webkit-backdrop-filter: blur(6px) saturate(1.05) !important;
+    backdrop-filter: blur(6px) saturate(1.05) !important;
+  }
+}
