@@ -438,3 +438,64 @@ html:not(.rx-dark-shell):root:root .rx-kpi *,
 html:not(.rx-dark-shell):root:root .kpi-card * {
   text-shadow:none !important;
 }
+
+/* Light-mode final contrast patch for dashboard mini tiles and sidebar icons. */
+html:not(.rx-dark-shell):root:root .sidebar .menu a i,
+html:not(.rx-dark-shell):root:root .sidebar .menu a .fa,
+html:not(.rx-dark-shell):root:root .sidebar .menu a [class*="fa-"] {
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  font-size:15px !important;
+  line-height:1 !important;
+  -webkit-text-fill-color:#087F5B !important;
+}
+html:not(.rx-dark-shell):root:root .sidebar .menu a span {
+  display:inline !important;
+  -webkit-text-fill-color:#244D40 !important;
+}
+html:not(.rx-dark-shell):root:root .rx-mini-card,
+html:not(.rx-dark-shell):root:root .rx-mini-card:hover,
+html:not(.rx-dark-shell):root:root .rx-aging-row,
+html:not(.rx-dark-shell):root:root .rx-command-panel,
+html:not(.rx-dark-shell):root:root .rx-risk-panel,
+html:not(.rx-dark-shell):root:root .rx-roadmap-panel,
+html:not(.rx-dark-shell):root:root .analytics-panel,
+html:not(.rx-dark-shell):root:root .vo-command-strip {
+  background:#FFFFFF !important;
+  background-image:linear-gradient(180deg,#FFFFFF 0%,#EAF7F0 100%) !important;
+  border-color:#C9E5D6 !important;
+  color:#153D32 !important;
+  box-shadow:0 8px 22px rgba(21,61,50,.07) !important;
+  -webkit-text-fill-color:initial !important;
+}
+html:not(.rx-dark-shell):root:root .rx-mini-card *,
+html:not(.rx-dark-shell):root:root .rx-aging-row *,
+html:not(.rx-dark-shell):root:root .rx-command-panel *,
+html:not(.rx-dark-shell):root:root .rx-risk-panel *,
+html:not(.rx-dark-shell):root:root .rx-roadmap-panel *,
+html:not(.rx-dark-shell):root:root .analytics-panel *,
+html:not(.rx-dark-shell):root:root .vo-command-strip * {
+  color:#244D40 !important;
+  -webkit-text-fill-color:#244D40 !important;
+  text-shadow:none !important;
+}
+html:not(.rx-dark-shell):root:root .rx-mini-card strong,
+html:not(.rx-dark-shell):root:root .rx-mini-card b,
+html:not(.rx-dark-shell):root:root .rx-mini-card h1,
+html:not(.rx-dark-shell):root:root .rx-mini-card h2,
+html:not(.rx-dark-shell):root:root .rx-mini-card h3,
+html:not(.rx-dark-shell):root:root .rx-mini-card .amount {
+  color:#087F5B !important;
+  -webkit-text-fill-color:#087F5B !important;
+}
+html:not(.rx-dark-shell):root:root .topbar .page-title,
+html:not(.rx-dark-shell):root:root .topbar h1,
+html:not(.rx-dark-shell):root:root .topbar h2 {
+  background:none !important;
+  color:#153D32 !important;
+  -webkit-text-fill-color:#153D32 !important;
+  text-shadow:none !important;
+}
