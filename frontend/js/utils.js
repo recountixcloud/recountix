@@ -274,10 +274,10 @@ window.showToast = showToast;
 })();
 
 
-/* Robust mobile navigation fallback: delegated events work even if page scripts initialize late. */
+/* Mobile drawer handler: capture the menu tap before older handlers can cancel/toggle it twice. */
 (function () {
-  if (window.__rxMobileNavFixInstalled) return;
-  window.__rxMobileNavFixInstalled = true;
+  if (window.__rxMobileNavFixV2) return;
+  window.__rxMobileNavFixV2 = true;
   function mobile() { return window.matchMedia ? window.matchMedia('(max-width: 767px)').matches : window.innerWidth < 768; }
   function drawer(open) {
     var side = document.querySelector('.sidebar');
@@ -286,8 +286,8 @@ window.showToast = showToast;
     if (!side) return;
     var show = mobile() && !!open;
     side.classList.toggle('open', show);
-    side.setAttribute('aria-hidden', show ? 'false' : (mobile() ? 'true' : 'false'));
-    side.inert = mobile() && !show;
+    side.setAttribute('aria-hidden', mobile() && !show ? 'true' : 'false');
+    if ('inert' in side) side.inert = mobile() && !show;
     if (overlay) overlay.classList.toggle('show', show);
     document.documentElement.classList.toggle('sidebar-open', show);
     document.body.classList.toggle('sidebar-open', show);
@@ -299,20 +299,24 @@ window.showToast = showToast;
     }
   }
   function init() {
-    var btn = document.getElementById('menuToggle');
-    var side = document.querySelector('.sidebar');
-    var overlay = document.getElementById('sidebarOverlay');
-    if (!btn || !side) return;
+    if (!document.getElementById('menuToggle') || !document.querySelector('.sidebar')) return;
     drawer(false);
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
-      drawer(!side.classList.contains('open'));
-    });
-    if (overlay) overlay.addEventListener('click', function () { drawer(false); });
-    side.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href]');
+    /* Capture phase + stopImmediatePropagation prevents a legacy listener toggling twice. */
+    document.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('#menuToggle') : null;
+      if (btn) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        drawer(!document.querySelector('.sidebar').classList.contains('open'));
+        return;
+      }
+      if (e.target && e.target.closest && e.target.closest('#sidebarOverlay')) {
+        drawer(false);
+        return;
+      }
+      var link = e.target && e.target.closest ? e.target.closest('.sidebar a[href]') : null;
       if (link) drawer(false);
-    });
+    }, true);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') drawer(false); });
     window.addEventListener('resize', function () { if (!mobile()) drawer(false); });
     window.addEventListener('pageshow', function () { drawer(false); });
