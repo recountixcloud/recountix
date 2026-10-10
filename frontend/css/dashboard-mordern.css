@@ -181,3 +181,89 @@
   transform: translateY(-2px) !important;
   background: rgba(38, 50, 78, 0.75) !important;
 }
+
+/* Final light-mode contrast override: this file loads after the design system. */
+html:not(.rx-dark-shell) .vo-final-kpi,
+html:not(.rx-dark-shell) .vo-today-panel,
+html:not(.rx-dark-shell) .rx-mini-card,
+html:not(.rx-dark-shell) .rx-kpi,
+html:not(.rx-dark-shell) .kpi-card {
+  background:#F7FCF9 !important;
+  background-image:linear-gradient(145deg,#FFFFFF 0%,#E2F5EB 100%) !important;
+  border:1px solid #B9E4CD !important;
+  color:#153D32 !important;
+  box-shadow:0 6px 18px rgba(21,61,50,.08) !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+html:not(.rx-dark-shell) .vo-final-kpi *,
+html:not(.rx-dark-shell) .vo-today-panel *,
+html:not(.rx-dark-shell) .rx-mini-card *,
+html:not(.rx-dark-shell) .rx-kpi *,
+html:not(.rx-dark-shell) .kpi-card * {
+  text-shadow:none !important;
+}
+html:not(.rx-dark-shell) .vo-final-kpi,
+html:not(.rx-dark-shell) .vo-today-panel,
+html:not(.rx-dark-shell) .rx-mini-card {
+  opacity:1 !important;
+  filter:none !important;
+}
+html:not(.rx-dark-shell) .vo-final-kpi span,
+html:not(.rx-dark-shell) .vo-final-kpi p,
+html:not(.rx-dark-shell) .vo-final-kpi small,
+html:not(.rx-dark-shell) .vo-today-panel span,
+html:not(.rx-dark-shell) .vo-today-panel p,
+html:not(.rx-dark-shell) .vo-today-panel small,
+html:not(.rx-dark-shell) .rx-mini-card span,
+html:not(.rx-dark-shell) .rx-mini-card p,
+html:not(.rx-dark-shell) .rx-mini-card small {
+  color:#42685A !important;
+  -webkit-text-fill-color:#42685A !important;
+}
+html:not(.rx-dark-shell) .vo-final-kpi strong,
+html:not(.rx-dark-shell) .vo-final-kpi b,
+html:not(.rx-dark-shell) .vo-final-kpi h1,
+html:not(.rx-dark-shell) .vo-final-kpi h2,
+html:not(.rx-dark-shell) .vo-today-panel strong,
+html:not(.rx-dark-shell) .vo-today-panel b,
+html:not(.rx-dark-shell) .rx-mini-card strong {
+  color:#087F5B !important;
+  -webkit-text-fill-color:#087F5B !important;
+}
+html:not(.rx-dark-shell) .topbar .page-title {
+  background:none !important;
+  color:#153D32 !important;
+  -webkit-text-fill-color:#153D32 !important;
+}
+html:not(.rx-dark-shell) .rx-ad-card,
+html:not(.rx-dark-shell) .rx-ad-card * {
+  color:#153D32 !important;
+  -webkit-text-fill-color:#153D32 !important;
+  text-shadow:none !important;
+}
+html:not(.rx-dark-shell) .rx-ad-label {
+  background:#DDF5E8 !important;
+  color:#087F5B !important;
+  -webkit-text-fill-color:#087F5B !important;
+}
+html:not(.rx-dark-shell) .sidebar .menu a i,
+html:not(.rx-dark-shell) .sidebar .menu a svg,
+html:not(.rx-dark-shell) .sidebar .menu a [class*="fa-"] {
+  color:#087F5B !important;
+  -webkit-text-fill-color:#087F5B !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  filter:none !important;
+  background:transparent !important;
+}
+html:not(.rx-dark-shell) .sidebar .menu a {
+  color:#244D40 !important;
+  -webkit-text-fill-color:#244D40 !important;
+}
+html:not(.rx-dark-shell) .sidebar .menu a.active,
+html:not(.rx-dark-shell) .sidebar .menu a:hover {
+  background:#D7F2E3 !important;
+  color:#064E3B !important;
+  -webkit-text-fill-color:#064E3B !important;
+}
