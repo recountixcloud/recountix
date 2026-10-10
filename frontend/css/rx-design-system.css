@@ -969,3 +969,58 @@ html:not(.rx-dark-shell) body .sidebar.collapsed .menu a :is(span,.menu-text,.la
     opacity: 1 !important;
   }
 }
+
+
+/* Collapsed sidebar behavior: icon-only rail, labels hidden, no hover expansion. */
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar:hover,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar:focus-within {
+  width: 76px !important;
+  min-width: 76px !important;
+  max-width: 76px !important;
+  overflow-x: hidden !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .main-content {
+  margin-left: 76px !important;
+  width: calc(100% - 76px) !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .logo {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .logo h2,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .logo p,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a span,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu .rx-collapse-btn span {
+  display: none !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu li > a,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu .rx-collapse-btn > button {
+  display: flex !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  overflow: hidden !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a > i,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a > svg,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu a > .fa,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar .menu .rx-collapse-btn button > i {
+  display: inline-flex !important;
+  width: 24px !important;
+  min-width: 24px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: #087F5B !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar:hover .menu a span,
+html:not(.rx-dark-shell) body.rx-collapsed .sidebar:focus-within .menu a span {
+  display: none !important;
+}
