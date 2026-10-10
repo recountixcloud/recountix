@@ -2286,3 +2286,67 @@ html.rx-dark-shell .rx-theme-toggle .rx-theme-choice.is-active {
   .rx-theme-toggle { min-height:38px !important; gap:2px !important; padding:3px !important; }
   .rx-theme-toggle .rx-theme-choice { padding:5px 7px !important; gap:4px !important; font-size:11px !important; }
 }
+
+/* Light-mode tactile depth: consistent soft 3D elevation and pressed feedback. */
+html:not(.rx-dark-shell) body button:not(.rx-theme-toggle),
+html:not(.rx-dark-shell) body .btn,
+html:not(.rx-dark-shell) body .add-btn,
+html:not(.rx-dark-shell) body .action-btn,
+html:not(.rx-dark-shell) body input[type="button"],
+html:not(.rx-dark-shell) body input[type="submit"],
+html:not(.rx-dark-shell) body input[type="reset"] {
+  border:1px solid rgba(8,100,69,.20) !important;
+  box-shadow:0 4px 0 rgba(8,100,69,.13),0 7px 14px rgba(24,83,59,.12),0 1px 0 rgba(255,255,255,.78) inset !important;
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease !important;
+}
+html:not(.rx-dark-shell) body button:not(.rx-theme-toggle):hover,
+html:not(.rx-dark-shell) body .btn:hover,
+html:not(.rx-dark-shell) body .add-btn:hover,
+html:not(.rx-dark-shell) body .action-btn:hover,
+html:not(.rx-dark-shell) body input[type="button"]:hover,
+html:not(.rx-dark-shell) body input[type="submit"]:hover {
+  filter:brightness(1.035) !important;
+  box-shadow:0 5px 0 rgba(8,100,69,.15),0 10px 18px rgba(24,83,59,.15),0 1px 0 rgba(255,255,255,.82) inset !important;
+  transform:translateY(-1px) !important;
+}
+html:not(.rx-dark-shell) body button:not(.rx-theme-toggle):active,
+html:not(.rx-dark-shell) body .btn:active,
+html:not(.rx-dark-shell) body .add-btn:active,
+html:not(.rx-dark-shell) body .action-btn:active,
+html:not(.rx-dark-shell) body input[type="button"]:active,
+html:not(.rx-dark-shell) body input[type="submit"]:active {
+  transform:translateY(2px) !important;
+  box-shadow:0 1px 0 rgba(8,100,69,.14),0 2px 5px rgba(24,83,59,.10),0 1px 0 rgba(255,255,255,.55) inset !important;
+}
+html:not(.rx-dark-shell) body .card,
+html:not(.rx-dark-shell) body .stat-card,
+html:not(.rx-dark-shell) body .metric-card,
+html:not(.rx-dark-shell) body .summary-card,
+html:not(.rx-dark-shell) body .panel,
+html:not(.rx-dark-shell) body .section-card,
+html:not(.rx-dark-shell) body .content-card,
+html:not(.rx-dark-shell) body .form-card,
+html:not(.rx-dark-shell) body .table-container,
+html:not(.rx-dark-shell) body .modal-content {
+  box-shadow:0 2px 4px rgba(21,72,51,.035),0 10px 24px rgba(21,72,51,.065),0 1px 0 rgba(255,255,255,.9) inset !important;
+}
+html:not(.rx-dark-shell) body input:not([type="checkbox"]):not([type="radio"]),
+html:not(.rx-dark-shell) body select,
+html:not(.rx-dark-shell) body textarea {
+  box-shadow:0 2px 4px rgba(21,72,51,.045) inset,0 1px 0 rgba(255,255,255,.9) !important;
+}
+html:not(.rx-dark-shell) body input:focus,
+html:not(.rx-dark-shell) body select:focus,
+html:not(.rx-dark-shell) body textarea:focus {
+  box-shadow:0 0 0 3px rgba(8,127,91,.12),0 2px 5px rgba(21,72,51,.06) !important;
+}
+html:not(.rx-dark-shell) body .rx-theme-toggle {
+  box-shadow:0 3px 0 rgba(8,100,69,.12),0 6px 12px rgba(24,83,59,.10),0 1px 0 rgba(255,255,255,.8) inset !important;
+}
+@media(prefers-reduced-motion:reduce) {
+  html:not(.rx-dark-shell) body button,
+  html:not(.rx-dark-shell) body .btn,
+  html:not(.rx-dark-shell) body .add-btn {
+    transition:none !important;
+  }
+}
