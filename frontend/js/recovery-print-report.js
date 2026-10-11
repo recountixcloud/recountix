@@ -31,7 +31,17 @@
         .clean-print-report .cpr-logo{max-height:54px;max-width:160px;object-fit:contain}
         .clean-print-report h1{font-size:22px;margin:4px 0}
         .clean-print-report p{margin:4px 0;font-size:11px}
-        .clean-print-report .cpr-table{width:100%;border-collapse:collapse;font-size:10px}
+        .clean-print-report .cpr-table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:9px;overflow-wrap:anywhere}
+        .clean-print-report .cpr-table th:nth-child(1){width:3%}
+        .clean-print-report .cpr-table th:nth-child(2){width:12%}
+        .clean-print-report .cpr-table th:nth-child(3){width:9%}
+        .clean-print-report .cpr-table th:nth-child(4){width:10%}
+        .clean-print-report .cpr-table th:nth-child(5){width:16%}
+        .clean-print-report .cpr-table th:nth-child(6){width:10%}
+        .clean-print-report .cpr-table th:nth-child(7){width:10%}
+        .clean-print-report .cpr-table th:nth-child(8){width:12%}
+        .clean-print-report .cpr-table th:nth-child(9){width:9%}
+        .clean-print-report .cpr-table th:nth-child(10){width:9%}
         .clean-print-report .cpr-table th,.clean-print-report .cpr-table td{border:1px solid #aab2ad;padding:6px 5px;text-align:left;vertical-align:top}
         .clean-print-report .cpr-table th{background:#edf5f0!important;font-weight:700}
         .clean-print-report .cpr-table td.amount,.clean-print-report .cpr-table th.amount{text-align:right;white-space:nowrap}
@@ -42,7 +52,11 @@
         @media print{
           body.rx-print-clean *{visibility:hidden!important}
           body.rx-print-clean #cleanPrintReport,body.rx-print-clean #cleanPrintReport *{visibility:visible!important}
-          body.rx-print-clean #cleanPrintReport{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;margin:0!important;padding:0!important}
+          body.rx-print-clean #cleanPrintReport{display:block!important;position:static!important;left:auto!important;top:auto!important;width:100%!important;margin:0!important;padding:0!important;break-after:auto!important}
+          body.rx-print-clean html,body.rx-print-clean{height:auto!important;overflow:visible!important}
+          body.rx-print-clean #cleanPrintReport .cpr-header{margin-bottom:8px}
+          body.rx-print-clean #cleanPrintReport .cpr-table th,body.rx-print-clean #cleanPrintReport .cpr-table td{padding:4px 3px;font-size:8px;line-height:1.2;white-space:normal}
+          body.rx-print-clean #cleanPrintReport .cpr-footer{margin-top:8px;break-inside:avoid}
           body.rx-print-clean .cpr-table{page-break-inside:auto}
           body.rx-print-clean .cpr-table tr{page-break-inside:avoid;page-break-after:auto}
           body.rx-print-clean .cpr-table thead{display:table-header-group}
@@ -69,9 +83,10 @@
     const query = searchEl && searchEl.value ? searchEl.value.trim().toLowerCase() : "";
     const session = (typeof window.getSession === "function" ? window.getSession() : {}) || {};
 
-    if (typeof window.reloadAllData === "function" && (!Array.isArray(window.customers) || !window.customers.length)) {
-      await window.reloadAllData();
-    }
+    try {
+      if (typeof window.loadReports === "function") await window.loadReports();
+      else if (typeof window.reloadAllData === "function" && (!Array.isArray(window.customers) || !window.customers.length)) await window.reloadAllData();
+    } catch (e) { console.warn("Could not refresh report data before printing", e); }
     const allCustomers = Array.isArray(window.customers) ? window.customers.slice() : [];
     const allRecoveries = Array.isArray(window.recoveries) ? window.recoveries.slice() : [];
 
