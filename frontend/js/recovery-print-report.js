@@ -151,7 +151,7 @@
     const tbody = byId("cprBody");
     if (tbody) {
       tbody.innerHTML = rows.length ? rows.map((r, i) =>
-        "<tr><td>" + (i + 1) + "</td><td>" + esc(r.name) + "</td><td>" + esc(r.city) + "</td><td>" + esc(r.mobile) + "</td><td>" + esc(r.callStatus) + "</td><td class=\"amount\">" + money(r.totalAmount) + "</td><td class=\"amount\">" + money(r.promise) + "</td><td class=\"amount\">" + money(r.received) + "</td><td class=\"amount\">" + money(r.due) + "</td></tr>"
+        "<tr><td>" + (i + 1) + "</td><td>" + esc(r.name) + "</td><td>" + esc(r.city) + "</td><td>" + esc(r.mobile) + "</td><td>" + esc(r.callStatus) + "</td><td class=\"amount\">" + money(r.totalAmount) + "</td><td class=\"amount\">" + money(r.promise) + "</td><td>" + esc(r.promiseDetails) + "</td><td class=\"amount\">" + money(r.received) + "</td><td class=\"amount\">" + money(r.due) + "</td></tr>"
       ).join("") : '<tr><td colspan="10" style="text-align:center">No customers match these filters.</td></tr>';
     }
 
@@ -169,7 +169,7 @@
     if (byId("cprShopName")) byId("cprShopName").textContent = shop;
     if (byId("cprSubTitle")) byId("cprSubTitle").textContent = "Customer-wise Daily Recovery Report";
     if (byId("cprDateLine")) byId("cprDateLine").textContent = "Printed: " + new Date().toLocaleString("en-IN");
-    if (byId("cprFilterLine")) byId("cprFilterLine").textContent = "Period: " + (from || "All") + " to " + (to || "All") + " | Total CR excluded";
+    if (byId("cprFilterLine")) byId("cprFilterLine").textContent = "Period: " + (from || "All") + " to " + (to || "All") + " | Total CR not shown";
     document.body.classList.add("rx-print-clean");
     box.style.display = "block";
     try {
