@@ -2612,3 +2612,78 @@ html:not(.rx-dark-shell) body .rx-theme-toggle {
     font-weight: 600 !important;
   }
 }
+
+
+/* Stable light sidebar alignment after refresh: expanded links stay left aligned. */
+@media (min-width: 600px) {
+  html:not(.rx-dark-shell) .sidebar {
+    text-align: left !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .menu {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .menu li {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .menu a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .menu a i {
+    flex: 0 0 22px !important;
+    width: 22px !important;
+    text-align: center !important;
+  }
+  html:not(.rx-dark-shell) .sidebar:hover .menu a,
+  html:not(.rx-dark-shell) .sidebar:focus-within .menu a {
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+}
+html:not(.rx-dark-shell) .sidebar .menu a span,
+html:not(.rx-dark-shell) .sidebar .menu a b,
+html:not(.rx-dark-shell) .sidebar .menu a small {
+  color: #153D32 !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+}
+html:not(.rx-dark-shell) .sidebar .menu a i {
+  color: #087F5B !important;
+}
+
+/* Login password visibility control remains visible and tappable on mobile. */
+.login-page .field-wrap {
+  position: relative !important;
+}
+.login-page #password {
+  padding-right: 52px !important;
+}
+.login-page #togglePassword {
+  position: absolute !important;
+  right: 6px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 5 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  color: #087F5B !important;
+  background: transparent !important;
+  border: 0 !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+}
+.login-page #togglePassword i {
+  font-size: 18px !important;
+  pointer-events: none !important;
+}
