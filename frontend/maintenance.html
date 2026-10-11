@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+/* Apply saved Recountix theme before styles to prevent a light-mode flash on page navigation. */
+(function(){var theme='light';try{theme=localStorage.getItem('recountix_theme')||'light';}catch(e){}if(theme!=='dark'&&theme!=='light')theme='light';var root=document.documentElement;root.classList.toggle('rx-dark-shell',theme==='dark');root.dataset.rxTheme=theme;})();
+</script>
+
 <meta name="color-scheme" content="light dark">
 
 <link rel="manifest" href="manifest.json">
