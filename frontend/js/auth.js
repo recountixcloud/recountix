@@ -420,6 +420,56 @@ async function submitForgotPassword() {
     showLoginError("Contact your Business Administrator or Super Admin to reset your password securely.");
 }
 
+/* Resume a valid remembered session when the login page is reopened.
+   Never persist the user's password; only the server-issued session token is stored. */
+async function resumeRememberedLogin() {
+    const page = String(window.location.pathname || "").toLowerCase();
+    if (!page.includes("login.html")) return;
+    let remembered = false;
+    try { remembered = localStorage.getItem("bk_remember") === "true"; } catch (_) {}
+    if (!remembered) return;
+
+    const session = (typeof getSession === "function") ? getSession() : null;
+    if (!session || !session.isLoggedIn || !session.sessionToken) return;
+
+    try {
+        const sb = getSupabase();
+        if (!sb) return;
+        const { data, error } = await sb.rpc("app_validate_session", { p_token: session.sessionToken });
+        if (error || !data || data.valid !== true) {
+            clearSession();
+            return;
+        }
+        const verified = data.user || {};
+        if (String(verified.id || "") !== String(session.userId || "") ||
+            String(verified.role || "") !== String(session.role || "") ||
+            String(verified.shop_id || "") !== String(session.shopId || "")) {
+            clearSession();
+            return;
+        }
+
+        if (verified.role !== "super_admin") {
+            const maintenance = await sbGetMaintenanceStatus();
+            if (maintenance && maintenance.enabled === true) {
+                try {
+                    sessionStorage.setItem("bk_maintenance_message", maintenance.message || "Our system is currently being updated. Please try again shortly.");
+                } catch (_) {}
+                clearSession();
+                window.location.replace("maintenance.html");
+                return;
+            }
+        }
+        window.location.replace(verified.role === "super_admin" ? "super-dashboard.html" : "dashboard.html");
+    } catch (e) {
+        console.warn("Could not resume remembered session; manual sign-in remains available.", e);
+    }
+}
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", resumeRememberedLogin, { once: true });
+} else {
+    setTimeout(resumeRememberedLogin, 0);
+}
+
 window.sbLogin = sbLogin;
 window.login = login;
 window.checkLogin = checkLogin;
