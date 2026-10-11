@@ -2727,3 +2727,24 @@ html:not(.rx-dark-shell) .sidebar .menu a i {
     border-left-width: 3px !important;
   }
 }
+
+
+/* Recountix readability baseline: sharper text without changing card colors. */
+html body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+html body :is(h1,h2,h3,h4,h5,h6,p,label,button,a,span,small,strong,td,th,li) {
+  text-shadow: none;
+}
+html:not(.rx-dark-shell) body :is(.sidebar .menu a, .topbar .page-title, .card h1, .card h2, .card h3, button, label) {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+html:not(.rx-dark-shell) body :is(.sidebar .menu a, .topbar .page-title, .card p, .card span, .card label, .table-section td, .table-section th) {
+  color: #23483A;
+}
+html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-section td, .table-section th) {
+  line-height: 1.5;
+}
