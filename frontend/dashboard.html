@@ -3,6 +3,17 @@
 
 <head>
 <meta name="color-scheme" content="light dark">
+<script>
+/* Set the saved Recountix theme before CSS paints to prevent a light-mode flash during navigation. */
+(function(){
+  var theme='light';
+  try { theme=localStorage.getItem('recountix_theme') || 'light'; } catch(e) {}
+  if(theme!=='dark' && theme!=='light') theme='light';
+  var root=document.documentElement;
+  root.classList.toggle('rx-dark-shell',theme==='dark');
+  root.dataset.rxTheme=theme;
+})();
+</script>
 
 <script>
 (function(){
@@ -33,6 +44,11 @@
 
 <style id="rx-mobile-emergency-fix">
 @media(max-width:767px){html body button#menuToggle{display:flex!important;position:fixed!important;left:12px!important;top:12px!important;width:48px!important;height:48px!important;align-items:center!important;justify-content:center!important;z-index:2147483001!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;background:#28344d!important;color:#fff!important;border:1px solid #64748b!important;border-radius:12px!important;font-size:25px!important}html body .sidebar{position:fixed!important;inset:0 auto 0 0!important;width:min(86vw,320px)!important;max-width:calc(100vw - 48px)!important;height:100vh!important;height:100dvh!important;overflow-y:auto!important;z-index:2147483000!important;transform:translateX(-110%)!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}html body .sidebar.rx-force-open{transform:translateX(0)!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}html body #sidebarOverlay{position:fixed!important;inset:0!important;z-index:2147482999!important;background:rgba(4,8,18,.68)!important;display:block!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}html body #sidebarOverlay.rx-force-show{visibility:visible!important;opacity:1!important;pointer-events:auto!important}html body .main-content{margin-left:0!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:72px 12px 24px!important;overflow-x:hidden!important}}
+</style>
+<style id="rx-home-banner-style">
+.rx-home-banner{position:relative;z-index:1;width:100%;margin:0 0 22px;overflow:hidden;border:1px solid rgba(255,255,255,.78);border-radius:20px;background:#f3faf7;box-shadow:0 12px 32px rgba(10,45,38,.12)}
+.rx-home-banner img{display:block;width:100%;height:auto;max-height:330px;object-fit:cover;object-position:center}
+@media(max-width:640px){.rx-home-banner{margin:0 0 16px;border-radius:14px}.rx-home-banner img{max-height:none;object-fit:contain}}
 </style>
 </head>
 
@@ -73,7 +89,9 @@
     </div>
   </header>
 
-  <section id="recountixAdSlot" class="rx-ad-slot" hidden aria-label="Sponsored promotion"></section>
+  <section class="rx-home-banner" aria-label="Recountix promotion">
+  <img src="assets/ads/Recountix.banner.1.png" alt="Recountix — Beyond What's Due. Simplify accounting and focus on growth." fetchpriority="high" decoding="async">
+</section>
 
   <div class="dashboard-grid">
     <div class="card blue">
