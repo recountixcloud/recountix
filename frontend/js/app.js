@@ -317,13 +317,11 @@ function loadCustomers() {
     const tbody = document.getElementById("customerBody");
     if (!tbody) return;
 
-    tbody.innerHTML = "";
+    const rows = [];
     let rowNum = 0;
-    customers.forEach((customer, index) => {
+    (customers || []).forEach((customer, index) => {
         const bucket = getCustomerAgingBucket(customer);
-        if (customerAgingFilter && customerAgingFilter !== "all") {
-            if (bucket !== customerAgingFilter) return;
-        }
+        if (customerAgingFilter && customerAgingFilter !== "all" && bucket !== customerAgingFilter) return;
 
         rowNum++;
         const deleteButton = rxCan("delete")
@@ -341,8 +339,7 @@ function loadCustomers() {
                </button>`;
 
         const dueShow = (customer.dueDate || customer.followup || "").toString().slice(0, 10);
-
-        tbody.innerHTML += `
+        rows.push(`
         <tr>
             <td>${rowNum}</td>
             <td>${appEscape(customer.name)}</td>
@@ -362,14 +359,13 @@ function loadCustomers() {
                   style="display:inline-flex;align-items:center;gap:4px;background:#7c3aed;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">📜 Notice</button>
                 ${deleteButton}
             </td>
-        </tr>`;
+        </tr>`);
     });
 
-    if (rowNum === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#73879B;">No customers in this filter</td></tr>`;
-    }
+    tbody.innerHTML = rows.length
+        ? rows.join("")
+        : `<tr><td colspan="8" style="text-align:center;color:#73879B;">No customers in this filter</td></tr>`;
 }
-
 window.getCustomerAgingBucket = getCustomerAgingBucket;
 window.agingBadgeHtml = agingBadgeHtml;
 window.setCustomerAgingFilter = setCustomerAgingFilter;
@@ -919,21 +915,27 @@ function loadRecoveryTable() {
     const tbody = document.getElementById("recoveryBody");
     if (!tbody) return;
 
-    tbody.innerHTML = "";
-    recoveries.forEach((item, index) => {
-        const customer = (customers || []).find(c => String(c.id) === String(item.customerId));
+    // Build a one-time customer lookup instead of searching the full customer
+    // array for every recovery row.
+    const customerById = new Map();
+    (customers || []).forEach(customer => customerById.set(String(customer.id), customer));
+
+    const rows = [];
+    (recoveries || []).forEach((item, index) => {
+        const customerId = item.customerId ?? item.customer_id;
+        const customer = customerById.get(String(customerId));
         const deleteBtn = rxCan("delete")
             ? `<button class="action-btn delete-btn" onclick="deleteRecovery(${index})" title="Delete">🗑️</button>`
             : "";
 
-        tbody.innerHTML += `
+        rows.push(`
         <tr>
             <td>${index + 1}</td>
             <td>${appEscape(customer ? customer.name : "-")}</td>
             <td>₹${Number(item.amount || 0).toLocaleString("en-IN")}</td>
             <td>${appEscape(item.paymentMode || "-")}</td>
             <td>${appEscape(item.receiptNo || "-")}</td>
-            <td>${appEscape(item.date || "-")}</td>
+            <td>${appEscape(item.date || item.recovery_date || "-")}</td>
             <td>${appEscape(item.collectedBy || "-")}</td>
             <td>${appEscape(item.remarks || "-")}</td>
             <td>
@@ -942,11 +944,11 @@ function loadRecoveryTable() {
                 ${rxCan("modify") ? `<button type="button" onclick="editRecovery(${index})" title="Modify">✏️</button>` : ""}
                 ${deleteBtn}
             </td>
-        </tr>`;
+        </tr>`);
     });
+    tbody.innerHTML = rows.length ? rows.join("") : `<tr><td colspan="9" style="text-align:center;color:#73879B;">No recovery records found</td></tr>`;
     searchRecovery();
 }
-
 async function deleteRecovery(index) {
     if (!rxCan("delete")) {
         alert("Your Administrator has not granted Delete permission.");
