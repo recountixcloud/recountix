@@ -94,7 +94,10 @@
     promises.filter((p) => dateInRange(p.promised_date || p.created_at, from, to)).forEach((p) => {
       const id = String(p.customer_id || p.customerId || "");
       if (!id) return;
-      promiseByCustomer[id] = (promiseByCustomer[id] || 0) + Number(p.promised_amount || p.amount || 0);
+      if (!promiseByCustomer[id]) promiseByCustomer[id] = { amount: 0, details: [] };
+      promiseByCustomer[id].amount += Number(p.promised_amount || p.amount || 0);
+      const detail = [p.promised_date ? ("Date: " + dateOf(p.promised_date)) : "", p.notes || ""].filter(Boolean).join(" — ");
+      if (detail) promiseByCustomer[id].details.push(detail);
     });
 
     const recoveryByCustomer = {};
@@ -125,7 +128,8 @@
         mobile: c.mobile || c.phone || "-",
         callStatus: activity ? callType + (callResult ? ": " + callResult : "") : "No call logged",
         totalAmount,
-        promise: Number(promiseByCustomer[id] || 0),
+        promise: Number((promiseByCustomer[id] || {}).amount || 0),
+        promiseDetails: ((promiseByCustomer[id] || {}).details || []).join(" | ") || "-",
         received: Number(recoveryByCustomer[id] || 0),
         due: Number(c.outstanding || c.balance || 0)
       };
@@ -139,7 +143,7 @@
       return acc;
     }, { amount: 0, promise: 0, received: 0, due: 0 });
 
-    const headers = ["#", "Customer Name", "City / Village", "Mobile Number", "Call Status / Result", "Total Amount", "Promise Amount", "Received Amount", "Total Outstanding"];
+    const headers = ["#", "Customer Name", "City / Village", "Mobile Number", "Call Status / Result", "Total Amount", "Promise Amount", "Promise Details / Date", "Received Amount", "Total Outstanding"];
     const table = box.querySelector(".cpr-table");
     if (table) {
       table.innerHTML = "<thead><tr>" + headers.map((h, i) => "<th" + (i >= 5 ? ' class="amount"' : "") + ">" + esc(h) + "</th>").join("") + "</tr></thead><tbody id=\"cprBody\"></tbody>";
@@ -148,7 +152,7 @@
     if (tbody) {
       tbody.innerHTML = rows.length ? rows.map((r, i) =>
         "<tr><td>" + (i + 1) + "</td><td>" + esc(r.name) + "</td><td>" + esc(r.city) + "</td><td>" + esc(r.mobile) + "</td><td>" + esc(r.callStatus) + "</td><td class=\"amount\">" + money(r.totalAmount) + "</td><td class=\"amount\">" + money(r.promise) + "</td><td class=\"amount\">" + money(r.received) + "</td><td class=\"amount\">" + money(r.due) + "</td></tr>"
-      ).join("") : '<tr><td colspan="9" style="text-align:center">No customers match these filters.</td></tr>';
+      ).join("") : '<tr><td colspan="10" style="text-align:center">No customers match these filters.</td></tr>';
     }
 
     const footer = box.querySelector(".cpr-footer");
