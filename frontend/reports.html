@@ -158,20 +158,25 @@
 
   <div class="form-grid">
     <div>
+      <label for="dayWiseDate">Day-wise Entry (Select Date)</label>
+      <input type="date" id="dayWiseDate" aria-label="Show all recovery entries for selected date" onchange="applyDayWiseDate()">
+      <small>Selected date's entries will show automatically.</small>
+    </div>
+    <div>
       <label for="reportSearch">Search Customer</label>
       <input type="text" id="reportSearch" class="search-box" placeholder="Search by Customer Name or Mobile..." onkeyup="searchReport()">
     </div>
     <div>
       <label for="fromDate">From Date</label>
-      <input type="date" id="fromDate">
+      <input type="date" id="fromDate" onchange="filterReport()">
     </div>
     <div>
       <label for="toDate">To Date</label>
-      <input type="date" id="toDate">
+      <input type="date" id="toDate" onchange="filterReport()">
     </div>
     <div>
       <label for="reportCustomer">Select Customer</label>
-      <select id="reportCustomer">
+      <select id="reportCustomer" onchange="filterReport()">
         <option value="">All Customers</option>
       </select>
     </div>
@@ -385,10 +390,21 @@ if (typeof checkLogin === "function") checkLogin();
 if (typeof loadReports === "function") loadReports();
 if (typeof updateDashboard === "function") updateDashboard();
 var today = new Date().toISOString().split("T")[0];
+var dayWiseDate = document.getElementById("dayWiseDate");
 var fromDate = document.getElementById("fromDate");
 var toDate = document.getElementById("toDate");
+if (dayWiseDate && dayWiseDate.value === "") dayWiseDate.value = today;
 if (fromDate && fromDate.value === "") fromDate.value = today;
 if (toDate && toDate.value === "") toDate.value = today;
+function applyDayWiseDate() {
+  var selectedDate = document.getElementById("dayWiseDate")?.value || "";
+  var from = document.getElementById("fromDate");
+  var to = document.getElementById("toDate");
+  if (from) from.value = selectedDate;
+  if (to) to.value = selectedDate;
+  if (typeof filterReport === "function") filterReport();
+}
+if (typeof filterReport === "function") filterReport();
 setInterval(function(){
     if (typeof refreshProject === "function") refreshProject();
 }, 30000);
