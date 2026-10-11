@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1A2236">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://niroqvhpyrwulzwiyctl.supabase.co https://niroqvhpyrwulzwiyctl.supabase.co/functions/v1; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
+<title>WhatsApp Integration | Recountix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="css/recountix-2027.css?v=starless-wave-1">
+<link rel="stylesheet" href="css/boltise-dark.css?v=theme-switch-8">
+<style>
+body{font-family:Inter,sans-serif}.wa-wrap{max-width:1050px;margin:auto}.wa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}.wa-card{background:var(--card-bg,#fff);border:1px solid var(--border-color,#dce5e2);border-radius:18px;padding:22px;box-shadow:0 8px 24px #0f172a0b}.wa-card h2{margin:0 0 8px;font-family:Outfit,sans-serif}.wa-card p,.wa-muted{color:var(--text-muted,#64748b);line-height:1.55}.wa-label{display:block;font-weight:700;font-size:13px;margin:14px 0 6px}.wa-input{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:12px;font:inherit;background:var(--input-bg,#fff);color:var(--text-color,#111827)}.wa-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:12px 15px;font-weight:800;cursor:pointer;text-decoration:none;color:#fff!important;background:#128c7e;margin-top:14px}.wa-btn.api{background:#1769aa}.wa-note{padding:12px 14px;border-radius:10px;background:#f0fdf4;color:#166534;font-size:13px;line-height:1.5}.wa-warning{background:#fff7ed;color:#9a3412}.wa-status{margin-top:12px;font-size:14px;white-space:pre-wrap}.wa-status.error{color:#b91c1c}.wa-status.ok{color:#15803d}.wa-pill{display:inline-block;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;background:#dcfce7;color:#166534}.wa-card ol{padding-left:20px;line-height:1.7}.wa-back{color:inherit;text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<button type="button" class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" onclick="window.rxForceToggleMenu&&window.rxForceToggleMenu(event)">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="wrapper">
+<aside class="sidebar"><div class="logo"><h2>Recountix</h2><p>Beyond What’s Due.</p></div>
+<ul class="menu">
+<li><a href="dashboard.html"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+<li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
+<li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
+<li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
+<li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
+<li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
+<li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
+<li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
+<li><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+<li><a href="whatsapp.html" class="active"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp Integration</span></a></li>
+<li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li>
+<li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+</ul></aside>
+<main class="main-content"><header class="topbar"><div><h1 class="page-title">WhatsApp Integration</h1><p class="page-subtitle">Use WhatsApp Web today and connect the official WhatsApp Business API for automated sending.</p></div><div class="user-info"><i class="fa-brands fa-whatsapp"></i><span id="waSessionLabel">Checking session…</span></div></header>
+<div class="wa-wrap">
+<div class="wa-note wa-warning" style="margin-bottom:18px"><b>Privacy &amp; security:</b> Never paste your Meta access token or API key into this page. Official API credentials are stored only as Supabase Edge Function secrets. Send reminders only to customers who have agreed to receive WhatsApp messages.</div>
+<div class="wa-grid">
+<section class="wa-card">
+<h2><i class="fa-brands fa-whatsapp" style="color:#25D366"></i> WhatsApp Web</h2>
+<span class="wa-pill">Browser / App</span>
+<p>Opens a pre-filled chat in WhatsApp Web or the WhatsApp app. You review and press Send yourself; no API setup is required.</p>
+<label class="wa-label" for="webPhone">Customer mobile number</label><input class="wa-input" id="webPhone" inputmode="tel" placeholder="e.g. 9876543210">
+<label class="wa-label" for="webMessage">Message</label><textarea class="wa-input" id="webMessage" rows="5">Hello, this is a friendly reminder about your pending payment. Please contact us if you have already paid. Thank you.</textarea>
+<a class="wa-btn" id="openWhatsAppWeb" href="https://web.whatsapp.com/" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp Web Chat</a>
+<p class="wa-muted">Use country code for international numbers. For India, enter a 10-digit mobile or 91 + mobile.</p>
+</section>
+<section class="wa-card">
+<h2><i class="fa-solid fa-cloud-arrow-up" style="color:#1769aa"></i> Official WhatsApp Business API</h2>
+<span class="wa-pill">Meta Cloud API</span>
+<p>Sends through your connected Meta WhatsApp Business phone number using an approved message template. A backend deployment and Meta setup are required.</p>
+<label class="wa-label" for="apiPhone">Recipient mobile number</label><input class="wa-input" id="apiPhone" inputmode="tel" placeholder="e.g. 919876543210">
+<label class="wa-label" for="apiCustomer">Customer name (template variable 1)</label><input class="wa-input" id="apiCustomer" placeholder="Customer name">
+<label class="wa-label" for="apiAmount">Outstanding amount (template variable 2)</label><input class="wa-input" id="apiAmount" inputmode="decimal" placeholder="e.g. ₹5,000">
+<label class="wa-label" for="apiBusiness">Business name (template variable 3)</label><input class="wa-input" id="apiBusiness" placeholder="Your business name">
+<button class="wa-btn api" id="sendApiButton" type="button"><i class="fa-solid fa-paper-plane"></i> Send Template via API</button>
+<div class="wa-status" id="apiStatus" role="status" aria-live="polite"></div>
+<p class="wa-muted">Default template: <b>recountix_payment_reminder</b>, language <b>en</b>. It must be approved in Meta and contain exactly three body placeholders: customer name, amount, business name.</p>
+</section>
+</div>
+<section class="wa-card" style="margin-top:18px">
+<h2>Enable the official API</h2>
+<ol>
+<li>Create/configure a WhatsApp Business Platform app in Meta and verify the sender phone number.</li>
+<li>Create and get approval for the template <code>recountix_payment_reminder</code> with three body variables.</li>
+<li>Deploy the included <code>whatsapp-send</code> Supabase Edge Function.</li>
+<li>Set the server-side secrets <code>WHATSAPP_ACCESS_TOKEN</code>, <code>WHATSAPP_PHONE_NUMBER_ID</code>, and optionally <code>WHATSAPP_GRAPH_API_VERSION</code>.</li>
+<li>Deploy with JWT gateway verification disabled only because the function validates Recountix's own session token itself: <code>supabase functions deploy whatsapp-send --no-verify-jwt</code>.</li>
+</ol>
+<div class="wa-note">The API button will return a configuration error until the Edge Function is deployed and the Meta secrets/template are ready. WhatsApp Web works independently of the API.</div>
+<div id="setupStatus" class="wa-status" role="status"></div>
+</section>
+</div>
+</main></div>
+<script src="js/vendor/supabase-2.117.2.js"></script><script src="js/supabase.js"></script><script src="js/permissions.js?v=rights-1"></script><script src="js/auth.js?v=rights-1"></script>
+<script>
+(function(){
+'use strict';
+const s=typeof getSession==='function'?getSession():{};
+if(!s.isLoggedIn||!s.sessionToken){location.replace('login.html');return;}
+document.getElementById('waSessionLabel').textContent=(s.shopName||s.username||'Signed in')+' · '+(s.role||'user');
+const cleanPhone=v=>{let n=String(v||'').replace(/\D/g,'');if(n.length===10)n='91'+n;return n;};
+function updateWebLink(){
+ const phone=cleanPhone(document.getElementById('webPhone').value);
+ const message=document.getElementById('webMessage').value.trim();
+ const a=document.getElementById('openWhatsAppWeb');
+ if(phone.length>=11&&phone.length<=15){a.href='https://web.whatsapp.com/send?phone='+phone+'&text='+encodeURIComponent(message);a.setAttribute('aria-disabled','false');}
+ else {a.href='https://web.whatsapp.com/';a.setAttribute('aria-disabled','true');}
+}
+document.getElementById('webPhone').addEventListener('input',updateWebLink);
+document.getElementById('webMessage').addEventListener('input',updateWebLink);
+document.getElementById('openWhatsAppWeb').addEventListener('click',function(e){updateWebLink();if(this.getAttribute('aria-disabled')==='true'){e.preventDefault();alert('Enter a valid mobile number first.');}});
+document.getElementById('sendApiButton').addEventListener('click',async function(){
+ const status=document.getElementById('apiStatus');const btn=this;
+ const phone=cleanPhone(document.getElementById('apiPhone').value);
+ const name=document.getElementById('apiCustomer').value.trim();
+ const amount=document.getElementById('apiAmount').value.trim();
+ const business=document.getElementById('apiBusiness').value.trim();
+ if(phone.length<11||phone.length>15){status.className='wa-status error';status.textContent='Enter a valid phone number with country code.';return;}
+ if(!name||!amount||!business){status.className='wa-status error';status.textContent='Fill in customer name, amount and business name.';return;}
+ btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Sending…';status.className='wa-status';status.textContent='Sending through the official API…';
+ try{
+  const sb=getSupabase();if(!sb)throw new Error('Supabase client is not available.');
+  const {data,error}=await sb.functions.invoke('whatsapp-send',{body:{session_token:s.sessionToken,to:phone,customer_name:name,outstanding:amount,company_name:business}});
+  if(error)throw new Error(error.message||'API request failed.');
+  if(!data||!data.ok)throw new Error((data&&data.error)||'Message could not be sent.');
+  status.className='wa-status ok';status.textContent='Message accepted by WhatsApp. Message ID: '+(data.message_id||'accepted');
+ }catch(err){status.className='wa-status error';status.textContent='Not sent: '+(err.message||String(err))+'\nCheck that the Edge Function, Meta credentials and approved template are configured.';}
+ finally{btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Send Template via API';}
+});
+})();
+</script>
+<script src="js/final-suite.js?v=whatsapp-integration-1"></script>
+</body></html>
