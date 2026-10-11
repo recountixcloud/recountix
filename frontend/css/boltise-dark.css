@@ -2558,3 +2558,57 @@ html:not(.rx-dark-shell) body .rx-theme-toggle {
     box-sizing: border-box !important;
   }
 }
+
+
+/* Light theme: readable expanded sidebar and clear collapsed rail */
+@media (min-width: 768px) {
+  html:not(.rx-dark-shell) .sidebar {
+    font-size: 14px !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .menu a {
+    box-sizing: border-box !important;
+    min-height: 42px !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    padding: 10px 16px !important;
+    color: #153D32 !important;
+    text-align: left !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .menu a span,
+  html:not(.rx-dark-shell) .sidebar .menu a b,
+  html:not(.rx-dark-shell) .sidebar .menu a small {
+    color: #153D32 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    text-align: left !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .logo h2,
+  html:not(.rx-dark-shell) .sidebar .logo p {
+    text-align: left !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .menu a i {
+    color: #087F5B !important;
+    flex: 0 0 22px !important;
+  }
+  html:not(.rx-dark-shell) .sidebar:not(:hover):not(:focus-within) .logo h2,
+  html:not(.rx-dark-shell) .sidebar:not(:hover):not(:focus-within) .logo p,
+  html:not(.rx-dark-shell) .sidebar:not(:hover):not(:focus-within) .menu a span,
+  html:not(.rx-dark-shell) .sidebar:not(:hover):not(:focus-within) .menu a b,
+  html:not(.rx-dark-shell) .sidebar:not(:hover):not(:focus-within) .menu a small {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  html:not(.rx-dark-shell) .sidebar:hover .menu a,
+  html:not(.rx-dark-shell) .sidebar:focus-within .menu a {
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+  html:not(.rx-dark-shell) .sidebar .collapse,
+  html:not(.rx-dark-shell) .sidebar button,
+  html:not(.rx-dark-shell) .sidebar .menu-toggle {
+    color: #075C45 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+}
