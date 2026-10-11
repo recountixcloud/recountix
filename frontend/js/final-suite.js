@@ -130,9 +130,25 @@ if(document.getElementById('totalCustomers')) setInterval(()=>{
 },120000);
 })();
 
-/* Recountix Rc.0.05 — Compact data views: overview first, details on demand */
+/* Recountix — Reliable View Details / Hide Details controls */
 (function(){
   'use strict';
+  function ensureCompactStyles(){
+    if(document.getElementById('rcCompactViewStyles')) return;
+    const style=document.createElement('style');
+    style.id='rcCompactViewStyles';
+    style.textContent=`
+      section.table-section > .rc-compact-body,
+      section.vo-today-panel > .rc-compact-body { display:none !important; }
+      section.table-section.rc-open > .rc-compact-body,
+      section.vo-today-panel.rc-open > .rc-compact-body { display:block !important; }
+      .rc-compact-actions { display:flex; justify-content:flex-end; align-items:center; margin:8px 0; }
+      .rc-view-details { display:inline-flex !important; align-items:center; justify-content:center; gap:8px; min-height:40px; padding:9px 14px; border:1px solid #0B8060; border-radius:10px; background:#0B8060; color:#fff; font-weight:700; cursor:pointer; touch-action:manipulation; position:relative; z-index:2; }
+      .rc-view-details span, .rc-view-details i { color:inherit; pointer-events:none; }
+      .rc-view-details:focus-visible { outline:3px solid rgba(16,185,129,.35); outline-offset:2px; }
+    `;
+    document.head.appendChild(style);
+  }
   function makeCompact(section){
     if(!section || section.dataset.rcCompact==='1') return;
     const head=section.querySelector(':scope > .summary-bar, :scope > .vo-today-head');
@@ -149,15 +165,23 @@ if(document.getElementById('totalCustomers')) setInterval(()=>{
     btn.setAttribute('aria-expanded','false');
     btn.setAttribute('aria-label','Open '+title);
     actions.appendChild(btn); head.appendChild(actions);
-    btn.addEventListener('click',()=>{
-      const open=section.classList.toggle('rc-open');
+    btn.addEventListener('click',(event)=>{
+      event.preventDefault();
+      event.stopPropagation();
+      const open=!section.classList.contains('rc-open');
+      section.classList.toggle('rc-open',open);
       btn.setAttribute('aria-expanded',String(open));
-      btn.querySelector('span').textContent=open?'Hide details':'View details';
+      btn.setAttribute('aria-label',(open?'Hide ':'Open ')+title);
+      const label=btn.querySelector('span');
+      if(label) label.textContent=open?'Hide details':'View details';
+      const icon=btn.querySelector('i');
+      if(icon) icon.className='fa-solid '+(open?'fa-chevron-up':'fa-chevron-down');
       if(open) setTimeout(()=>body.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
     });
     section.dataset.rcCompact='1';
   }
   function apply(){
+    ensureCompactStyles();
     document.querySelectorAll('section.table-section, section.vo-today-panel').forEach(makeCompact);
   }
   window.rcApplyCompactViews=apply;
