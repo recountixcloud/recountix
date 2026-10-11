@@ -2459,3 +2459,102 @@ html:not(.rx-dark-shell) body .rx-theme-toggle {
     box-shadow: 0 4px 0 rgba(8,100,69,.13),0 7px 14px rgba(24,83,59,.12) !important;
   }
 }
+
+
+/* Recountix light-theme sidebar-collapse overflow fix */
+@media (min-width: 768px) {
+  html:not(.rx-dark-shell) {
+    --rx-sidebar-rail: 76px;
+  }
+  html:not(.rx-dark-shell) body {
+    overflow-x: hidden !important;
+  }
+  html:not(.rx-dark-shell) .wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: clip !important;
+  }
+  html:not(.rx-dark-shell) .sidebar {
+    box-sizing: border-box !important;
+    width: var(--rx-sidebar-rail) !important;
+    min-width: var(--rx-sidebar-rail) !important;
+    max-width: var(--rx-sidebar-rail) !important;
+  }
+  html:not(.rx-dark-shell) .sidebar:hover,
+  html:not(.rx-dark-shell) .sidebar:focus-within {
+    width: min(var(--sidebar-w, 260px), 86vw) !important;
+    min-width: min(var(--sidebar-w, 260px), 86vw) !important;
+    max-width: min(var(--sidebar-w, 260px), 86vw) !important;
+  }
+  html:not(.rx-dark-shell) .main-content {
+    box-sizing: border-box !important;
+    margin-left: var(--rx-sidebar-rail) !important;
+    width: calc(100% - var(--rx-sidebar-rail)) !important;
+    min-width: 0 !important;
+    max-width: calc(100% - var(--rx-sidebar-rail)) !important;
+    overflow-x: clip !important;
+  }
+  html:not(.rx-dark-shell) .main-content > *,
+  html:not(.rx-dark-shell) .dashboard-grid > *,
+  html:not(.rx-dark-shell) .dashboard-cards > *,
+  html:not(.rx-dark-shell) .rx-metric-grid > *,
+  html:not(.rx-dark-shell) .rx-risk-grid > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  html:not(.rx-dark-shell) .topbar {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    flex-wrap: wrap !important;
+  }
+  html:not(.rx-dark-shell) .topbar .page-title {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+  html:not(.rx-dark-shell) .card,
+  html:not(.rx-dark-shell) .content-box,
+  html:not(.rx-dark-shell) .table-section,
+  html:not(.rx-dark-shell) .dashboard-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  html:not(.rx-dark-shell) .status-row,
+  html:not(.rx-dark-shell) .status-item,
+  html:not(.rx-dark-shell) .rx-status-row {
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+@media (max-width: 767px) {
+  html:not(.rx-dark-shell) body,
+  html:not(.rx-dark-shell) .wrapper {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+  html:not(.rx-dark-shell) .main-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: clip !important;
+  }
+  html:not(.rx-dark-shell) .topbar,
+  html:not(.rx-dark-shell) .dashboard-grid,
+  html:not(.rx-dark-shell) .dashboard-cards,
+  html:not(.rx-dark-shell) .rx-metric-grid,
+  html:not(.rx-dark-shell) .rx-risk-grid,
+  html:not(.rx-dark-shell) .dashboard-analytics {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
