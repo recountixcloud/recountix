@@ -745,3 +745,44 @@ html.rx-portal:not(.rx-dark-shell):root button:focus-visible {
     scroll-behavior:auto !important;
   }
 }
+
+
+/* Login clarity pass: remove decorative colored icon tiles and keep password eye compact. */
+.login-page .icon-badge {
+  display: none !important;
+}
+.login-page #password {
+  padding-right: 42px !important;
+}
+.login-page #togglePassword,
+.login-page button.eye-btn#togglePassword {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  right: 7px !important;
+  padding: 0 !important;
+  border-radius: 7px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #087F5B !important;
+}
+.login-page #togglePassword i {
+  font-size: 15px !important;
+  line-height: 1 !important;
+  color: #087F5B !important;
+}
+.login-page #togglePassword:focus-visible {
+  outline: 2px solid #087F5B !important;
+  outline-offset: 1px !important;
+}
+.login-page .forgot-link,
+.login-page .remember,
+.login-page label,
+.login-page .subtitle,
+.login-page .secure-note,
+.login-page .footer-note {
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
