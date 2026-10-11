@@ -26,7 +26,9 @@
       style = document.createElement("style");
       style.id = "rxRecoveryPrintStyles";
       style.textContent = `
-        .clean-print-report{display:none;background:#fff;color:#111;font-family:Arial,sans-serif}
+        .clean-print-report{display:none;background:#fff;color:#111;font-family:Arial,sans-serif;position:relative;isolation:isolate;overflow:hidden}
+        .clean-print-report::before{content:"";position:absolute;z-index:0;pointer-events:none;left:50%;top:54%;transform:translate(-50%,-50%);width:48%;height:70%;background-image:url("assets/logo.png");background-repeat:no-repeat;background-position:center;background-size:contain;opacity:.075}
+        .clean-print-report .cpr-header,.clean-print-report .cpr-table,.clean-print-report .cpr-footer{position:relative;z-index:1}
         .clean-print-report .cpr-header{text-align:center;margin-bottom:8px;background:#f0fbf8!important;border:1px solid #b8e4d8;border-top:5px solid #07866f;padding:8px 12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
         .clean-print-report .cpr-logo{display:block;max-height:58px;max-width:190px;width:auto;height:auto;object-fit:contain;margin:0 auto 5px}
         .clean-print-report h1{font-size:22px;margin:4px 0}
