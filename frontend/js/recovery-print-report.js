@@ -27,8 +27,8 @@
       style.id = "rxRecoveryPrintStyles";
       style.textContent = `
         .clean-print-report{display:none;background:#fff;color:#111;font-family:Arial,sans-serif}
-        .clean-print-report .cpr-header{text-align:center;margin-bottom:18px}
-        .clean-print-report .cpr-logo{max-height:54px;max-width:160px;object-fit:contain}
+        .clean-print-report .cpr-header{text-align:center;margin-bottom:8px;background:#f0fbf8!important;border:1px solid #b8e4d8;border-top:5px solid #07866f;padding:8px 12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+        .clean-print-report .cpr-logo{display:block;max-height:58px;max-width:190px;width:auto;height:auto;object-fit:contain;margin:0 auto 5px}
         .clean-print-report h1{font-size:22px;margin:4px 0}
         .clean-print-report p{margin:4px 0;font-size:11px}
         .clean-print-report .cpr-table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:9px;overflow-wrap:anywhere}
@@ -45,6 +45,15 @@
         .clean-print-report .cpr-table th,.clean-print-report .cpr-table td{border:1px solid #aab2ad;padding:6px 5px;text-align:left;vertical-align:top}
         .clean-print-report .cpr-table th{background:#edf5f0!important;font-weight:700}
         .clean-print-report .cpr-table td.amount,.clean-print-report .cpr-table th.amount{text-align:right;white-space:nowrap}
+        .clean-print-report .cpr-table tbody tr:nth-child(even){background:#eef7ff!important}
+        .clean-print-report .cpr-table td:nth-child(6){background:#fff8dc!important}
+        .clean-print-report .cpr-table td:nth-child(7){background:#fff0e5!important}
+        .clean-print-report .cpr-table td:nth-child(8){background:#e7f8ef!important}
+        .clean-print-report .cpr-table td:nth-child(9){background:#eaf2ff!important}
+        .clean-print-report .cpr-table td:nth-child(10){background:#ffe9e9!important}
+        .clean-print-report .cpr-footer{background:#eaf7f3!important;border:1px solid #b8e4d8;padding:8px 10px}
+        .clean-print-report .cpr-footer p{color:#075e52;font-weight:600}
+        .clean-print-report *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
         .clean-print-report .cpr-footer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin-top:14px;padding-top:10px;border-top:2px solid #1f513f}
         .clean-print-report .cpr-footer p{font-size:12px;margin:0}
         .clean-print-report .cpr-sign{grid-column:1/-1;text-align:right;color:#555}
