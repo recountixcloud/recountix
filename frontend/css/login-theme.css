@@ -752,29 +752,61 @@ html.rx-portal:not(.rx-dark-shell):root button:focus-visible {
   display: none !important;
 }
 .login-page #password {
-  padding-right: 42px !important;
+  padding-right: 48px !important;
 }
-.login-page #togglePassword,
-.login-page button.eye-btn#togglePassword {
-  width: 32px !important;
-  height: 32px !important;
-  min-width: 32px !important;
-  min-height: 32px !important;
-  right: 7px !important;
+/* Keep the password visibility icon clearly visible on every login/recovery view. */
+html.rx-login:root .login-page #togglePassword,
+html.rx-login:root .login-page button.eye-btn#togglePassword {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  right: 6px !important;
   padding: 0 !important;
-  border-radius: 7px !important;
-  background: transparent !important;
+  border: 1px solid #9BD7C7 !important;
+  border-radius: 10px !important;
+  background: #DFF5EE !important;
   box-shadow: none !important;
   color: #087F5B !important;
+  opacity: 1 !important;
 }
-.login-page #togglePassword i {
-  font-size: 15px !important;
+html.rx-login:root .login-page #togglePassword i {
+  font-size: 16px !important;
   line-height: 1 !important;
   color: #087F5B !important;
 }
-.login-page #togglePassword:focus-visible {
+html.rx-login:root .login-page #togglePassword:hover {
+  background: #C7EDE1 !important;
+  border-color: #087F5B !important;
+}
+html.rx-login:root .login-page #togglePassword:focus-visible {
   outline: 2px solid #087F5B !important;
-  outline-offset: 1px !important;
+  outline-offset: 2px !important;
+}
+/* The Forgot password action is text-only: remove legacy green box/underline shadows. */
+html.rx-login:root .login-page .forgot-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 32px !important;
+  padding: 0 2px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #087F5B !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+}
+html.rx-login:root .login-page .forgot-link:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #075E46 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
 }
 .login-page .forgot-link,
 .login-page .remember,
