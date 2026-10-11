@@ -349,7 +349,6 @@ function loadCustomers() {
             <td>${agingBadgeHtml(bucket, getCustomerDaysOverdue(customer))}</td>
             <td>${appEscape(dueShow)}${customer.autoReminder === false ? " 🔕" : ""}</td>
             <td style="white-space:nowrap;">
-                <button onclick="viewCustomer(${index})" title="View">👁</button>
                 <button onclick="editCustomer(${index})" title="Edit">✏️</button>
                 ${waBtn}
                 <button type="button" onclick="setCustomerPortalPin(${index})" title="Set Customer Portal PIN" style="display:inline-flex;align-items:center;gap:4px;background:#0B5D4F;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">🔐 PIN</button>
@@ -454,34 +453,9 @@ function searchCustomer() {
 }
 
 function viewCustomer(index) {
-    const c = customers[index];
-    const msg =
-`Customer Details
-
-Customer : ${c.name}
-Father : ${c.father}
-Mobile : ${c.mobile}
-Alternate : ${c.altMobile}
-Village : ${c.village}
-Taluka : ${c.taluka}
-District : ${c.district}
-Address :
-${c.address}
-Bill Amount : ₹${c.bill}
-Down Payment : ₹${c.down}
-Outstanding : ₹${c.outstanding}
-Executive : ${c.executive}
-Follow-up : ${c.followup}
-Remarks :
-${c.remarks}
-`;
-    if (Number(c.outstanding || 0) > 0 && c.mobile) {
-        if (confirm(msg + "\n\nSend WhatsApp dues reminder?")) {
-            sendWhatsAppReminder(index);
-        }
-    } else {
-        alert(msg);
-    }
+    // Customer profile viewing is intentionally disabled globally to avoid
+    // browser hangs. Customer editing and payment actions remain available.
+    return;
 }
 
 // ================================
