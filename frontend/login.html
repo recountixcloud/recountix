@@ -88,7 +88,10 @@
     }
     .card > *{ position:relative; z-index:1; }
 
-    .icon-badge{
+    /* Remove the colored square icon badge from login and forgot-password panels. */
+    .icon-badge{ display:none !important; }
+    /* Original icon-badge styles intentionally disabled below. */
+    .icon-badge-original{
       width:44px; height:44px; border-radius:14px;
       background:var(--pale-100);
       color:var(--navy-700);
