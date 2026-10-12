@@ -269,11 +269,24 @@
     if (byId("cprDateLine")) byId("cprDateLine").textContent = "Printed: " + new Date().toLocaleString("en-IN");
     if (byId("cprFilterLine")) byId("cprFilterLine").textContent = "Period: " + from + " to " + to + " | Events only — no full customer list | Total CR excluded";
 
+    // Move the report to body so print CSS cannot hide it with its dashboard ancestors.
+    const originalParent = box.parentNode;
+    const originalNext = box.nextSibling;
+    const originalDisplay = box.style.display;
+    document.body.appendChild(box);
     document.body.classList.add("rx-print-clean");
     box.style.display = "block";
-    try { window.print(); }
-    finally {
-      setTimeout(() => { document.body.classList.remove("rx-print-clean"); box.style.display = "none"; }, 800);
+    try {
+      window.print();
+    } finally {
+      setTimeout(() => {
+        document.body.classList.remove("rx-print-clean");
+        box.style.display = originalDisplay || "none";
+        if (originalParent) {
+          if (originalNext && originalNext.parentNode === originalParent) originalParent.insertBefore(box, originalNext);
+          else originalParent.appendChild(box);
+        }
+      }, 800);
     }
   }
 
