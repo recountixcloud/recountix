@@ -190,8 +190,11 @@
     <button type="button" class="add-btn" style="background:#16a34a;" onclick="exportReport()">
       <i class="fa-solid fa-file-arrow-down"></i> Export Report
     </button>
-    <button type="button" class="add-btn" style="background:#f59e0b;" onclick="if(typeof printCleanReport==='function')printCleanReport();else window.print();">
-      <i class="fa-solid fa-print"></i> Print Report
+    <button type="button" class="add-btn" style="background:#0f766e;" onclick="printTodayRecoveryReport()">
+      <i class="fa-solid fa-calendar-day"></i> Print Today's Recovery
+    </button>
+    <button type="button" class="add-btn" style="background:#d97706;" onclick="printSelectedRecoveryReport()">
+      <i class="fa-solid fa-calendar-check"></i> Print Selected Date
     </button>
     <button type="button" class="add-btn" style="background:#64748b;" onclick="loadReports()">
       <i class="fa-solid fa-rotate"></i> Refresh
@@ -396,6 +399,21 @@ var toDate = document.getElementById("toDate");
 if (dayWiseDate && dayWiseDate.value === "") dayWiseDate.value = today;
 if (fromDate && fromDate.value === "") fromDate.value = today;
 if (toDate && toDate.value === "") toDate.value = today;
+function printTodayRecoveryReport() {
+  var todayLocal = new Date();
+  var date = todayLocal.getFullYear() + "-" + String(todayLocal.getMonth()+1).padStart(2,"0") + "-" + String(todayLocal.getDate()).padStart(2,"0");
+  ["dayWiseDate","fromDate","toDate"].forEach(function(id){var el=document.getElementById(id);if(el)el.value=date;});
+  var customer = document.getElementById("reportCustomer"); if(customer)customer.value="";
+  var search = document.getElementById("reportSearch"); if(search)search.value="";
+  if (typeof printCleanReport === "function") printCleanReport(); else window.print();
+}
+function printSelectedRecoveryReport() {
+  var selected = document.getElementById("dayWiseDate")?.value || "";
+  if (!selected) { alert("Please select a date first."); return; }
+  var from = document.getElementById("fromDate"); var to = document.getElementById("toDate");
+  if (from) from.value = selected; if (to) to.value = selected;
+  if (typeof printCleanReport === "function") printCleanReport(); else window.print();
+}
 function applyDayWiseDate() {
   var selectedDate = document.getElementById("dayWiseDate")?.value || "";
   var from = document.getElementById("fromDate");
@@ -427,7 +445,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 <script src="js/offline-backup.js?v=preferences-1"></script>
 <script src="js/i18n.js?v=2"></script>
 <script src="js/rx-design-system.js?v=ds-1"></script>
-<script src="js/recovery-print-report.js?v=4"></script>
+<script src="js/recovery-print-report.js?v=5"></script>
 </body>
 
 </html>
