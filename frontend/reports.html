@@ -401,12 +401,21 @@ var toDate = document.getElementById("toDate");
   if (fromDate && !fromDate.value) fromDate.value = todayLocal;
   if (toDate && !toDate.value) toDate.value = todayLocal;
 })();
-function printSelectedRecoveryReport() {
-  var selected = document.getElementById("dayWiseDate")?.value || "";
-  if (!selected) { alert("Please select a date first."); return; }
-  var from = document.getElementById("fromDate"); var to = document.getElementById("toDate");
-  if (from) from.value = selected; if (to) to.value = selected;
-  if (typeof printCleanReport === "function") printCleanReport(); else window.print();
+async function printSelectedRecoveryReport() {
+  var from = document.getElementById("fromDate");
+  var to = document.getElementById("toDate");
+  var selected = document.getElementById("dayWiseDate");
+  // Print the range the user selected. Do not overwrite From/To with the single-day picker.
+  if ((!from || !from.value) && (!to || !to.value) && (!selected || !selected.value)) {
+    alert("Please select a date range first.");
+    return;
+  }
+  if (typeof printCleanReport === "function") {
+    try { await printCleanReport(); }
+    catch (error) { console.error("Report print failed:", error); alert("Report print failed. Please refresh the page and try again."); }
+  } else {
+    alert("Print report script is not loaded. Please refresh the page.");
+  }
 }
 function applyDayWiseDate() {
   var selectedDate = document.getElementById("dayWiseDate")?.value || "";
@@ -439,7 +448,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 <script src="js/offline-backup.js?v=preferences-1"></script>
 <script src="js/i18n.js?v=2"></script>
 <script src="js/rx-design-system.js?v=ds-1"></script>
-<script src="js/recovery-print-report.js?v=7"></script>
+<script src="js/recovery-print-report.js?v=8"></script>
 </body>
 
 </html>
