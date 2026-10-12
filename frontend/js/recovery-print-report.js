@@ -152,6 +152,7 @@
         @page{size:A4 landscape;margin:5mm;size:auto landscape}
         @media print{
           body.rx-print-clean > *{display:none!important}
+          body.rx-print-clean > #cleanPrintReport{display:block!important}
           body.rx-print-clean #cleanPrintReport{display:block!important}
           body.rx-print-clean #cleanPrintReport,body.rx-print-clean #cleanPrintReport *{visibility:visible!important}
           body.rx-print-clean #cleanPrintReport{display:block!important;position:relative!important;left:auto!important;top:auto!important;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;break-before:avoid!important;break-after:avoid!important;box-sizing:border-box!important}
