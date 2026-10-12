@@ -78,8 +78,7 @@
 
   async function printRecoverySummary() {
     const box = byId("cleanPrintReport");
-    const body = byId("cprBody");
-    if (!box || !body) { window.print(); return; }
+    if (!box) { window.print(); return; }
     ensurePrintLayout();
 
     const fromEl = byId("fromDate");
@@ -88,124 +87,93 @@
     const searchEl = byId("reportSearch");
     const customerEl = byId("reportCustomer");
     const today = currentDate();
-    const from = (fromEl && fromEl.value) || (dayEl && dayEl.value) || "";
-    const to = (toEl && toEl.value) || (dayEl && dayEl.value) || "";
+    const from = (fromEl && fromEl.value) || (dayEl && dayEl.value) || today;
+    const to = (toEl && toEl.value) || (dayEl && dayEl.value) || from;
     const selectedCustomer = customerEl && customerEl.value ? String(customerEl.value) : "";
     const query = searchEl && searchEl.value ? searchEl.value.trim().toLowerCase() : "";
     const session = (typeof window.getSession === "function" ? window.getSession() : {}) || {};
 
     try {
-      if (typeof window.loadReports === "function") await window.loadReports();
-      else if (typeof window.reloadAllData === "function" && (!Array.isArray(window.customers) || !window.customers.length)) await window.reloadAllData();
-    } catch (e) { console.warn("Could not refresh report data before printing", e); }
-    const allCustomers = (typeof customers !== "undefined" && Array.isArray(customers)) ? customers.slice() : (Array.isArray(window.customers) ? window.customers.slice() : []);
-    const allRecoveries = (typeof recoveries !== "undefined" && Array.isArray(recoveries)) ? recoveries.slice() : (Array.isArray(window.recoveries) ? window.recoveries.slice() : []);
+      if (typeof window.reloadAllData === "function") await window.reloadAllData();
+      if (typeof window.loadReports === "function") window.loadReports();
+    } catch (e) { console.warn("Could not refresh report data", e); }
 
-    let promises = [];
-    let activities = [];
-    try {
-      if (typeof window.sbGetPtp === "function") promises = await window.sbGetPtp(session.shopId || null, "all") || [];
-    } catch (e) { console.warn("Report promise data unavailable", e); }
-    try {
-      if (typeof window.sbGetActivities === "function") activities = await window.sbGetActivities(session.shopId || null, 500) || [];
-    } catch (e) { console.warn("Report activity data unavailable", e); }
+    const allCustomers = (typeof customers !== "undefined" && Array.isArray(customers)) ? customers.slice() : [];
+    const allRecoveries = (typeof recoveries !== "undefined" && Array.isArray(recoveries)) ? recoveries.slice() : [];
+    let promises = [], activities = [];
+    try { if (typeof window.sbGetPtp === "function") promises = await window.sbGetPtp(session.shopId || null, "all") || []; }
+    catch (e) { console.warn("Promise report data unavailable", e); }
+    try { if (typeof window.sbGetActivities === "function") activities = await window.sbGetActivities(session.shopId || null, 500) || []; }
+    catch (e) { console.warn("Activity report data unavailable", e); }
 
-    const filteredCustomers = allCustomers.filter((c) => {
-      if (selectedCustomer && String(c.id) !== selectedCustomer) return false;
-      const haystack = [c.name, c.mobile, c.village, c.city, c.district].join(" ").toLowerCase();
+    const customerMap = new Map(allCustomers.map(c => [String(c.id), c]));
+    const events = [];
+    const matches = (customerId, name, mobile) => {
+      if (selectedCustomer && String(customerId) !== selectedCustomer) return false;
+      const haystack = [name, mobile].join(" ").toLowerCase();
       return !query || haystack.includes(query);
+    };
+    allRecoveries.forEach(r => {
+      const id = String(r.customerId || r.customer_id || "");
+      const customer = customerMap.get(id) || {};
+      const date = dateOf(r.date || r.recovery_date || r.created_at);
+      if (!dateInRange(date, from, to) || !matches(id, customer.name, customer.mobile || customer.phone)) return;
+      events.push({ date, id, customer, kind: "Payment Received", detail: [r.paymentMode || r.payment_mode || "", r.receiptNo || r.receipt_no ? "Receipt " + (r.receiptNo || r.receipt_no) : "", r.remarks || r.notes || ""].filter(Boolean).join(" — ") || "Payment recorded", amount: Number(r.amount || 0), promise: 0 });
     });
-
-    const promiseByCustomer = {};
-    promises.filter((p) => dateInRange(p.promised_date || p.created_at, from, to)).forEach((p) => {
+    promises.forEach(p => {
       const id = String(p.customer_id || p.customerId || "");
-      if (!id) return;
-      if (!promiseByCustomer[id]) promiseByCustomer[id] = { amount: 0, details: [] };
-      promiseByCustomer[id].amount += Number(p.promised_amount || p.amount || 0);
-      const detail = [p.promised_date ? ("Date: " + dateOf(p.promised_date)) : "", p.notes || ""].filter(Boolean).join(" — ");
-      if (detail) promiseByCustomer[id].details.push(detail);
+      const customer = customerMap.get(id) || {};
+      const date = dateOf(p.created_at || p.promised_date);
+      if (!dateInRange(date, from, to) || !matches(id, customer.name, customer.mobile || customer.phone)) return;
+      events.push({ date, id, customer, kind: "Promise", detail: ["Promise date: " + dateOf(p.promised_date), p.notes || "", "Status: " + (p.status || "open")].filter(Boolean).join(" — "), amount: 0, promise: Number(p.promised_amount || p.amount || 0) });
     });
-
-    const recoveryByCustomer = {};
-    allRecoveries.filter((r) => dateInRange(r.date || r.recovery_date || r.created_at, from, to)).forEach((r) => {
-      const id = customerIdOf(r);
-      if (!id) return;
-      recoveryByCustomer[id] = (recoveryByCustomer[id] || 0) + Number(r.amount || 0);
-    });
-
-    const latestActivityByCustomer = {};
-    activities.filter((a) => dateInRange(a.created_at, from, to)).forEach((a) => {
+    activities.forEach(a => {
       const id = String(a.customer_id || a.customerId || "");
-      if (!id) return;
-      if (!latestActivityByCustomer[id] || String(a.created_at || "") > String(latestActivityByCustomer[id].created_at || "")) {
-        latestActivityByCustomer[id] = a;
-      }
+      const customer = customerMap.get(id) || {};
+      const date = dateOf(a.created_at || a.date);
+      if (!dateInRange(date, from, to) || !matches(id, customer.name, customer.mobile || customer.phone)) return;
+      events.push({ date, id, customer, kind: "Call / Action", detail: [a.activity_type || "Action", a.outcome || "", a.notes || ""].filter(Boolean).join(" — "), amount: 0, promise: 0 });
     });
+    events.sort((a,b) => b.date.localeCompare(a.date) || a.kind.localeCompare(b.kind));
 
-    const rows = filteredCustomers.map((c) => {
-      const id = String(c.id);
-      const customerRecoveries = allRecoveries.filter((r) => customerIdOf(r) === id);
-      const totalAmount = Number(c.bill || c.total_amount || c.totalAmount || (Number(c.outstanding || c.balance || 0) + customerRecoveries.reduce((sum, r) => sum + Number(r.amount || 0), 0)) || 0);
-      const activity = latestActivityByCustomer[id];
-      const callType = activity ? String(activity.activity_type || "Activity") : "No call logged";
-      const callResult = activity ? [activity.outcome, activity.notes].filter(Boolean).join(" — ") : "";
-      return {
-        name: c.name || "-",
-        city: c.village || c.city || c.district || "-",
-        mobile: c.mobile || c.phone || "-",
-        callStatus: activity ? callType + (callResult ? ": " + callResult : "") : "No call logged",
-        totalAmount,
-        promise: Number((promiseByCustomer[id] || {}).amount || 0),
-        promiseDetails: ((promiseByCustomer[id] || {}).details || []).join(" | ") || "-",
-        received: Number(recoveryByCustomer[id] || 0),
-        due: Number(c.outstanding || c.balance || 0)
-      };
-    });
-
-    const totals = rows.reduce((acc, r) => {
-      acc.amount += r.totalAmount;
-      acc.promise += r.promise;
-      acc.received += r.received;
-      acc.due += r.due;
-      return acc;
-    }, { amount: 0, promise: 0, received: 0, due: 0 });
-
-    const headers = ["#", "Customer Name", "City / Village", "Mobile Number", "Call Status / Result", "Total Amount", "Promise Amount", "Promise Details / Date", "Received Amount", "Total Outstanding"];
+    const uniqueIds = [...new Set(events.map(e => e.id).filter(Boolean))];
+    const involvedCustomers = uniqueIds.map(id => customerMap.get(id)).filter(Boolean);
+    const totalReceived = events.reduce((s,e) => s + e.amount, 0);
+    const totalPromise = events.reduce((s,e) => s + e.promise, 0);
+    const totalOutstanding = involvedCustomers.reduce((s,c) => s + Number(c.outstanding || c.balance || 0), 0);
+    const headers = ["#", "Date", "Customer Name", "City", "Mobile Number", "Recovery / Call Action", "Details / Promise Date", "Received Amount", "Promise Amount", "Outstanding"];
     const table = box.querySelector(".cpr-table");
     if (table) {
-      table.innerHTML = "<thead><tr>" + headers.map((h, i) => "<th" + (i >= 5 ? ' class="amount"' : "") + ">" + esc(h) + "</th>").join("") + "</tr></thead><tbody id=\"cprBody\"></tbody>";
+      table.innerHTML = "<thead><tr>" + headers.map((h,i) => "<th" + (i >= 7 ? ' class=\"amount\"' : "") + ">" + esc(h) + "</th>").join("") + "</tr></thead><tbody id=\"cprBody\"></tbody>";
     }
     const tbody = byId("cprBody");
     if (tbody) {
-      tbody.innerHTML = rows.length ? rows.map((r, i) =>
-        "<tr><td>" + (i + 1) + "</td><td>" + esc(r.name) + "</td><td>" + esc(r.city) + "</td><td>" + esc(r.mobile) + "</td><td>" + esc(r.callStatus) + "</td><td class=\"amount\">" + money(r.totalAmount) + "</td><td class=\"amount\">" + money(r.promise) + "</td><td>" + esc(r.promiseDetails) + "</td><td class=\"amount\">" + money(r.received) + "</td><td class=\"amount\">" + money(r.due) + "</td></tr>"
-      ).join("") : '<tr><td colspan="10" style="text-align:center">No customers match these filters.</td></tr>';
+      tbody.innerHTML = events.length ? events.map((e,i) =>
+        "<tr><td>" + (i+1) + "</td><td>" + esc(e.date) + "</td><td>" + esc(e.customer.name || "-") + "</td><td>" + esc(e.customer.village || e.customer.city || e.customer.district || "-") + "</td><td>" + esc(e.customer.mobile || e.customer.phone || "-") + "</td><td>" + esc(e.kind) + "</td><td>" + esc(e.detail || "-") + "</td><td class=\"amount\">" + (e.amount ? money(e.amount) : "-") + "</td><td class=\"amount\">" + (e.promise ? money(e.promise) : "-") + "</td><td class=\"amount\">" + money(e.customer.outstanding || e.customer.balance || 0) + "</td></tr>"
+      ).join("") : '<tr><td colspan="10" style="text-align:center;padding:14px">No recovery, promise or call/action entries found for this date range.</td></tr>';
     }
 
     const footer = box.querySelector(".cpr-footer");
     if (footer) {
-      footer.innerHTML = '<p>Total Customers: <strong>' + rows.length.toLocaleString("en-IN") + '</strong></p>' +
-        '<p>Total Amount: <strong>' + money(totals.amount) + '</strong></p>' +
-        '<p>Total Promise Amount: <strong>' + money(totals.promise) + '</strong></p>' +
-        '<p>Today\'s Recovery: <strong>' + money(totals.received) + '</strong></p>' +
-        '<p>Total Outstanding: <strong>' + money(totals.due) + '</strong></p>' +
+      footer.innerHTML = '<p>Total Customers in Activity: <strong>' + uniqueIds.length.toLocaleString("en-IN") + '</strong></p>' +
+        '<p>Total Amount / Payments Received: <strong>' + money(totalReceived) + '</strong></p>' +
+        '<p>Total Promise Amount: <strong>' + money(totalPromise) + '</strong></p>' +
+        '<p>Today\\'s Recovery (selected period): <strong>' + money(totalReceived) + '</strong></p>' +
+        '<p>Total Outstanding (involved customers): <strong>' + money(totalOutstanding) + '</strong></p>' +
         '<p class="cpr-sign">Generated by Recountix</p>';
     }
 
     const shop = session.shopName || (window.settings && window.settings.company) || "Recountix";
     if (byId("cprShopName")) byId("cprShopName").textContent = shop;
-    if (byId("cprSubTitle")) byId("cprSubTitle").textContent = "Customer-wise Daily Recovery Report";
+    if (byId("cprSubTitle")) byId("cprSubTitle").textContent = "Date-wise Recovery, Customer Promises & Call Actions";
     if (byId("cprDateLine")) byId("cprDateLine").textContent = "Printed: " + new Date().toLocaleString("en-IN");
-    if (byId("cprFilterLine")) byId("cprFilterLine").textContent = "Period: " + (from || "All") + " to " + (to || "All") + " | Total CR not shown";
+    if (byId("cprFilterLine")) byId("cprFilterLine").textContent = "Period: " + from + " to " + to + " | Events only — no full customer list | Total CR excluded";
+
     document.body.classList.add("rx-print-clean");
     box.style.display = "block";
-    try {
-      window.print();
-    } finally {
-      setTimeout(() => {
-        document.body.classList.remove("rx-print-clean");
-        box.style.display = "none";
-      }, 600);
+    try { window.print(); }
+    finally {
+      setTimeout(() => { document.body.classList.remove("rx-print-clean"); box.style.display = "none"; }, 800);
     }
   }
 
