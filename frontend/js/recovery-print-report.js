@@ -88,8 +88,8 @@
     const searchEl = byId("reportSearch");
     const customerEl = byId("reportCustomer");
     const today = currentDate();
-    const from = (fromEl && fromEl.value) || (dayEl && dayEl.value) || today;
-    const to = (toEl && toEl.value) || (dayEl && dayEl.value) || today;
+    const from = (fromEl && fromEl.value) || (dayEl && dayEl.value) || "";
+    const to = (toEl && toEl.value) || (dayEl && dayEl.value) || "";
     const selectedCustomer = customerEl && customerEl.value ? String(customerEl.value) : "";
     const query = searchEl && searchEl.value ? searchEl.value.trim().toLowerCase() : "";
     const session = (typeof window.getSession === "function" ? window.getSession() : {}) || {};
@@ -98,8 +98,8 @@
       if (typeof window.loadReports === "function") await window.loadReports();
       else if (typeof window.reloadAllData === "function" && (!Array.isArray(window.customers) || !window.customers.length)) await window.reloadAllData();
     } catch (e) { console.warn("Could not refresh report data before printing", e); }
-    const allCustomers = Array.isArray(window.customers) ? window.customers.slice() : [];
-    const allRecoveries = Array.isArray(window.recoveries) ? window.recoveries.slice() : [];
+    const allCustomers = (typeof customers !== "undefined" && Array.isArray(customers)) ? customers.slice() : (Array.isArray(window.customers) ? window.customers.slice() : []);
+    const allRecoveries = (typeof recoveries !== "undefined" && Array.isArray(recoveries)) ? recoveries.slice() : (Array.isArray(window.recoveries) ? window.recoveries.slice() : []);
 
     let promises = [];
     let activities = [];
@@ -144,7 +144,8 @@
 
     const rows = filteredCustomers.map((c) => {
       const id = String(c.id);
-      const totalAmount = Number(c.bill || c.total_amount || c.totalAmount || (Number(c.outstanding || 0) + allRecoveries.filter((r) => customerIdOf(r) === id).reduce((sum, r) => sum + Number(r.amount || 0), 0)) || 0);
+      const customerRecoveries = allRecoveries.filter((r) => customerIdOf(r) === id);
+      const totalAmount = Number(c.bill || c.total_amount || c.totalAmount || (Number(c.outstanding || c.balance || 0) + customerRecoveries.reduce((sum, r) => sum + Number(r.amount || 0), 0)) || 0);
       const activity = latestActivityByCustomer[id];
       const callType = activity ? String(activity.activity_type || "Activity") : "No call logged";
       const callResult = activity ? [activity.outcome, activity.notes].filter(Boolean).join(" — ") : "";
