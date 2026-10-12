@@ -190,9 +190,6 @@
     <button type="button" class="add-btn" style="background:#16a34a;" onclick="exportReport()">
       <i class="fa-solid fa-file-arrow-down"></i> Export Report
     </button>
-    <button type="button" class="add-btn" style="background:#0f766e;" onclick="printTodayRecoveryReport()">
-      <i class="fa-solid fa-calendar-day"></i> Print Today's Recovery
-    </button>
     <button type="button" class="add-btn" style="background:#d97706;" onclick="printSelectedRecoveryReport()">
       <i class="fa-solid fa-calendar-check"></i> Print Selected Date
     </button>
@@ -396,14 +393,14 @@ if (typeof updateDashboard === "function") updateDashboard();
 var dayWiseDate = document.getElementById("dayWiseDate");
 var fromDate = document.getElementById("fromDate");
 var toDate = document.getElementById("toDate");
-function printTodayRecoveryReport() {
-  var todayLocal = new Date();
-  var date = todayLocal.getFullYear() + "-" + String(todayLocal.getMonth()+1).padStart(2,"0") + "-" + String(todayLocal.getDate()).padStart(2,"0");
-  ["dayWiseDate","fromDate","toDate"].forEach(function(id){var el=document.getElementById(id);if(el)el.value=date;});
-  var customer = document.getElementById("reportCustomer"); if(customer)customer.value="";
-  var search = document.getElementById("reportSearch"); if(search)search.value="";
-  if (typeof printCleanReport === "function") printCleanReport(); else window.print();
-}
+// Default custom-date filters to today's local date.
+(function setDefaultReportDate() {
+  var now = new Date();
+  var todayLocal = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0");
+  if (dayWiseDate && !dayWiseDate.value) dayWiseDate.value = todayLocal;
+  if (fromDate && !fromDate.value) fromDate.value = todayLocal;
+  if (toDate && !toDate.value) toDate.value = todayLocal;
+})();
 function printSelectedRecoveryReport() {
   var selected = document.getElementById("dayWiseDate")?.value || "";
   if (!selected) { alert("Please select a date first."); return; }
