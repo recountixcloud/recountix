@@ -771,7 +771,7 @@ function loadDashboardRecentRecovery() {
     if (!tbody) return;
     tbody.innerHTML = "";
     recoveries.slice(0, 5).forEach((item, index) => {
-        const customer = (customers || []).find(c => String(c.id) === String(item.customerId));
+        const customer = (customers || []).find(c => String(c.id) === String(item.customerId ?? item.customer_id));
         tbody.innerHTML += `
         <tr>
             <td>${index + 1}</td>
@@ -1096,9 +1096,11 @@ function loadReports() {
     try { if (typeof renderAnalyticsOnReports === 'function') renderAnalyticsOnReports(); } catch (e) {}
 
     loadReportCustomers();
-    renderReportRows(recoveries);
+    // Always render using the active date/customer/search filters, including after data refresh.
+    const filtered = (typeof getFilteredRecoveries === "function") ? getFilteredRecoveries() : recoveries;
+    renderReportRows(filtered);
     updateRecoverySummary();
-    updateReportExtraStats();
+    updateReportExtraStats(filtered);
 }
 
 function getFilteredRecoveries() {
@@ -1110,18 +1112,20 @@ function getFilteredRecoveries() {
     let list = recoveries.slice();
 
     if (reportCustomer && reportCustomer.value) {
-        list = list.filter(r => String(r.customerId) === String(reportCustomer.value));
+        list = list.filter(r => String(r.customerId ?? r.customer_id ?? "") === String(reportCustomer.value));
     }
+    // Supabase stores recovery_date as YYYY-MM-DD; tolerate timestamps and legacy field names too.
+    const normalizedDate = r => String(r.date || r.recovery_date || r.recoveryDate || r.created_at || "").slice(0, 10);
     if (fromDate && fromDate.value) {
-        list = list.filter(r => String(r.date || "").slice(0, 10) >= fromDate.value);
+        list = list.filter(r => normalizedDate(r) && normalizedDate(r) >= fromDate.value);
     }
     if (toDate && toDate.value) {
-        list = list.filter(r => String(r.date || "").slice(0, 10) <= toDate.value);
+        list = list.filter(r => normalizedDate(r) && normalizedDate(r) <= toDate.value);
     }
     if (reportSearch && reportSearch.value.trim() !== "") {
         const keyword = reportSearch.value.trim().toLowerCase();
         list = list.filter(r => {
-            const customer = customers.find(c => c.id == r.customerId);
+            const customer = customers.find(c => String(c.id) === String(r.customerId ?? r.customer_id));
             const name = customer ? (customer.name || "").toLowerCase() : "";
             const mobile = customer ? (customer.mobile || "").toLowerCase() : "";
             const village = customer ? (customer.village || "").toLowerCase() : "";
@@ -1167,7 +1171,7 @@ function updateReportExtraStats(list) {
     list = list || recoveries;
     const totals = {};
     list.forEach(item => {
-        const id = item.customerId;
+        const id = item.customerId ?? item.customer_id;
         totals[id] = (totals[id] || 0) + Number(item.amount || 0);
     });
     let topId = null, topAmt = 0;
@@ -1188,7 +1192,7 @@ function updateReportExtraStats(list) {
     }
     if (highestCollection) highestCollection.innerHTML = formatCurrency(topAmt);
     if (activeCustomers) {
-        const activeIds = new Set(list.map(r => String(r.customerId)));
+        const activeIds = new Set(list.map(r => String(r.customerId ?? r.customer_id)));
         activeCustomers.innerHTML = activeIds.size;
     }
     if (pendingCustomers) {
