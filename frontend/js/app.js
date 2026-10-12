@@ -1113,10 +1113,10 @@ function getFilteredRecoveries() {
         list = list.filter(r => String(r.customerId) === String(reportCustomer.value));
     }
     if (fromDate && fromDate.value) {
-        list = list.filter(r => r.date >= fromDate.value);
+        list = list.filter(r => String(r.date || "").slice(0, 10) >= fromDate.value);
     }
     if (toDate && toDate.value) {
-        list = list.filter(r => r.date <= toDate.value);
+        list = list.filter(r => String(r.date || "").slice(0, 10) <= toDate.value);
     }
     if (reportSearch && reportSearch.value.trim() !== "") {
         const keyword = reportSearch.value.trim().toLowerCase();
