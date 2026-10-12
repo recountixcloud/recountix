@@ -149,17 +149,26 @@
         .clean-print-report .cpr-footer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin-top:14px;padding-top:10px;border-top:2px solid #1f513f}
         .clean-print-report .cpr-footer p{font-size:12px;margin:0}
         .clean-print-report .cpr-sign{grid-column:1/-1;text-align:right;color:#555}
-        @page{size:A4 landscape;margin:10mm}
+        @page{size:A4 landscape;margin:5mm;size:auto landscape}
         @media print{
-          body.rx-print-clean *{visibility:hidden!important}
+          body.rx-print-clean > *{display:none!important}
+          body.rx-print-clean #cleanPrintReport{display:block!important}
           body.rx-print-clean #cleanPrintReport,body.rx-print-clean #cleanPrintReport *{visibility:visible!important}
-          body.rx-print-clean #cleanPrintReport{display:block!important;position:static!important;left:auto!important;top:auto!important;width:100%!important;margin:0!important;padding:0!important;break-after:auto!important}
+          body.rx-print-clean #cleanPrintReport{display:block!important;position:relative!important;left:auto!important;top:auto!important;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;break-before:avoid!important;break-after:avoid!important;box-sizing:border-box!important}
+          body.rx-print-clean #cleanPrintReport .cpr-header{padding:4px 8px!important;margin-bottom:4px!important}
+          body.rx-print-clean #cleanPrintReport .cpr-logo{max-height:32px!important;margin-bottom:2px!important}
+          body.rx-print-clean #cleanPrintReport h1{font-size:15px!important;margin:2px 0!important}
+          body.rx-print-clean #cleanPrintReport p{font-size:8px!important;margin:2px 0!important}
+          body.rx-print-clean #cleanPrintReport .cpr-table{width:100%!important;table-layout:fixed!important;font-size:7px!important}
+          body.rx-print-clean #cleanPrintReport .cpr-table th,body.rx-print-clean #cleanPrintReport .cpr-table td{padding:2px 2px!important;font-size:7px!important;line-height:1.05!important;white-space:normal!important;overflow-wrap:anywhere!important}
+          body.rx-print-clean #cleanPrintReport .cpr-footer{margin-top:4px!important;padding:4px 6px!important;gap:2px 8px!important}
+          body.rx-print-clean #cleanPrintReport .cpr-footer p{font-size:8px!important}
           body.rx-print-clean html,body.rx-print-clean{height:auto!important;overflow:visible!important}
           body.rx-print-clean #cleanPrintReport .cpr-header{margin-bottom:8px}
           body.rx-print-clean #cleanPrintReport .cpr-table th,body.rx-print-clean #cleanPrintReport .cpr-table td{padding:4px 3px;font-size:8px;line-height:1.2;white-space:normal}
-          body.rx-print-clean #cleanPrintReport .cpr-footer{margin-top:8px;break-inside:avoid}
+          body.rx-print-clean #cleanPrintReport .cpr-footer{margin-top:4px;break-inside:avoid;page-break-inside:avoid}
           body.rx-print-clean .cpr-table{page-break-inside:auto}
-          body.rx-print-clean .cpr-table tr{page-break-inside:avoid;page-break-after:auto}
+          body.rx-print-clean .cpr-table tr{page-break-inside:avoid;break-inside:avoid;page-break-after:auto}
           body.rx-print-clean .cpr-table thead{display:table-header-group}
         }`;
       document.head.appendChild(style);
