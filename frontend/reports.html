@@ -392,13 +392,10 @@
 if (typeof checkLogin === "function") checkLogin();
 if (typeof loadReports === "function") loadReports();
 if (typeof updateDashboard === "function") updateDashboard();
-var today = new Date().toISOString().split("T")[0];
+// Leave report date filters blank by default. The user selects any custom date/range.
 var dayWiseDate = document.getElementById("dayWiseDate");
 var fromDate = document.getElementById("fromDate");
 var toDate = document.getElementById("toDate");
-if (dayWiseDate && dayWiseDate.value === "") dayWiseDate.value = today;
-if (fromDate && fromDate.value === "") fromDate.value = today;
-if (toDate && toDate.value === "") toDate.value = today;
 function printTodayRecoveryReport() {
   var todayLocal = new Date();
   var date = todayLocal.getFullYear() + "-" + String(todayLocal.getMonth()+1).padStart(2,"0") + "-" + String(todayLocal.getDate()).padStart(2,"0");
