@@ -183,18 +183,19 @@
     const query = searchEl && searchEl.value ? searchEl.value.trim().toLowerCase() : "";
     const session = (typeof window.getSession === "function" ? window.getSession() : {}) || {};
 
+    let allCustomers = [], allRecoveries = [], promises = [], activities = [];
     try {
-      if (typeof window.reloadAllData === "function") await window.reloadAllData();
-      if (typeof window.loadReports === "function") window.loadReports();
-    } catch (e) { console.warn("Could not refresh report data", e); }
-
-    const allCustomers = (typeof customers !== "undefined" && Array.isArray(customers)) ? customers.slice() : [];
-    const allRecoveries = (typeof recoveries !== "undefined" && Array.isArray(recoveries)) ? recoveries.slice() : [];
-    let promises = [], activities = [];
+      if (typeof window.sbGetCustomers === "function") allCustomers = await window.sbGetCustomers() || [];
+      else if (typeof customers !== "undefined" && Array.isArray(customers)) allCustomers = customers.slice();
+    } catch (e) { console.error("Supabase customers load failed", e); }
+    try {
+      if (typeof window.sbGetRecoveries === "function") allRecoveries = await window.sbGetRecoveries() || [];
+      else if (typeof recoveries !== "undefined" && Array.isArray(recoveries)) allRecoveries = recoveries.slice();
+    } catch (e) { console.error("Supabase recoveries load failed", e); }
     try { if (typeof window.sbGetPtp === "function") promises = await window.sbGetPtp(session.shopId || null, "all") || []; }
-    catch (e) { console.warn("Promise report data unavailable", e); }
+    catch (e) { console.error("Supabase promises load failed", e); }
     try { if (typeof window.sbGetActivities === "function") activities = await window.sbGetActivities(session.shopId || null, 500) || []; }
-    catch (e) { console.warn("Activity report data unavailable", e); }
+    catch (e) { console.error("Supabase activities load failed", e); }
 
     const customerMap = new Map(allCustomers.map(c => [String(c.id), c]));
     const events = [];
