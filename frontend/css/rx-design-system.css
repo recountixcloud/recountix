@@ -1024,3 +1024,49 @@ html:not(.rx-dark-shell) body.rx-collapsed .sidebar:hover .menu a span,
 html:not(.rx-dark-shell) body.rx-collapsed .sidebar:focus-within .menu a span {
   display: none !important;
 }
+
+
+/* NAV TAP RELIABILITY FIX — more breathing room and isolated touch targets.
+   Prevent neighboring sidebar links from feeling like one large tap area on phones. */
+html body .sidebar .menu {
+  display: block !important;
+  position: relative !important;
+  isolation: isolate !important;
+  padding: 0 0 12px !important;
+}
+html body .sidebar .menu > li {
+  display: block !important;
+  position: relative !important;
+  margin: 8px 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  line-height: normal !important;
+  transform: none !important;
+}
+html body .sidebar .menu > li > a {
+  position: relative !important;
+  z-index: 1 !important;
+  display: flex !important;
+  box-sizing: border-box !important;
+  width: calc(100% - 12px) !important;
+  min-height: 46px !important;
+  margin: 0 6px !important;
+  padding: 11px 12px !important;
+  line-height: 1.35 !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: rgba(21,150,109,.18) !important;
+  pointer-events: auto !important;
+  transform: none !important;
+}
+html body .sidebar .menu > li > a > i,
+html body .sidebar .menu > li > a > span {
+  pointer-events: none !important;
+}
+@media (max-width: 767px) {
+  html body .sidebar .menu > li { margin: 9px 0 !important; }
+  html body .sidebar .menu > li > a {
+    min-height: 48px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+}
