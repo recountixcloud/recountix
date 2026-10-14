@@ -137,34 +137,24 @@ window.showToast = showToast;
       setOpen(false);
     }, true);
 
-    // Capture real sidebar links and navigate explicitly. This avoids mobile
-    // WebView/stacking-layer bugs that can swallow the browser's default tap.
+    // Do not intercept or manually rewrite sidebar URLs. Let the browser's
+    // native anchor navigation resolve each href from the current page. The
+    // previous forced-navigation handler could send taps to the wrong route
+    // when pages are hosted under a nested path or a base URL is present.
     document.addEventListener('click', function (e) {
       var a = e.target && e.target.closest ? e.target.closest('.sidebar a[href]') : null;
       if (!a || !sb.contains(a)) return;
-
       var rawHref = (a.getAttribute('href') || '').trim();
-      // Leave non-navigation actions (logout and placeholder links) to their own handlers.
+
+      // Logout and placeholder links keep their existing click handlers.
       if (!rawHref || rawHref === '#' || /^javascript:/i.test(rawHref)) {
         window.setTimeout(function () { setOpen(false); }, 0);
         return;
       }
 
-      // One delegated handler owns sidebar navigation. Resolve relative links against
-      // the current document so nested hosting paths never send users to another page.
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      // Only close the mobile drawer; do not preventDefault, rewrite href,
+      // or stop the page's other legitimate link handlers.
       setOpen(false);
-
-      var destination;
-      try {
-        destination = new URL(rawHref, document.baseURI);
-      } catch (err) {
-        return;
-      }
-      if (destination.origin !== window.location.origin) return;
-      window.location.href = destination.href;
     }, true);
 
     document.addEventListener('keydown', function (e) {
