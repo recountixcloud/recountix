@@ -59,6 +59,40 @@ textarea.wa-input{min-height:132px;resize:vertical}
   .wa-input,.wa-btn{transition:none}
 }
 
+/* WhatsApp page: keep every sidebar item reachable on short screens and
+   prevent long labels (including WhatsApp Integration) from being clipped. */
+body .sidebar{
+  height:100vh!important;
+  height:100dvh!important;
+  max-height:100dvh!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-gutter:stable;
+}
+body .sidebar .menu{
+  padding-bottom:calc(28px + env(safe-area-inset-bottom, 0px))!important;
+}
+body .sidebar .menu li{
+  min-width:0!important;
+}
+body .sidebar .menu a{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  max-width:100%!important;
+}
+body .sidebar .menu a > span{
+  min-width:0!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  line-height:1.35!important;
+}
+body .sidebar .menu a > i{
+  flex:0 0 18px!important;
+  min-width:18px!important;
+}
+
 </style>
 </head>
 <body>
