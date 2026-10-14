@@ -140,17 +140,31 @@ window.showToast = showToast;
     // Capture real sidebar links and navigate explicitly. This avoids mobile
     // WebView/stacking-layer bugs that can swallow the browser's default tap.
     document.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('.sidebar a[href]');
-      if (!a) return;
-      var href = a.getAttribute('href') || '';
-      if (!href || href === '#' || /^javascript:/i.test(href)) {
-        window.setTimeout(function(){ setOpen(false); }, 0);
+      var a = e.target && e.target.closest ? e.target.closest('.sidebar a[href]') : null;
+      if (!a || !sb.contains(a)) return;
+
+      var rawHref = (a.getAttribute('href') || '').trim();
+      // Leave non-navigation actions (logout and placeholder links) to their own handlers.
+      if (!rawHref || rawHref === '#' || /^javascript:/i.test(rawHref)) {
+        window.setTimeout(function () { setOpen(false); }, 0);
         return;
       }
+
+      // One delegated handler owns sidebar navigation. Resolve relative links against
+      // the current document so nested hosting paths never send users to another page.
       e.preventDefault();
-      e.stopImmediatePropagation();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
       setOpen(false);
-      window.location.assign(a.href);
+
+      var destination;
+      try {
+        destination = new URL(rawHref, document.baseURI);
+      } catch (err) {
+        return;
+      }
+      if (destination.origin !== window.location.origin) return;
+      window.location.href = destination.href;
     }, true);
 
     document.addEventListener('keydown', function (e) {
