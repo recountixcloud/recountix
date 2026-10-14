@@ -144,7 +144,7 @@ body .main-content .summary-bar { display:flex!important; align-items:center!imp
     <li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
     <li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
     <li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
-    <li><a href="whatsapp.html"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp Integration</span></a></li>
+    <li><a href="whatsapp.html" id="rxSettingsWhatsAppLink"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp Integration</span></a></li>
     <li><a href="settings.html" class="active"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
     <li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li>
     <li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
@@ -571,5 +571,22 @@ async function optimizeWebsite(){
 }</script>
 
 <script src="js/rx-design-system.js?v=ds-1"></script>
+
+<script id="rxSettingsWhatsAppRouteFix">
+/* Keep the Settings sidebar WhatsApp item bound to the WhatsApp page.
+   Capture the tap so legacy navigation listeners cannot redirect it elsewhere. */
+(function () {
+  document.addEventListener('click', function (event) {
+    var link = event.target && event.target.closest
+      ? event.target.closest('#rxSettingsWhatsAppLink') : null;
+    if (!link) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+    window.location.assign(new URL('whatsapp.html', window.location.href).href);
+  }, true);
+})();
+</script>
+
 </body>
 </html>
