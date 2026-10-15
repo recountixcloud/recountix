@@ -123,6 +123,17 @@ body .main-content .summary-bar { display:flex!important; align-items:center!imp
 }
 </style>
 
+
+<style id="rx-sidebar-hit-target-fix-20261015">
+/* Fix mobile sidebar hit-testing: every row owns a distinct, full-width tap target. */
+body .sidebar .menu{position:relative!important;display:block!important;isolation:isolate!important}
+body .sidebar .menu>li{position:relative!important;display:block!important;width:100%!important;min-height:44px!important;margin:2px 0!important;isolation:isolate!important}
+body .sidebar .menu>li>a{position:relative!important;display:flex!important;width:100%!important;min-height:44px!important;box-sizing:border-box!important;z-index:1!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(46,203,146,.2)!important}
+body .sidebar .menu>li>a>i,body .sidebar .menu>li>a>span{pointer-events:none!important}
+body .sidebar .menu>li>a:focus-visible{outline:3px solid #7fe0b8!important;outline-offset:-3px!important}
+@media(max-width:767px){body .sidebar .menu>li{margin:3px 0!important}body .sidebar .menu>li>a{padding:12px 14px!important}}
+</style>
+
 </head>
 
 <body>
@@ -573,18 +584,27 @@ async function optimizeWebsite(){
 <script src="js/rx-design-system.js?v=ds-1"></script>
 
 <script id="rxSettingsWhatsAppRouteFix">
-/* Keep the Settings sidebar WhatsApp item bound to the WhatsApp page.
-   Capture the tap so legacy navigation listeners cannot redirect it elsewhere. */
+/* Route using the actual anchor target and isolate this tap from legacy listeners. */
 (function () {
-  document.addEventListener('click', function (event) {
+  function routeWhatsApp(event) {
     var link = event.target && event.target.closest
-      ? event.target.closest('#rxSettingsWhatsAppLink') : null;
+      ? event.target.closest('#rxSettingsWhatsAppLink, .settings-quick-actions a[href="whatsapp.html"]') : null;
     if (!link) return;
+    var target = link.href;
+    if (!target) return;
     event.preventDefault();
     event.stopPropagation();
     if (event.stopImmediatePropagation) event.stopImmediatePropagation();
-    window.location.assign(new URL('whatsapp.html', window.location.href).href);
-  }, true);
+    window.location.href = target;
+  }
+  document.addEventListener('click', routeWhatsApp, true);
+  document.addEventListener('pointerup', function(event) {
+    if (event.pointerType !== 'touch') return;
+    var link = event.target && event.target.closest
+      ? event.target.closest('#rxSettingsWhatsAppLink') : null;
+    if (!link) return;
+    /* Let the native click handler perform navigation; pointerup only guards row hit testing. */
+  }, {capture:true, passive:true});
 })();
 </script>
 
