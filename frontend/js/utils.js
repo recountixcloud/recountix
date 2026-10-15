@@ -359,3 +359,50 @@ window.rxForceToggleMenu = function (event) {
     btn.textContent = opening ? '✕' : '☰';
   }
 };
+
+
+/* Recountix — Desktop sidebar hit-target + WhatsApp route guard (2026-10-15). */
+(function () {
+  'use strict';
+  if (window.__rxDesktopSidebarWhatsAppFix20261015) return;
+  window.__rxDesktopSidebarWhatsAppFix20261015 = true;
+
+  function installStyles() {
+    if (document.getElementById('rxSidebarHitTargetFix20261015')) return;
+    var style = document.createElement('style');
+    style.id = 'rxSidebarHitTargetFix20261015';
+    style.textContent = [
+      '.sidebar .menu { display:block!important; position:relative!important; isolation:isolate!important; }',
+      '.sidebar .menu > li { display:block!important; position:relative!important; float:none!important; clear:both!important; width:100%!important; min-width:0!important; min-height:44px!important; margin:2px 0!important; padding:0!important; isolation:isolate!important; }',
+      '.sidebar .menu > li > a { position:relative!important; display:flex!important; width:100%!important; min-width:0!important; min-height:44px!important; box-sizing:border-box!important; z-index:1!important; pointer-events:auto!important; touch-action:manipulation!important; }',
+      '.sidebar .menu > li > a > i, .sidebar .menu > li > a > span { pointer-events:none!important; }',
+      '.sidebar .menu > li + li { margin-top:3px!important; }',
+      '@media (min-width:768px) { .sidebar { pointer-events:auto!important; } .sidebar .menu > li > a { cursor:pointer!important; } }'
+    ].join('\n');
+    (document.head || document.documentElement).appendChild(style);
+  }
+
+  function routeWhatsApp(event) {
+    var target = event.target;
+    if (!target || !target.closest) return;
+    var link = target.closest('.sidebar .menu a[href]');
+    if (!link) return;
+    var href = (link.getAttribute('href') || '').trim();
+    var label = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+    var destination;
+    try { destination = new URL(href, document.baseURI); } catch (_) { return; }
+    if (destination.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase() !== 'whatsapp.html' &&
+        label !== 'whatsapp integration' && label !== 'whatsapp api') return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+    window.location.assign(destination.href);
+  }
+
+  function boot() {
+    installStyles();
+    document.addEventListener('click', routeWhatsApp, true);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once:true });
+  else boot();
+})();
