@@ -140,6 +140,17 @@ body .sidebar .menu a > i{
 <p class="wa-muted">Default template: <b>recountix_payment_reminder</b>, language <b>en</b>. It must be approved in Meta and contain exactly three body placeholders: customer name, amount, business name.</p>
 </section>
 </div>
+<section class="wa-card" style="margin-top:18px" id="waDaySetupCard">
+<h2><i class="fa-regular fa-calendar-check" style="color:#128c7e"></i> Reminder Day Setup</h2>
+<p>Choose how many days after a reminder the next reminder should be due. This value is used as the default interval for customer reminder setup.</p>
+<label class="wa-label" for="waReminderDays">Send reminder again after</label>
+<select class="wa-input" id="waReminderDays">
+<option value="1">1 day</option><option value="2">2 days</option><option value="3">3 days</option><option value="5">5 days</option><option value="7">7 days</option><option value="10">10 days</option><option value="15">15 days</option><option value="30">30 days</option>
+</select>
+<button class="wa-btn" id="saveWaReminderDays" type="button"><i class="fa-solid fa-floppy-disk"></i> Save Day Setup</button>
+<div id="waDaySetupStatus" class="wa-status" role="status" aria-live="polite"></div>
+<div class="wa-note wa-warning" style="margin-top:12px">Important: saving this interval does not itself run a background scheduler. Fully automatic official API delivery requires a server-side scheduled job that checks due customers and calls the WhatsApp API; the current manual reminder flow opens WhatsApp Web.</div>
+</section>
 <section class="wa-card" style="margin-top:18px">
 <h2>Enable the official API</h2>
 <ol>
@@ -172,6 +183,15 @@ function updateWebLink(){
 document.getElementById('webPhone').addEventListener('input',updateWebLink);
 document.getElementById('webMessage').addEventListener('input',updateWebLink);
 document.getElementById('openWhatsAppWeb').addEventListener('click',function(e){updateWebLink();if(this.getAttribute('aria-disabled')==='true'){e.preventDefault();alert('Enter a valid mobile number first.');}});
+const daySelect=document.getElementById('waReminderDays');
+const dayStatus=document.getElementById('waDaySetupStatus');
+try{daySelect.value=localStorage.getItem('recountix_wa_reminder_days')||'3';}catch(e){}
+document.getElementById('saveWaReminderDays').addEventListener('click',function(){
+ const days=Number(daySelect.value);
+ if(!Number.isInteger(days)||days<1||days>365){dayStatus.className='wa-status error';dayStatus.textContent='Choose a valid interval.';return;}
+ try{localStorage.setItem('recountix_wa_reminder_days',String(days));dayStatus.className='wa-status ok';dayStatus.textContent='Day setup saved: next reminder interval is '+days+' day(s) on this browser.';}
+ catch(e){dayStatus.className='wa-status error';dayStatus.textContent='Could not save setting in this browser.';}
+});
 document.getElementById('sendApiButton').addEventListener('click',async function(){
  const status=document.getElementById('apiStatus');const btn=this;
  const phone=cleanPhone(document.getElementById('apiPhone').value);
