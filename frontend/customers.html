@@ -154,6 +154,20 @@
   </div>
 </section>
 
+<!-- CUSTOMER LEDGER: complete recovery/payment history -->
+<div id="customerLedgerModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" style="display:none;">
+ <div class="modal-content" style="max-width:980px;width:min(96vw,980px);max-height:88vh;overflow:auto;">
+  <span class="close" onclick="closeCustomerLedger()">&times;</span>
+  <h2 style="color:#0f766e">📒 Customer Ledger</h2>
+  <div id="customerLedgerSummary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0;"></div>
+  <div class="table-responsive"><table style="width:100%;border-collapse:collapse;">
+   <thead><tr><th>Date</th><th>Receipt No.</th><th>Payment Mode</th><th>Collected By</th><th>Amount (₹)</th><th>Remarks</th></tr></thead>
+   <tbody id="customerLedgerRows"><tr><td colspan="6">Loading payment history…</td></tr></tbody>
+  </table></div>
+  <p id="customerLedgerStatus" style="margin-top:12px;color:#64748b;font-size:13px;"></p>
+ </div>
+</div>
+
 <!-- CUSTOMER MODAL -->
 <div id="customerModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" style="display:none;">
   <div class="modal-content">
@@ -346,6 +360,29 @@ if (typeof updateDashboard === "function") updateDashboard();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 </script>
 
+<script>
+/* Customer ledger reads the secured recovery collection and filters by customer ID. */
+window.openCustomerLedger = async function(index){
+ const c=(window.customers||[])[Number(index)];
+ const modal=document.getElementById('customerLedgerModal');
+ if(!c||!modal){alert('Customer not found.');return;}
+ modal.style.display='block';modal.classList.add('vo-modal-open');modal.setAttribute('aria-hidden','false');
+ document.getElementById('customerLedgerSummary').innerHTML='<div><b>Customer</b><div>'+ledgerEsc(c.name||'—')+'</div></div><div><b>Mobile</b><div>'+ledgerEsc(c.mobile||'—')+'</div></div><div><b>Bill Amount</b><div>₹'+Number(c.bill||0).toLocaleString('en-IN')+'</div></div><div><b>Down Payment</b><div>₹'+Number(c.down||0).toLocaleString('en-IN')+'</div></div><div><b>Current Outstanding</b><div>₹'+Number(c.outstanding||0).toLocaleString('en-IN')+'</div></div>';
+ const body=document.getElementById('customerLedgerRows');const status=document.getElementById('customerLedgerStatus');
+ body.innerHTML='<tr><td colspan="6">Loading payment history…</td></tr>';status.textContent='';
+ try{
+  if(typeof sbGetRecoveries!=='function')throw new Error('Payment history service is unavailable.');
+  const all=await sbGetRecoveries();
+  const rows=(all||[]).filter(r=>String(r.customerId||r.customer_id||'')===String(c.id||'')).sort((a,b)=>String(b.date||b.recovery_date||b.created_at||'').localeCompare(String(a.date||a.recovery_date||a.created_at||'')));
+  const total=rows.reduce((s,r)=>s+Number(r.amount||0),0);
+  document.getElementById('customerLedgerSummary').innerHTML+='<div><b>Total Payments</b><div>'+rows.length+'</div></div><div><b>Total Collected</b><div>₹'+total.toLocaleString('en-IN')+'</div></div>';
+  body.innerHTML=rows.length?rows.map(r=>'<tr><td>'+ledgerEsc((r.date||r.recovery_date||r.created_at||'').toString().slice(0,10)||'—')+'</td><td>'+ledgerEsc(r.receiptNo||r.receipt_no||'—')+'</td><td>'+ledgerEsc(r.paymentMode||r.payment_mode||'—')+'</td><td>'+ledgerEsc(r.collectedBy||r.collected_by||'—')+'</td><td style="text-align:right;font-weight:700">₹'+Number(r.amount||0).toLocaleString('en-IN')+'</td><td>'+ledgerEsc(r.remarks||'—')+'</td></tr>').join(''):'<tr><td colspan="6" style="text-align:center;padding:20px">No payment records found for this customer.</td></tr>';
+  status.textContent='Showing '+rows.length+' recorded payment(s).';
+ }catch(e){body.innerHTML='<tr><td colspan="6">Could not load payment history.</td></tr>';status.textContent=e.message||String(e);}
+};
+window.closeCustomerLedger=function(){const m=document.getElementById('customerLedgerModal');if(m){m.style.display='none';m.classList.remove('vo-modal-open');m.setAttribute('aria-hidden','true');}};
+function ledgerEsc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+</script>
 <script src="js/final-suite.js?v=theme-switch-3"></script>
 <script src="js/offline-backup.js?v=preferences-1"></script>
 <script src="js/i18n.js?v=2"></script>
