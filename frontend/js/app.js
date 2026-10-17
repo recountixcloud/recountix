@@ -350,6 +350,7 @@ function loadCustomers() {
             <td>${appEscape(dueShow)}${customer.autoReminder === false ? " 🔕" : ""}</td>
             <td style="white-space:nowrap;">
                 <button onclick="editCustomer(${index})" title="Edit">✏️</button>
+                <button type="button" onclick="openCustomerLedger(${index})" title="Customer Ledger / Payment History" style="display:inline-flex;align-items:center;gap:4px;background:#0f766e;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">📒 Ledger</button>
                 ${waBtn}
                 <button type="button" onclick="setCustomerPortalPin(${index})" title="Set Customer Portal PIN" style="display:inline-flex;align-items:center;gap:4px;background:#0B5D4F;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">🔐 PIN</button>
                 <button type="button" onclick="openPaymentLinkForCustomer(${index})" title="UPI / Payment link"
