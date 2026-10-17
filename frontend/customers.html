@@ -363,7 +363,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 <script>
 /* Customer ledger reads the secured recovery collection and filters by customer ID. */
 window.openCustomerLedger = async function(index){
- const c=(window.customers||[])[Number(index)];
+ const customerRows=(typeof customers!=='undefined'&&Array.isArray(customers))?customers:[];\n const c=customerRows[Number(index)];
  const modal=document.getElementById('customerLedgerModal');
  if(!c||!modal){alert('Customer not found.');return;}
  modal.style.display='block';modal.classList.add('vo-modal-open');modal.setAttribute('aria-hidden','false');
