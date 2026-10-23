@@ -376,27 +376,49 @@ window.applyHashAgingFilter = applyHashAgingFilter;
 // ================================
 function editCustomer(index) {
     if (!rxRequire("modify")) return;
-    editIndex = index;
-    const c = customers[index];
-    editCustomerId = c.id;
+    const customerIndex = Number(index);
+    const c = Number.isInteger(customerIndex) ? customers[customerIndex] : null;
+    if (!c) {
+        alert("Customer not found. Refresh the customer list and try again.");
+        return;
+    }
 
-    document.getElementById("customerName").value = c.name || "";
-    const pn = document.getElementById("productName"); if (pn) pn.value = c.productName || "";
-    document.getElementById("fatherName").value = c.father || "";
-    document.getElementById("mobile").value = c.mobile || "";
-    document.getElementById("altMobile").value = c.altMobile || "";
-    document.getElementById("village").value = c.village || "";
-    document.getElementById("taluka").value = c.taluka || "";
-    document.getElementById("district").value = c.district || "";
-    document.getElementById("address").value = c.address || "";
-    document.getElementById("billAmount").value = c.bill || 0;
-    document.getElementById("downPayment").value = c.down || 0;
-    document.getElementById("outstanding").value = c.outstanding || 0;
-    document.getElementById("executive").value = c.executive || "";
-    document.getElementById("followup").value = c.followup || "";
-    const dueEl = document.getElementById("dueDate"); if (dueEl) dueEl.value = (c.dueDate || c.followup || "").toString().slice(0,10);
-    document.getElementById("remarks").value = c.remarks || "";
+    // Resolve the form before changing edit state, so a missing field cannot
+    // leave the next Add Customer action in edit mode.
+    const fields = {
+        customerName: c.name || "",
+        fatherName: c.father || "",
+        mobile: c.mobile || "",
+        altMobile: c.altMobile || "",
+        village: c.village || "",
+        taluka: c.taluka || "",
+        district: c.district || "",
+        address: c.address || "",
+        billAmount: c.bill || 0,
+        downPayment: c.down || 0,
+        outstanding: c.outstanding || 0,
+        executive: c.executive || "",
+        followup: c.followup || "",
+        remarks: c.remarks || ""
+    };
+    const missing = Object.keys(fields).filter(id => !document.getElementById(id));
+    if (missing.length) {
+        console.error("Customer edit form is incomplete:", missing);
+        alert("Customer edit form could not open. Missing fields: " + missing.join(", "));
+        return;
+    }
 
+    editIndex = customerIndex;
+    editCustomerId = c.id || null;
+    Object.entries(fields).forEach(([id, value]) => { document.getElementById(id).value = value; });
+    const productName = document.getElementById("productName");
+    if (productName) productName.value = c.productName || "";
+    const dueEl = document.getElementById("dueDate");
+    if (dueEl) dueEl.value = String(c.dueDate || c.followup || "").slice(0, 10);
+    const reminder = document.getElementById("autoReminder");
+    if (reminder) reminder.checked = c.autoReminder !== false;
+    const interval = document.getElementById("reminderInterval");
+    if (interval) interval.value = Number(c.reminderInterval || 3);
     openModal();
 }
 
