@@ -12,7 +12,8 @@ const fields = [
 ];
 let rights = {}, serverRole = '', loaded = false, refreshing = null, users = [], editing = null;
 const page = location.pathname.split('/').pop();
-const manager = () => ['admin','super_admin'].includes(serverRole);
+const normalizeRole = value => String(value || '').trim().toLowerCase().replace(/[ -]+/g, '_');
+const manager = () => ['admin','super_admin'].includes(normalizeRole(serverRole));
 function can(key) { return loaded && rights.view === true && rights[key] === true; }
 async function rpc(name, args) {
  const token = getSession().sessionToken;
@@ -27,7 +28,7 @@ async function refresh() {
   const wasLoaded=loaded, previous=JSON.stringify(rights);
   try {
    const result=await rpc('app_get_my_permissions');
-   rights=result.permissions || {}; serverRole=result.role || ''; loaded=true;
+   rights=result && result.permissions && typeof result.permissions === 'object' ? result.permissions : {}; serverRole=normalizeRole(result && result.role); loaded=true;
    if (wasLoaded && previous!==JSON.stringify(rights)) { location.reload(); return; }
   } catch (error) { rights={};serverRole='';loaded=true;console.warn('Permissions unavailable',error.message); }
   apply();
@@ -63,7 +64,7 @@ function apply() {
  const management=document.getElementById('userManagementSection');
  if (management) management.style.display=manager()?'':'none';
  const roleSelect=document.getElementById('newUserRole');
- if (roleSelect && serverRole==='admin') {roleSelect.value='User';roleSelect.disabled=true;}
+ if (roleSelect && normalizeRole(serverRole)==='admin') {roleSelect.value='User';roleSelect.disabled=true;}
  const upload=document.querySelector('input[type="file"][accept*=".xlsx"]');
  if(upload) upload.disabled=!can('add');
  if (!loaded || !getSession().isLoggedIn || ['login.html','checkin.html','maintenance.html','index.html'].includes(page)) return;
@@ -126,11 +127,11 @@ async function loadUsers() {
    const row=document.createElement('tr');
    [user.username, user.role+(user.is_active?' · Active':' · Inactive')].forEach(text=>{const td=document.createElement('td');td.textContent=text;row.append(td);});
    const cell=document.createElement('td');row.append(cell);
-   const self=user.id===getSession().userId;
-   if(!self && user.role==='user') {
+   const self=String(user.id)===String(getSession().userId);
+   if(!self && normalizeRole(user.role)==='user') {
     const edit=document.createElement('button');edit.type='button';edit.className='rx-user-action';edit.textContent='Modify / Rights';edit.onclick=()=>editUser(user.id);cell.append(edit);
    }
-   if(!self && user.role!=='super_admin' && (serverRole==='super_admin' || user.role==='user')) {
+   if(!self && normalizeRole(user.role)!=='super_admin' && (normalizeRole(serverRole)==='super_admin' || normalizeRole(user.role)==='user')) {
     const reset=document.createElement('button');reset.type='button';reset.className='rx-user-action rx-reset';reset.textContent='Reset Password';reset.onclick=()=>resetUserPassword(user.id);cell.append(reset);
     const del=document.createElement('button');del.type='button';del.className='rx-user-action rx-delete';del.textContent='Delete';del.onclick=()=>deleteUser(user.id);cell.append(del);
    }
