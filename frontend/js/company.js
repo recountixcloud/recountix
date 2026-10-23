@@ -208,21 +208,34 @@ function openAddShopModal() {
 
 function openEditShopModal(shopId) {
     const shop = allShopsCache.find(s => String(s.id) === String(shopId));
-    if (!shop) return;
+    if (!shop) {
+        console.warn("Cannot edit business: the selected business is no longer in the loaded list.", shopId);
+        alert("Business not found. Please refresh the list and try again.");
+        return;
+    }
 
-    document.getElementById("shopModalTitle").innerText = "Edit Business";
-    document.getElementById("shopId").value = shop.id || "";
-    document.getElementById("shopName").value = shop.name || "";
+    const requiredFields = ["shopModalTitle", "shopId", "shopName", "shopCode", "shopContact", "shopEmail", "shopAddress", "shopPlan", "shopLicenseExpiry", "shopMaxUsers"];
+    const missing = requiredFields.filter(id => !document.getElementById(id));
+    if (missing.length) {
+        console.error("Business edit form is incomplete:", missing);
+        alert("Business edit form could not open. Missing fields: " + missing.join(", "));
+        return;
+    }
+
+    document.getElementById("shopModalTitle").textContent = "Edit Business";
+    setShopFieldValue("shopId", shop.id || "");
+    setShopFieldValue("shopName", shop.name || "");
     setShopFieldValue("shopBusinessType", shop.business_type || "Other");
-    document.getElementById("shopCode").value = shop.code || "";
+    setShopFieldValue("shopCode", shop.code || "");
     document.getElementById("shopCode").disabled = true;
-    document.getElementById("shopContact").value = shop.contact_number || "";
-    document.getElementById("shopEmail").value = shop.email || "";
-    document.getElementById("shopAddress").value = shop.address || "";
-    document.getElementById("shopPlan").value = shop.plan_name || "Basic";
-    document.getElementById("shopLicenseExpiry").value = shop.license_expiry || "";
-    document.getElementById("shopMaxUsers").value = shop.max_users || 5;
-    document.getElementById("newShopAdminBlock").style.display = "none";
+    setShopFieldValue("shopContact", shop.contact_number || "");
+    setShopFieldValue("shopEmail", shop.email || "");
+    setShopFieldValue("shopAddress", shop.address || "");
+    setShopFieldValue("shopPlan", shop.plan_name || "Basic");
+    setShopFieldValue("shopLicenseExpiry", String(shop.license_expiry || "").slice(0, 10));
+    setShopFieldValue("shopMaxUsers", shop.max_users || 5);
+    const adminBlock = document.getElementById("newShopAdminBlock");
+    if (adminBlock) adminBlock.style.display = "none";
     showShopModal();
 }
 
@@ -259,18 +272,23 @@ async function saveShop() {
         return;
     }
 
+    const saveButton = document.querySelector("#shopModal button[onclick*=\"saveShop\"]");
+    if (saveButton && saveButton.disabled) return;
+    if (saveButton) { saveButton.disabled = true; saveButton.dataset.originalText = saveButton.textContent; saveButton.textContent = "Saving…"; }
     try {
         if (shopId) {
             await sbUpdateShop(shopId, form);
         } else {
             await sbAddShop(form);
         }
-        closeShopModal();
         await loadCompanies();
+        closeShopModal();
         alert("Business saved successfully.");
     } catch (e) {
-        console.error(e);
-        alert("Save failed: " + (e.message || e));
+        console.error("Business save failed:", e);
+        alert("Save failed: " + (e && e.message ? e.message : String(e)));
+    } finally {
+        if (saveButton) { saveButton.disabled = false; if (saveButton.dataset.originalText) saveButton.textContent = saveButton.dataset.originalText; }
     }
 }
 
