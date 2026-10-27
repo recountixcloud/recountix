@@ -33,6 +33,7 @@ jobs:
             sleep 1
           done
           RECOUNTIX_TEST_URL=http://127.0.0.1:8765 node tests/layout-ui.cjs
+          RECOUNTIX_TEST_URL=http://127.0.0.1:8765 node tests/user-permissions-ui.cjs
       - name: Security regression scan
         run: node scripts/security-check.mjs
       - name: Release readiness
