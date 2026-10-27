@@ -46,7 +46,7 @@ const assert=require('node:assert/strict');
   }
  }
 
- const pages=['dashboard','customers','recovery','ptp','escalations','activity','field-tracking','reports','settings','backup','super-dashboard','companies','subscription','ad-manager'];
+ const pages=['dashboard','customers','recovery','ptp','escalations','activity','field-tracking','reports','settings','backup','super-dashboard','companies','subscription','ad-manager','whatsapp'];
  for(const viewport of [{width:390,height:844},{width:1365,height:900}]){
   for(const name of pages){
    const role=['super-dashboard','companies','subscription','ad-manager'].includes(name)?'super_admin':'admin';
