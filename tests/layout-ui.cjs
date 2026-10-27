@@ -57,6 +57,10 @@ const assert=require('node:assert/strict');
     throw new Error('Unexpected auth redirect from '+name+': '+JSON.stringify(debug));
    }
    await page.evaluate(()=>window.rxPermissionsReady);
+   if(!new URL(page.url()).pathname.endsWith('/'+name+'.html')) {
+    const debug=await page.evaluate(()=>({role:window.__role,localLoggedIn:localStorage.getItem('bk_isLoggedIn'),localRole:localStorage.getItem('bk_role'),localToken:!!localStorage.getItem('bk_session_token'),sessionLoggedIn:sessionStorage.getItem('bk_isLoggedIn'),calls:window.__rpcCalls}));
+    throw new Error('Auth redirected after permissions boot on '+name+': '+JSON.stringify(debug));
+   }
    await page.mouse.move(viewport.width-20,viewport.height-20);
    const sidebar=page.locator('.sidebar'),toggle=page.locator('#menuToggle');
    await toggle.waitFor();
