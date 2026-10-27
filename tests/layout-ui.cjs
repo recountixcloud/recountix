@@ -21,6 +21,7 @@ const assert=require('node:assert/strict');
     else if(name==='app_get_shops')data=[{id:'shop-a',name:'Demo Business',is_active:true}];
     else if(name==='app_get_user_access')data=[{...user,id:'admin-a',role:'admin',username:'owner',is_active:true,permissions:window.__rights},{id:'user-a',role:'user',username:'staff',display_name:'Staff',is_active:true,permissions:{view:true,add:false,modify:false,delete:false,settings:false,backup:false,restore:false}}];
     else if(name==='app_update_user_access'){window.__updates.push(args);data={ok:true};}
+    else if(name==='app_save_customer'){window.__customerSave=args;data={id:args.p_customer_id||'customer-a',name:args.p_payload.name,mobile:args.p_payload.mobile,shop_id:'shop-a',bill:args.p_payload.bill,down_payment:args.p_payload.down_payment,outstanding:args.p_payload.outstanding};}
     else if(name==='app_get_customers')data=[{id:'customer-a',name:'Test Customer',mobile:'9999999999',shop_id:'shop-a',bill:1000,down_payment:0,outstanding:900}];
     else if(name==='app_get_recoveries')data=[{id:'recovery-a',customer_id:'customer-a',amount:100,recovery_date:'2026-09-26',payment_mode:'Cash'}];
     else if(name==='app_aging')data={};
@@ -80,6 +81,18 @@ const assert=require('node:assert/strict');
   await content.evaluate(el=>el.scrollTop=0);
   if(process.env.RECOUNTIX_SCREENSHOTS)await page.screenshot({path:require('node:path').join(process.env.RECOUNTIX_SCREENSHOTS,'business-form-'+viewport.width+'.png')});
   await page.keyboard.press('Escape');assert.equal(await modal.isVisible(),false);assert.equal(await page.locator('.wrapper').evaluate(el=>el.inert),false);passed++;
+  await context.close();
+ }
+ {
+  const {page,context}=await setup('admin',all,{width:1365,height:900});
+  await page.goto(root+'/customers.html');await page.evaluate(()=>window.rxPermissionsReady);
+  await page.locator('#customerBody button[title="Edit"]').first().click();
+  await page.locator('#customerModal').waitFor();
+  assert.equal(await page.locator('#customerName').inputValue(),'Test Customer');passed++;
+  await page.locator('#customerName').fill('Edited Test Customer');
+  await page.getByRole('button',{name:/Save Customer/}).click();
+  await page.waitForFunction(()=>!!window.__customerSave);
+  assert.equal(await page.evaluate(()=>window.__customerSave.p_payload.name),'Edited Test Customer');passed++;
   await context.close();
  }
  {
