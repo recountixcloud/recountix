@@ -135,6 +135,19 @@ window.rxToggleDesktopSidebar = function (button) {
     // Desktop must keep side options active; mobile starts closed.
     setOpen(false);
 
+    function syncDesktopToggleState() {
+      if (!isDesktop()) return;
+      var collapsed = document.body.classList.contains('rx-collapsed');
+      btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      btn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+      btn.textContent = collapsed ? '☰' : '✕';
+    }
+    syncDesktopToggleState();
+    if (window.MutationObserver) {
+      var sidebarStateObserver = new MutationObserver(syncDesktopToggleState);
+      sidebarStateObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
