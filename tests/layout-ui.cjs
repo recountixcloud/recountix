@@ -51,6 +51,7 @@ const assert=require('node:assert/strict');
    const role=['super-dashboard','companies','subscription','ad-manager'].includes(name)?'super_admin':'admin';
    const {page,context}=await setup(role,all,viewport);
    await page.goto(root+'/'+name+'.html');await page.evaluate(()=>window.rxPermissionsReady);
+   await page.mouse.move(viewport.width-20,viewport.height-20);
    const sidebar=page.locator('.sidebar'),toggle=page.locator('#menuToggle');
    await toggle.waitFor();
    const initialSidebar=await sidebar.boundingBox();
