@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
  let passed=0;
  async function setup(role,permissions,viewport){
   const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block'});
-  await context.addInitScript(({role,permissions})=>{
+  const initBrowserState=(role,permissions)=>{
    for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'})){sessionStorage.setItem(key,value);localStorage.setItem(key,value);}
    window.__rights=permissions;window.__role=role;window.__updates=[];
    window.__rpc=async(name,args)=>{
@@ -25,7 +25,8 @@ const assert=require('node:assert/strict');
     else if(name==='app_aging')data={};
     return {data,error:null};
    };
-  },{role,permissions});
+  };
+  await context.addInitScript(`(${initBrowserState.toString()})(${JSON.stringify(role)},${JSON.stringify(permissions)});`);
   await context.route('**/*',route=>{
    const url=route.request().url();
    if(url.includes('@supabase/supabase-js')||url.includes('supabase-2.117.2.js'))return route.fulfill({contentType:'application/javascript',body:'window.supabase={createClient:function(){return {rpc:window.__rpc}}};'});
