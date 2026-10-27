@@ -350,6 +350,19 @@ window.rxForceToggleMenu = function (event) {
   var overlay = document.getElementById('sidebarOverlay');
   var btn = document.getElementById('menuToggle');
   if (!side) return;
+
+  // Pages with the legacy inline handler stop the shared document listener.
+  // Handle desktop expansion here too, otherwise the hamburger only works on mobile.
+  if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) {
+    var expanded = document.body.classList.toggle('rx-sidebar-expanded');
+    if (btn) {
+      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      btn.setAttribute('aria-label', expanded ? 'Collapse sidebar' : 'Expand sidebar');
+      btn.textContent = expanded ? '✕' : '☰';
+    }
+    return;
+  }
+
   var opening = !side.classList.contains('rx-force-open');
   side.classList.toggle('rx-force-open', opening);
   side.classList.toggle('open', opening);
