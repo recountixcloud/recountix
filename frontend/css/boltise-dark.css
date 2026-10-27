@@ -2834,14 +2834,14 @@ html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-secti
     top: 14px !important;
     z-index: 1101 !important;
   }
-  html body.rx-sidebar-expanded button.menu-toggle,
-  html body.rx-sidebar-expanded .menu-toggle {
+  html body:not(.rx-collapsed) button.menu-toggle,
+  html body:not(.rx-collapsed) .menu-toggle {
     left: calc(var(--sidebar-w, 248px) + 12px) !important;
   }
 }
 /* Desktop sidebar toggle: pin the expanded navigation when the hamburger is pressed. */
 @media (min-width: 768px) {
-  body.rx-sidebar-expanded .sidebar {
+  body:not(.rx-collapsed) .sidebar {
     transform: translateX(0) !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -2852,22 +2852,22 @@ html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-secti
     max-width: var(--sidebar-w, 248px) !important;
     overflow-x: hidden !important;
   }
-  body.rx-sidebar-expanded .sidebar .logo h2,
-  body.rx-sidebar-expanded .sidebar .logo p,
-  body.rx-sidebar-expanded .sidebar .menu a span,
-  body.rx-sidebar-expanded .sidebar .menu a b,
-  body.rx-sidebar-expanded .sidebar .menu a small {
+  body:not(.rx-collapsed) .sidebar .logo h2,
+  body:not(.rx-collapsed) .sidebar .logo p,
+  body:not(.rx-collapsed) .sidebar .menu a span,
+  body:not(.rx-collapsed) .sidebar .menu a b,
+  body:not(.rx-collapsed) .sidebar .menu a small {
     opacity: 1 !important;
     pointer-events: auto !important;
     white-space: nowrap !important;
   }
-  body.rx-sidebar-expanded .sidebar .menu a {
+  body:not(.rx-collapsed) .sidebar .menu a {
     justify-content: flex-start !important;
     gap: 12px !important;
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
-  body.rx-sidebar-expanded .main-content {
+  body:not(.rx-collapsed) .main-content {
     margin-left: var(--sidebar-w, 248px) !important;
     width: calc(100% - var(--sidebar-w, 248px)) !important;
   }
