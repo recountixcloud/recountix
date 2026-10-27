@@ -28,7 +28,7 @@ jobs:
       - name: Install Playwright Chromium
         run: |
           npm install --no-save playwright
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
       - name: Browser UI regression tests
         run: |
           python3 -m http.server 8765 --directory frontend >/tmp/recountix-http.log 2>&1 &
