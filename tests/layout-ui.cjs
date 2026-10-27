@@ -61,6 +61,21 @@ const assert=require('node:assert/strict');
    await context.close();
   }
  }
+ {
+  const {page,context}=await setup('admin',all,{width:1365,height:900});
+  await page.goto(root+'/settings.html');
+  await page.waitForFunction(()=>!!window.rxPermissionsReady);
+  await page.evaluate(()=>{
+   const list=document.querySelector('.sidebar .menu');
+   const li=document.createElement('li');
+   const link=document.createElement('a');link.href='field-tracking.html';link.textContent='WhatsApp API';link.id='testWrongWhatsAppLink';
+   li.append(link);list.append(li);
+  });
+  await page.locator('#testWrongWhatsAppLink').click();
+  await page.waitForURL('**/whatsapp.html');
+  assert.equal(new URL(page.url()).pathname.endsWith('/whatsapp.html'),true,'WhatsApp-labelled sidebar links must reach whatsapp.html');passed++;
+  await context.close();
+ }
  for(const viewport of [{width:390,height:844},{width:1365,height:900},{width:980,height:1400}]){
   const {page,context}=await setup('super_admin',all,viewport);
   await page.goto(root+'/companies.html');await page.locator('#addShopButton').click();
