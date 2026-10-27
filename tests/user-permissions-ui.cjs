@@ -6,7 +6,8 @@ const assert=require('node:assert/strict');
  const all={view:true,add:true,modify:true,delete:true,settings:true,backup:true,restore:true};
  let passed=0;
  async function setup(role,permissions,viewport){
-  const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block'});
+  const mobileViewport=viewport.width<768;
+  const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block',isMobile:mobileViewport,hasTouch:mobileViewport});
   const initBrowserState=(role,permissions)=>{
    for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'})){sessionStorage.setItem(key,value);localStorage.setItem(key,value);}
    window.__rights=permissions;window.__role=role;window.__updates=[];
