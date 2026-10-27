@@ -2750,6 +2750,16 @@ html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-secti
 }
 
 
+/* Keep the light-theme hamburger available on tablets; it toggles the pinned rail there. */
+@media (max-width: 900px) {
+  html:not(.rx-dark-shell) body button.menu-toggle,
+  html:not(.rx-dark-shell) body .menu-toggle {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+}
+
 /* Reliable light-theme mobile drawer and visible hamburger across every page. */
 @media (max-width: 767px) {
   html:not(.rx-dark-shell) body button.menu-toggle,
