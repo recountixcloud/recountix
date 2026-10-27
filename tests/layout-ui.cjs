@@ -136,7 +136,12 @@ const assert=require('node:assert/strict');
  {
   const {page,context}=await setup('admin',all,{width:1365,height:900});
   await page.goto(root+'/customers.html');await page.evaluate(()=>window.rxPermissionsReady);
-  await page.locator('#customerBody button[title="Edit"]').first().click();
+  await page.locator('#customerBody tr').first().waitFor();
+  const actionButtons=page.locator('#customerBody tr:first-child .rx-customer-actions button');
+  assert.equal(await actionButtons.count(),3,'customer action area must contain only Modify, WA Due, and Delete');passed++;
+  await page.locator('#customerBody tr:first-child .rx-customer-tools summary').click();
+  assert.equal(await page.locator('#customerBody tr:first-child .rx-customer-tools-menu button').count(),4,'secondary customer tools remain available in More menu');passed++;
+  await page.locator('#customerBody button[title="Customer Modify"]').first().click();
   await page.locator('#customerModal').waitFor();
   assert.equal(await page.locator('#customerName').inputValue(),'Test Customer');passed++;
   await page.locator('#customerName').fill('Edited Test Customer');
