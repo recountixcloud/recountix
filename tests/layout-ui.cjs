@@ -62,23 +62,33 @@ const assert=require('node:assert/strict');
     const debug=await page.evaluate(()=>({role:window.__role,localLoggedIn:localStorage.getItem('bk_isLoggedIn'),localRole:localStorage.getItem('bk_role'),localToken:!!localStorage.getItem('bk_session_token'),sessionLoggedIn:sessionStorage.getItem('bk_isLoggedIn'),calls:window.__rpcCalls}));
     throw new Error('Auth redirected after permissions boot on '+name+': '+JSON.stringify(debug));
    }
-   await page.mouse.move(viewport.width-20,viewport.height-20);
    const sidebar=page.locator('.sidebar'),toggle=page.locator('#menuToggle');
-   console.log('UI_TEST_PAGE',name,viewport.width,page.url(),'toggleVisible=',await toggle.isVisible());
    await toggle.waitFor();
+   if(viewport.width>=768) await page.evaluate(()=>window.rxSetDesktopSidebarCollapsed(false));
+   await page.mouse.move(viewport.width-20,viewport.height-20);
    const initialSidebar=await sidebar.boundingBox();
-   console.log('SIDEBAR_BOX',name,viewport.width,JSON.stringify(initialSidebar),JSON.stringify(await page.evaluate(()=>({htmlClass:document.documentElement.className,bodyClass:document.body.className,hover:document.querySelector('.sidebar').matches(':hover'),focusWithin:document.querySelector('.sidebar').matches(':focus-within'),computedWidth:getComputedStyle(document.querySelector('.sidebar')).width,rail:getComputedStyle(document.documentElement).getPropertyValue('--rx-sidebar-rail')}))));
    if(viewport.width<768) assert(initialSidebar.x+initialSidebar.width<=1,name+' mobile drawer initially hidden');
-   else assert(initialSidebar.x>=-1 && initialSidebar.width>=50 && initialSidebar.width<=120,name+' desktop sidebar starts as an icon rail');
+   else assert(initialSidebar.width>120,name+' desktop sidebar starts expanded');
    passed++;
    await toggle.click();
-   if(viewport.width<768) await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().x>=-1);
-   else await page.waitForFunction(()=>document.body.classList.contains('rx-sidebar-expanded'));
-   assert.equal(await toggle.getAttribute('aria-expanded'),'true');passed++;
-   await page.keyboard.press('Escape');
-   if(viewport.width<768) await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().right<=1);
-   else await page.waitForFunction(()=>!document.body.classList.contains('rx-sidebar-expanded'));
-   assert.equal(await toggle.getAttribute('aria-expanded'),'false');passed++;
+   if(viewport.width<768) {
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().x>=-1);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'true');passed++;
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().right<=1);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'false');passed++;
+   } else {
+    await page.waitForFunction(()=>document.body.classList.contains('rx-collapsed'));
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().width<=120);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'false');passed++;
+    await toggle.click();
+    await page.waitForFunction(()=>!document.body.classList.contains('rx-collapsed'));
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().width>120);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'true');passed++;
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(()=>document.body.classList.contains('rx-collapsed'));
+    assert.equal(await toggle.getAttribute('aria-expanded'),'false');passed++;
+   }
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),name+' no page overflow');passed++;
    await context.close();
   }
@@ -88,8 +98,11 @@ const assert=require('node:assert/strict');
   await page.goto(root+'/settings.html');
   await page.waitForFunction(()=>!!window.rxPermissionsReady);
   await page.locator('#menuToggle').evaluate(el=>el.removeAttribute('onclick'));
+  await page.evaluate(()=>window.rxSetDesktopSidebarCollapsed(false));
   await page.locator('#menuToggle').click();
-  await page.waitForFunction(()=>document.body.classList.contains('rx-sidebar-expanded'));
+  await page.waitForFunction(()=>document.body.classList.contains('rx-collapsed'));
+  await page.locator('#menuToggle').click();
+  await page.waitForFunction(()=>!document.body.classList.contains('rx-collapsed'));
   await page.evaluate(()=>{
    const list=document.querySelector('.sidebar .menu');
    const li=document.createElement('li');
