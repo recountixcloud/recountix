@@ -8,7 +8,7 @@ const assert=require('node:assert/strict');
  async function setup(role,permissions,viewport){
   const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block'});
   await context.addInitScript(({role,permissions})=>{
-   for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'}))sessionStorage.setItem(key,value);
+   for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'})){sessionStorage.setItem(key,value);localStorage.setItem(key,value);}
    window.__rights=permissions;window.__role=role;window.__updates=[];
    window.__rpc=async(name,args)=>{
     const user={id:role==='admin'?'admin-a':'user-a',username:role,role,shop_id:'shop-a',display_name:role};
