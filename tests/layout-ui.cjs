@@ -31,7 +31,7 @@ const assert=require('node:assert/strict');
   await context.route('**/*',route=>{
    const url=route.request().url();
    if(url.startsWith(root))return route.continue();
-   if(url.includes('@supabase/supabase-js'))return route.fulfill({contentType:'application/javascript',body:'window.supabase={createClient:function(){return {rpc:window.__rpc}}};'});
+   if(url.includes('@supabase/supabase-js')||url.includes('supabase-2.117.2.js'))return route.fulfill({contentType:'application/javascript',body:'window.supabase={createClient:function(){return {rpc:window.__rpc}}};'});
    return route.abort();
   });
   const page=await context.newPage();page.on('dialog',d=>d.accept());
