@@ -2750,6 +2750,67 @@ html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-secti
 }
 
 
+/* Reliable light-theme mobile drawer and visible hamburger across every page. */
+@media (max-width: 767px) {
+  html:not(.rx-dark-shell) body button.menu-toggle,
+  html:not(.rx-dark-shell) body .menu-toggle {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: fixed !important;
+    left: 12px !important;
+    top: 12px !important;
+    z-index: 1101 !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: min(86vw, 320px) !important;
+    min-width: 0 !important;
+    max-width: calc(100vw - 48px) !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    transform: translateX(-110%) !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: 1100 !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar.open,
+  html:not(.rx-dark-shell) body .sidebar.rx-force-open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    display: block !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: 1099 !important;
+  }
+  html:not(.rx-dark-shell) body .sidebar-overlay.show,
+  html:not(.rx-dark-shell) body .sidebar-overlay.rx-force-show {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  html:not(.rx-dark-shell) body .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-top: 72px !important;
+  }
+}
+
 /* Desktop sidebar toggle: pin the expanded navigation when the hamburger is pressed. */
 @media (min-width: 768px) {
   body.rx-sidebar-expanded .sidebar {
