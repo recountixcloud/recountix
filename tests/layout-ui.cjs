@@ -65,6 +65,8 @@ const assert=require('node:assert/strict');
   const {page,context}=await setup('admin',all,{width:1365,height:900});
   await page.goto(root+'/settings.html');
   await page.waitForFunction(()=>!!window.rxPermissionsReady);
+  await page.locator('#menuToggle').click();
+  await page.waitForFunction(()=>document.body.classList.contains('rx-sidebar-expanded'));
   await page.evaluate(()=>{
    const list=document.querySelector('.sidebar .menu');
    const li=document.createElement('li');
