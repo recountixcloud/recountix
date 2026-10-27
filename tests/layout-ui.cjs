@@ -63,6 +63,7 @@ const assert=require('node:assert/strict');
    }
    await page.mouse.move(viewport.width-20,viewport.height-20);
    const sidebar=page.locator('.sidebar'),toggle=page.locator('#menuToggle');
+   console.log('UI_TEST_PAGE',name,viewport.width,page.url(),'toggleVisible=',await toggle.isVisible());
    await toggle.waitFor();
    const initialSidebar=await sidebar.boundingBox();
    if(viewport.width<768) assert(initialSidebar.x+initialSidebar.width<=1,name+' mobile drawer initially hidden');
