@@ -9,8 +9,8 @@ const assert=require('node:assert/strict');
   const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block'});
   const initBrowserState=(role,permissions)=>{
    for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'})){sessionStorage.setItem(key,value);localStorage.setItem(key,value);}
-   window.__rights=permissions;window.__role=role;window.__updates=[];
-   window.__rpc=async(name,args)=>{
+   window.__rights=permissions;window.__role=role;window.__updates=[];window.__rpcCalls=[];
+   window.__rpc=async(name,args)=>{window.__rpcCalls.push(name);
     const user={id:role==='admin'?'admin-a':'user-a',username:role,role,shop_id:'shop-a',display_name:role};
     let data=[];
     if(name==='app_superadmin'){if(args&&['update_shop','create_shop'].includes(args.p_action))window.__shopSave=args;data=args&&args.p_action==='create_shop'?{id:'shop-a'}:[];}
@@ -51,7 +51,12 @@ const assert=require('node:assert/strict');
   for(const name of pages){
    const role=['super-dashboard','companies','subscription','ad-manager'].includes(name)?'super_admin':'admin';
    const {page,context}=await setup(role,all,viewport);
-   await page.goto(root+'/'+name+'.html');await page.evaluate(()=>window.rxPermissionsReady);
+   await page.goto(root+'/'+name+'.html');
+   if(!new URL(page.url()).pathname.endsWith('/'+name+'.html')) {
+    const debug=await page.evaluate(()=>({role:window.__role,localLoggedIn:localStorage.getItem('bk_isLoggedIn'),sessionLoggedIn:sessionStorage.getItem('bk_isLoggedIn'),calls:window.__rpcCalls}));
+    throw new Error('Unexpected auth redirect from '+name+': '+JSON.stringify(debug));
+   }
+   await page.evaluate(()=>window.rxPermissionsReady);
    await page.mouse.move(viewport.width-20,viewport.height-20);
    const sidebar=page.locator('.sidebar'),toggle=page.locator('#menuToggle');
    await toggle.waitFor();
