@@ -2748,3 +2748,33 @@ html:not(.rx-dark-shell) body :is(.sidebar .menu a, .topbar .page-title, .card p
 html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-section td, .table-section th) {
   line-height: 1.5;
 }
+
+
+/* Desktop sidebar toggle: pin the expanded navigation when the hamburger is pressed. */
+@media (min-width: 901px) {
+  body.rx-sidebar-expanded .sidebar {
+    width: var(--sidebar-w, 248px) !important;
+    min-width: var(--sidebar-w, 248px) !important;
+    max-width: var(--sidebar-w, 248px) !important;
+    overflow-x: hidden !important;
+  }
+  body.rx-sidebar-expanded .sidebar .logo h2,
+  body.rx-sidebar-expanded .sidebar .logo p,
+  body.rx-sidebar-expanded .sidebar .menu a span,
+  body.rx-sidebar-expanded .sidebar .menu a b,
+  body.rx-sidebar-expanded .sidebar .menu a small {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    white-space: nowrap !important;
+  }
+  body.rx-sidebar-expanded .sidebar .menu a {
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  body.rx-sidebar-expanded .main-content {
+    margin-left: var(--sidebar-w, 248px) !important;
+    width: calc(100% - var(--sidebar-w, 248px)) !important;
+  }
+}
