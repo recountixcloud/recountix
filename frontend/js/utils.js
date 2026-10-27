@@ -82,6 +82,24 @@ window.escapeHtml = escapeHtml;
 window.showToast = showToast;
 
 
+/* Shared desktop collapse state used by both the legacy hamburger and design-system controls. */
+window.rxSetDesktopSidebarCollapsed = function (collapsed, button) {
+  collapsed = !!collapsed;
+  document.body.classList.toggle('rx-collapsed', collapsed);
+  document.body.classList.remove('rx-sidebar-expanded');
+  try { localStorage.setItem('rx_sidebar_collapsed', collapsed ? '1' : '0'); } catch (_) {}
+  var btn = button || document.getElementById('menuToggle');
+  if (btn) {
+    btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    btn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+    btn.textContent = collapsed ? '☰' : '✕';
+  }
+};
+window.rxToggleDesktopSidebar = function (button) {
+  var collapsed = !document.body.classList.contains('rx-collapsed');
+  window.rxSetDesktopSidebarCollapsed(collapsed, button);
+};
+
 /* ========== Sidebar drawer V8: desktop sidebar + mobile drawer ========== */
 (function () {
   function initDrawerV6() {
@@ -121,9 +139,7 @@ window.showToast = showToast;
       e.preventDefault();
       e.stopPropagation();
       if (isDesktop()) {
-        var expanded = document.body.classList.toggle('rx-sidebar-expanded');
-        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-        btn.setAttribute('aria-label', expanded ? 'Collapse sidebar' : 'Expand sidebar');
+        window.rxToggleDesktopSidebar(btn);
         return;
       }
       setOpen(!sb.classList.contains('open'));
@@ -162,9 +178,7 @@ window.showToast = showToast;
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
       if (isDesktop()) {
-        document.body.classList.remove('rx-sidebar-expanded');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Expand sidebar');
+        window.rxSetDesktopSidebarCollapsed(true, btn);
       } else {
         setOpen(false);
       }
@@ -325,10 +339,7 @@ window.showToast = showToast;
         e.preventDefault();
         e.stopImmediatePropagation();
         if (!mobile()) {
-          var expanded = document.body.classList.toggle('rx-sidebar-expanded');
-          btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-          btn.setAttribute('aria-label', expanded ? 'Collapse sidebar' : 'Expand sidebar');
-          btn.textContent = expanded ? '✕' : '☰';
+          window.rxToggleDesktopSidebar(btn);
           return;
         }
         drawer(!document.querySelector('.sidebar').classList.contains('open'));
@@ -365,12 +376,7 @@ window.rxForceToggleMenu = function (event) {
   // Pages with the legacy inline handler stop the shared document listener.
   // Handle desktop expansion here too, otherwise the hamburger only works on mobile.
   if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) {
-    var expanded = document.body.classList.toggle('rx-sidebar-expanded');
-    if (btn) {
-      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-      btn.setAttribute('aria-label', expanded ? 'Collapse sidebar' : 'Expand sidebar');
-      btn.textContent = expanded ? '✕' : '☰';
-    }
+    window.rxToggleDesktopSidebar(btn);
     return;
   }
 
