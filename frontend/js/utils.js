@@ -393,8 +393,19 @@ window.rxForceToggleMenu = function (event) {
     var label = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
     var destination;
     try { destination = new URL(href, document.baseURI); } catch (_) { return; }
-    if (destination.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase() !== 'whatsapp.html' &&
-        label !== 'whatsapp integration' && label !== 'whatsapp api') return;
+    var isWhatsAppLabel = label === 'whatsapp integration' || label === 'whatsapp api';
+    var isWhatsAppPath = destination.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase() === 'whatsapp.html';
+    if (!isWhatsAppLabel && !isWhatsAppPath) return;
+
+    /*
+     * The label is the authoritative intent for the WhatsApp menu item.
+     * Older pages have had a WhatsApp-labelled anchor accidentally pointing
+     * at field-tracking.html. Do not faithfully navigate to that wrong href:
+     * resolve the intended page beside the current frontend page instead.
+     */
+    if (isWhatsAppLabel && !isWhatsAppPath) {
+      try { destination = new URL('whatsapp.html', window.location.href); } catch (_) { return; }
+    }
     event.preventDefault();
     event.stopPropagation();
     if (event.stopImmediatePropagation) event.stopImmediatePropagation();
