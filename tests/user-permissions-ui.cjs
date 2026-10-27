@@ -6,9 +6,10 @@ const assert=require('node:assert/strict');
  const all={view:true,add:true,modify:true,delete:true,settings:true,backup:true,restore:true};
  let passed=0;
  async function setup(role,permissions,viewport){
-  const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block'});
-  await context.addInitScript(({role,permissions})=>{
-   for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'}))sessionStorage.setItem(key,value);
+  const mobileViewport=viewport.width<768;
+  const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block',isMobile:mobileViewport,hasTouch:mobileViewport});
+  const initBrowserState=(role,permissions)=>{
+   for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'})){sessionStorage.setItem(key,value);localStorage.setItem(key,value);}
    window.__rights=permissions;window.__role=role;window.__updates=[];
    window.__rpc=async(name,args)=>{
     const user={id:role==='admin'?'admin-a':'user-a',username:role,role,shop_id:'shop-a',display_name:role};
@@ -25,11 +26,12 @@ const assert=require('node:assert/strict');
     else if(name==='app_aging')data={};
     return {data,error:null};
    };
-  },{role,permissions});
+  };
+  await context.addInitScript(`(${initBrowserState.toString()})(${JSON.stringify(role)},${JSON.stringify(permissions)});`);
   await context.route('**/*',route=>{
    const url=route.request().url();
+   if(url.includes('@supabase/supabase-js')||url.includes('supabase-2.117.2.js'))return route.fulfill({contentType:'application/javascript',body:'window.supabase={createClient:function(){return {rpc:window.__rpc}}};'});
    if(url.startsWith(root))return route.continue();
-   if(url.includes('@supabase/supabase-js'))return route.fulfill({contentType:'application/javascript',body:'window.supabase={createClient:function(){return {rpc:window.__rpc}}};'});
    return route.abort();
   });
   const page=await context.newPage();page.on('dialog',d=>d.accept());

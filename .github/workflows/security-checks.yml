@@ -1,5 +1,9 @@
 name: Security checks
 
+concurrency:
+  group: recountix-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
   push:
@@ -19,6 +23,21 @@ jobs:
       - name: JavaScript syntax
         run: |
           find frontend/js -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Frontend regression tests
+        run: node tests/overall-audit.cjs
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install chromium
+      - name: Browser UI regression tests
+        run: |
+          python3 -m http.server 8765 --directory frontend >/tmp/recountix-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/login.html >/dev/null; then break; fi
+            sleep 1
+          done
+          RECOUNTIX_TEST_URL=http://127.0.0.1:8765 node tests/layout-ui.cjs
+          RECOUNTIX_TEST_URL=http://127.0.0.1:8765 node tests/user-permissions-ui.cjs
       - name: Security regression scan
         run: node scripts/security-check.mjs
       - name: Release readiness

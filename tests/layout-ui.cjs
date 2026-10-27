@@ -6,14 +6,15 @@ const assert=require('node:assert/strict');
  const all={view:true,add:true,modify:true,delete:true,settings:true,backup:true,restore:true};
  let passed=0;
  async function setup(role,permissions,viewport){
-  const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block'});
-  await context.addInitScript(({role,permissions})=>{
-   for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'}))sessionStorage.setItem(key,value);
-   window.__rights=permissions;window.__role=role;window.__updates=[];
-   window.__rpc=async(name,args)=>{
+  const mobileViewport=viewport.width<768;
+  const context=await browser.newContext({viewport,reducedMotion:'reduce',serviceWorkers:'block',isMobile:mobileViewport,hasTouch:mobileViewport});
+  const initBrowserState=(role,permissions)=>{
+   for(const [key,value] of Object.entries({bk_isLoggedIn:'true',bk_userId:role==='admin'?'admin-a':'user-a',bk_username:role,bk_role:role,bk_shopId:'shop-a',bk_shopName:'Demo Business',bk_session_token:'synthetic-ui-token'})){sessionStorage.setItem(key,value);localStorage.setItem(key,value);}
+   window.__rights=permissions;window.__role=role;window.__updates=[];window.__rpcCalls=[];
+   window.__rpc=async(name,args)=>{window.__rpcCalls.push(name);
     const user={id:role==='admin'?'admin-a':'user-a',username:role,role,shop_id:'shop-a',display_name:role};
     let data=[];
-    if(name==='app_superadmin')data=[];
+    if(name==='app_superadmin'){if(args&&['update_shop','create_shop'].includes(args.p_action))window.__shopSave=args;data=args&&args.p_action==='create_shop'?{id:'shop-a'}:[];}
     else if(name==='app_get_my_permissions')data={role,permissions:window.__rights};
     else if(name==='app_validate_session')data={valid:true,user};
     else if(name==='app_maintenance_status')data={maintenance_mode:false};
@@ -21,16 +22,18 @@ const assert=require('node:assert/strict');
     else if(name==='app_get_shops')data=[{id:'shop-a',name:'Demo Business',is_active:true}];
     else if(name==='app_get_user_access')data=[{...user,id:'admin-a',role:'admin',username:'owner',is_active:true,permissions:window.__rights},{id:'user-a',role:'user',username:'staff',display_name:'Staff',is_active:true,permissions:{view:true,add:false,modify:false,delete:false,settings:false,backup:false,restore:false}}];
     else if(name==='app_update_user_access'){window.__updates.push(args);data={ok:true};}
+    else if(name==='app_save_customer'){window.__customerSave=args;data={id:args.p_customer_id||'customer-a',name:args.p_payload.name,mobile:args.p_payload.mobile,shop_id:'shop-a',bill:args.p_payload.bill,down_payment:args.p_payload.down_payment,outstanding:args.p_payload.outstanding};}
     else if(name==='app_get_customers')data=[{id:'customer-a',name:'Test Customer',mobile:'9999999999',shop_id:'shop-a',bill:1000,down_payment:0,outstanding:900}];
     else if(name==='app_get_recoveries')data=[{id:'recovery-a',customer_id:'customer-a',amount:100,recovery_date:'2026-09-26',payment_mode:'Cash'}];
     else if(name==='app_aging')data={};
     return {data,error:null};
    };
-  },{role,permissions});
+  };
+  await context.addInitScript(`(${initBrowserState.toString()})(${JSON.stringify(role)},${JSON.stringify(permissions)});`);
   await context.route('**/*',route=>{
    const url=route.request().url();
+   if(url.includes('@supabase/supabase-js')||url.includes('supabase-2.117.2.js'))return route.fulfill({contentType:'application/javascript',body:'window.supabase={createClient:function(){return {rpc:window.__rpc}}};'});
    if(url.startsWith(root))return route.continue();
-   if(url.includes('@supabase/supabase-js'))return route.fulfill({contentType:'application/javascript',body:'window.supabase={createClient:function(){return {rpc:window.__rpc}}};'});
    return route.abort();
   });
   const page=await context.newPage();page.on('dialog',d=>d.accept());
@@ -44,21 +47,72 @@ const assert=require('node:assert/strict');
   }
  }
 
- const pages=['dashboard','customers','recovery','ptp','escalations','activity','field-tracking','reports','settings','backup','super-dashboard','companies','subscription','ad-manager'];
+ const pages=['dashboard','customers','recovery','ptp','escalations','activity','field-tracking','reports','settings','backup','super-dashboard','companies','subscription','ad-manager','whatsapp'];
  for(const viewport of [{width:390,height:844},{width:1365,height:900}]){
   for(const name of pages){
    const role=['super-dashboard','companies','subscription','ad-manager'].includes(name)?'super_admin':'admin';
    const {page,context}=await setup(role,all,viewport);
-   await page.goto(root+'/'+name+'.html');await page.evaluate(()=>window.rxPermissionsReady);
+   await page.goto(root+'/'+name+'.html');
+   if(!new URL(page.url()).pathname.endsWith('/'+name+'.html')) {
+    const debug=await page.evaluate(()=>({role:window.__role,localLoggedIn:localStorage.getItem('bk_isLoggedIn'),sessionLoggedIn:sessionStorage.getItem('bk_isLoggedIn'),calls:window.__rpcCalls}));
+    throw new Error('Unexpected auth redirect from '+name+': '+JSON.stringify(debug));
+   }
+   await page.evaluate(()=>window.rxPermissionsReady);
+   if(!new URL(page.url()).pathname.endsWith('/'+name+'.html')) {
+    const debug=await page.evaluate(()=>({role:window.__role,localLoggedIn:localStorage.getItem('bk_isLoggedIn'),localRole:localStorage.getItem('bk_role'),localToken:!!localStorage.getItem('bk_session_token'),sessionLoggedIn:sessionStorage.getItem('bk_isLoggedIn'),calls:window.__rpcCalls}));
+    throw new Error('Auth redirected after permissions boot on '+name+': '+JSON.stringify(debug));
+   }
    const sidebar=page.locator('.sidebar'),toggle=page.locator('#menuToggle');
    await toggle.waitFor();
-   assert((await sidebar.boundingBox()).x+(await sidebar.boundingBox()).width<=1,name+' initially hidden');passed++;
-   await toggle.click();await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().x>=-1);
-   assert.equal(await toggle.getAttribute('aria-expanded'),'true');passed++;
-   await page.keyboard.press('Escape');await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().right<=1);passed++;
+   if(viewport.width>=768) await page.evaluate(()=>window.rxSetDesktopSidebarCollapsed(false));
+   await page.mouse.move(viewport.width-20,viewport.height-20);
+   const initialSidebar=await sidebar.boundingBox();
+   if(viewport.width<768) assert(initialSidebar.x+initialSidebar.width<=1,name+' mobile drawer initially hidden');
+   else assert(initialSidebar.width>120,name+' desktop sidebar starts expanded');
+   passed++;
+   await toggle.click();
+   if(viewport.width<768) {
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().x>=-1);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'true');passed++;
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().right<=1);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'false');passed++;
+   } else {
+    await page.waitForFunction(()=>document.body.classList.contains('rx-collapsed'));
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().width<=120);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'false');passed++;
+    await toggle.click();
+    await page.waitForFunction(()=>!document.body.classList.contains('rx-collapsed'));
+    await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().width>120);
+    assert.equal(await toggle.getAttribute('aria-expanded'),'true');passed++;
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(()=>document.body.classList.contains('rx-collapsed'));
+    assert.equal(await toggle.getAttribute('aria-expanded'),'false');passed++;
+   }
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),name+' no page overflow');passed++;
    await context.close();
   }
+ }
+ {
+  const {page,context}=await setup('admin',all,{width:1365,height:900});
+  await page.goto(root+'/settings.html');
+  await page.waitForFunction(()=>!!window.rxPermissionsReady);
+  await page.locator('#menuToggle').evaluate(el=>el.removeAttribute('onclick'));
+  await page.evaluate(()=>window.rxSetDesktopSidebarCollapsed(false));
+  await page.locator('#menuToggle').click();
+  await page.waitForFunction(()=>document.body.classList.contains('rx-collapsed'));
+  await page.locator('#menuToggle').click();
+  await page.waitForFunction(()=>!document.body.classList.contains('rx-collapsed'));
+  await page.evaluate(()=>{
+   const list=document.querySelector('.sidebar .menu');
+   const li=document.createElement('li');
+   const link=document.createElement('a');link.href='field-tracking.html';link.textContent='WhatsApp API';link.id='testWrongWhatsAppLink';
+   li.append(link);list.append(li);
+  });
+  await page.locator('#testWrongWhatsAppLink').click();
+  await page.waitForURL('**/whatsapp.html');
+  assert.equal(new URL(page.url()).pathname.endsWith('/whatsapp.html'),true,'WhatsApp-labelled sidebar links must reach whatsapp.html');passed++;
+  await context.close();
  }
  for(const viewport of [{width:390,height:844},{width:1365,height:900},{width:980,height:1400}]){
   const {page,context}=await setup('super_admin',all,viewport);
@@ -80,6 +134,33 @@ const assert=require('node:assert/strict');
   await content.evaluate(el=>el.scrollTop=0);
   if(process.env.RECOUNTIX_SCREENSHOTS)await page.screenshot({path:require('node:path').join(process.env.RECOUNTIX_SCREENSHOTS,'business-form-'+viewport.width+'.png')});
   await page.keyboard.press('Escape');assert.equal(await modal.isVisible(),false);assert.equal(await page.locator('.wrapper').evaluate(el=>el.inert),false);passed++;
+  if(viewport.width===1365){
+   await page.evaluate(()=>{allShopsCache=[{id:'shop-a',name:'Demo Business',business_type:'Other',code:'DEMO',contact_number:'9999999999',email:'demo@example.test',address:'Test Address',plan_name:'Basic',license_expiry:'2027-01-01',max_users:5,is_active:true}];openEditShopModal('shop-a');});
+   await page.locator('#shopModal').waitFor();
+   assert.equal(await page.locator('#shopName').inputValue(),'Demo Business');passed++;
+   await page.locator('#shopName').fill('Edited Demo Business');
+   await page.locator('#shopModal button[onclick*="saveShop"]').click();
+   await page.waitForFunction(()=>!!window.__shopSave);
+   assert.equal(await page.evaluate(()=>window.__shopSave.p_action),'update_shop');
+   assert.equal(await page.evaluate(()=>window.__shopSave.p_payload.name),'Edited Demo Business');passed++;
+  }
+  await context.close();
+ }
+ {
+  const {page,context}=await setup('admin',all,{width:1365,height:900});
+  await page.goto(root+'/customers.html');await page.evaluate(()=>window.rxPermissionsReady);await expand(page);
+  await page.locator('#customerBody tr').first().waitFor();
+  const actionButtons=page.locator('#customerBody tr:first-child .rx-customer-actions button');
+  assert.equal(await actionButtons.count(),3,'customer action area must contain only Modify, WA Due, and Delete');passed++;
+  await page.locator('#customerBody tr:first-child .rx-customer-tools summary').click();
+  assert.equal(await page.locator('#customerBody tr:first-child .rx-customer-tools-menu button').count(),4,'secondary customer tools remain available in More menu');passed++;
+  await page.locator('#customerBody button[title="Customer Modify"]').first().click();
+  await page.locator('#customerModal').waitFor();
+  assert.equal(await page.locator('#customerName').inputValue(),'Test Customer');passed++;
+  await page.locator('#customerName').fill('Edited Test Customer');
+  await page.getByRole('button',{name:/Save Customer/}).click();
+  await page.waitForFunction(()=>!!window.__customerSave);
+  assert.equal(await page.evaluate(()=>window.__customerSave.p_payload.name),'Edited Test Customer');passed++;
   await context.close();
  }
  {

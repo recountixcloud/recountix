@@ -82,6 +82,24 @@ window.escapeHtml = escapeHtml;
 window.showToast = showToast;
 
 
+/* Shared desktop collapse state used by both the legacy hamburger and design-system controls. */
+window.rxSetDesktopSidebarCollapsed = function (collapsed, button) {
+  collapsed = !!collapsed;
+  document.body.classList.toggle('rx-collapsed', collapsed);
+  document.body.classList.remove('rx-sidebar-expanded');
+  try { localStorage.setItem('rx_sidebar_collapsed', collapsed ? '1' : '0'); } catch (_) {}
+  var btn = button || document.getElementById('menuToggle');
+  if (btn) {
+    btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    btn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+    btn.textContent = collapsed ? '☰' : '✕';
+  }
+};
+window.rxToggleDesktopSidebar = function (button) {
+  var collapsed = !document.body.classList.contains('rx-collapsed');
+  window.rxSetDesktopSidebarCollapsed(collapsed, button);
+};
+
 /* ========== Sidebar drawer V8: desktop sidebar + mobile drawer ========== */
 (function () {
   function initDrawerV6() {
@@ -117,11 +135,24 @@ window.showToast = showToast;
     // Desktop must keep side options active; mobile starts closed.
     setOpen(false);
 
+    function syncDesktopToggleState() {
+      if (!isDesktop()) return;
+      var collapsed = document.body.classList.contains('rx-collapsed');
+      btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      btn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+      btn.textContent = collapsed ? '☰' : '✕';
+    }
+    syncDesktopToggleState();
+    if (window.MutationObserver) {
+      var sidebarStateObserver = new MutationObserver(syncDesktopToggleState);
+      sidebarStateObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
       if (isDesktop()) {
-        setOpen(false);
+        window.rxToggleDesktopSidebar(btn);
         return;
       }
       setOpen(!sb.classList.contains('open'));
@@ -158,7 +189,12 @@ window.showToast = showToast;
     }, true);
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key !== 'Escape') return;
+      if (isDesktop()) {
+        window.rxSetDesktopSidebarCollapsed(true, btn);
+      } else {
+        setOpen(false);
+      }
     });
 
     if (desktopMq) {
@@ -290,9 +326,13 @@ window.showToast = showToast;
     if (!side) return;
     var show = mobile() && !!open;
     side.classList.toggle('open', show);
+    side.classList.toggle('rx-force-open', show);
     side.setAttribute('aria-hidden', mobile() && !show ? 'true' : 'false');
     if ('inert' in side) side.inert = mobile() && !show;
-    if (overlay) overlay.classList.toggle('show', show);
+    if (overlay) {
+      overlay.classList.toggle('show', show);
+      overlay.classList.toggle('rx-force-show', show);
+    }
     document.documentElement.classList.toggle('sidebar-open', show);
     document.body.classList.toggle('sidebar-open', show);
     document.body.style.overflow = show ? 'hidden' : '';
@@ -311,6 +351,10 @@ window.showToast = showToast;
       if (btn) {
         e.preventDefault();
         e.stopImmediatePropagation();
+        if (!mobile()) {
+          window.rxToggleDesktopSidebar(btn);
+          return;
+        }
         drawer(!document.querySelector('.sidebar').classList.contains('open'));
         return;
       }
@@ -341,6 +385,14 @@ window.rxForceToggleMenu = function (event) {
   var overlay = document.getElementById('sidebarOverlay');
   var btn = document.getElementById('menuToggle');
   if (!side) return;
+
+  // Pages with the legacy inline handler stop the shared document listener.
+  // Handle desktop expansion here too, otherwise the hamburger only works on mobile.
+  if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) {
+    window.rxToggleDesktopSidebar(btn);
+    return;
+  }
+
   var opening = !side.classList.contains('rx-force-open');
   side.classList.toggle('rx-force-open', opening);
   side.classList.toggle('open', opening);
@@ -391,8 +443,19 @@ window.rxForceToggleMenu = function (event) {
     var label = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
     var destination;
     try { destination = new URL(href, document.baseURI); } catch (_) { return; }
-    if (destination.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase() !== 'whatsapp.html' &&
-        label !== 'whatsapp integration' && label !== 'whatsapp api') return;
+    var isWhatsAppLabel = label === 'whatsapp integration' || label === 'whatsapp api';
+    var isWhatsAppPath = destination.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase() === 'whatsapp.html';
+    if (!isWhatsAppLabel && !isWhatsAppPath) return;
+
+    /*
+     * The label is the authoritative intent for the WhatsApp menu item.
+     * Older pages have had a WhatsApp-labelled anchor accidentally pointing
+     * at field-tracking.html. Do not faithfully navigate to that wrong href:
+     * resolve the intended page beside the current frontend page instead.
+     */
+    if (isWhatsAppLabel && !isWhatsAppPath) {
+      try { destination = new URL('whatsapp.html', window.location.href); } catch (_) { return; }
+    }
     event.preventDefault();
     event.stopPropagation();
     if (event.stopImmediatePropagation) event.stopImmediatePropagation();
