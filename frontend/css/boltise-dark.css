@@ -2753,6 +2753,11 @@ html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-secti
 /* Desktop sidebar toggle: pin the expanded navigation when the hamburger is pressed. */
 @media (min-width: 768px) {
   body.rx-sidebar-expanded .sidebar {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 1000 !important;
     width: var(--sidebar-w, 248px) !important;
     min-width: var(--sidebar-w, 248px) !important;
     max-width: var(--sidebar-w, 248px) !important;
