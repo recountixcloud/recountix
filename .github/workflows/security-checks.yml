@@ -19,6 +19,8 @@ jobs:
       - name: JavaScript syntax
         run: |
           find frontend/js -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Frontend regression tests
+        run: node tests/overall-audit.cjs
       - name: Security regression scan
         run: node scripts/security-check.mjs
       - name: Release readiness
