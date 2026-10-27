@@ -299,9 +299,13 @@ window.showToast = showToast;
     if (!side) return;
     var show = mobile() && !!open;
     side.classList.toggle('open', show);
+    side.classList.toggle('rx-force-open', show);
     side.setAttribute('aria-hidden', mobile() && !show ? 'true' : 'false');
     if ('inert' in side) side.inert = mobile() && !show;
-    if (overlay) overlay.classList.toggle('show', show);
+    if (overlay) {
+      overlay.classList.toggle('show', show);
+      overlay.classList.toggle('rx-force-show', show);
+    }
     document.documentElement.classList.toggle('sidebar-open', show);
     document.body.classList.toggle('sidebar-open', show);
     document.body.style.overflow = show ? 'hidden' : '';
