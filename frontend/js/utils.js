@@ -160,7 +160,14 @@ window.showToast = showToast;
     }, true);
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key !== 'Escape') return;
+      if (isDesktop()) {
+        document.body.classList.remove('rx-sidebar-expanded');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Expand sidebar');
+      } else {
+        setOpen(false);
+      }
     });
 
     if (desktopMq) {
