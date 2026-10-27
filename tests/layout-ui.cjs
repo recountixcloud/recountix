@@ -13,7 +13,7 @@ const assert=require('node:assert/strict');
    window.__rpc=async(name,args)=>{
     const user={id:role==='admin'?'admin-a':'user-a',username:role,role,shop_id:'shop-a',display_name:role};
     let data=[];
-    if(name==='app_superadmin')data=[];
+    if(name==='app_superadmin'){if(args&&['update_shop','create_shop'].includes(args.p_action))window.__shopSave=args;data=args&&args.p_action==='create_shop'?{id:'shop-a'}:[];}
     else if(name==='app_get_my_permissions')data={role,permissions:window.__rights};
     else if(name==='app_validate_session')data={valid:true,user};
     else if(name==='app_maintenance_status')data={maintenance_mode:false};
@@ -98,6 +98,16 @@ const assert=require('node:assert/strict');
   await content.evaluate(el=>el.scrollTop=0);
   if(process.env.RECOUNTIX_SCREENSHOTS)await page.screenshot({path:require('node:path').join(process.env.RECOUNTIX_SCREENSHOTS,'business-form-'+viewport.width+'.png')});
   await page.keyboard.press('Escape');assert.equal(await modal.isVisible(),false);assert.equal(await page.locator('.wrapper').evaluate(el=>el.inert),false);passed++;
+  if(viewport.width===1365){
+   await page.evaluate(()=>{allShopsCache=[{id:'shop-a',name:'Demo Business',business_type:'Other',code:'DEMO',contact_number:'9999999999',email:'demo@example.test',address:'Test Address',plan_name:'Basic',license_expiry:'2027-01-01',max_users:5,is_active:true}];openEditShopModal('shop-a');});
+   await page.locator('#shopModal').waitFor();
+   assert.equal(await page.locator('#shopName').inputValue(),'Demo Business');passed++;
+   await page.locator('#shopName').fill('Edited Demo Business');
+   await page.locator('#shopModal button[onclick*="saveShop"]').click();
+   await page.waitForFunction(()=>!!window.__shopSave);
+   assert.equal(await page.evaluate(()=>window.__shopSave.p_action),'update_shop');
+   assert.equal(await page.evaluate(()=>window.__shopSave.p_payload.name),'Edited Demo Business');passed++;
+  }
   await context.close();
  }
  {
