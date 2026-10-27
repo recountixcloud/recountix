@@ -2821,6 +2821,24 @@ html:not(.rx-dark-shell) body :is(.card p, .card span, .card label, .table-secti
   }
 }
 
+/* Desktop hamburger stays visible and sits beside the rail instead of covering its icons. */
+@media (min-width: 768px) {
+  html body button.menu-toggle,
+  html body .menu-toggle {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    left: calc(var(--rx-sidebar-rail, 76px) + 12px) !important;
+    top: 14px !important;
+    z-index: 1101 !important;
+  }
+  html body.rx-sidebar-expanded button.menu-toggle,
+  html body.rx-sidebar-expanded .menu-toggle {
+    left: calc(var(--sidebar-w, 248px) + 12px) !important;
+  }
+}
 /* Desktop sidebar toggle: pin the expanded navigation when the hamburger is pressed. */
 @media (min-width: 768px) {
   body.rx-sidebar-expanded .sidebar {
