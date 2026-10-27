@@ -121,7 +121,9 @@ window.showToast = showToast;
       e.preventDefault();
       e.stopPropagation();
       if (isDesktop()) {
-        setOpen(false);
+        var expanded = document.body.classList.toggle('rx-sidebar-expanded');
+        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        btn.setAttribute('aria-label', expanded ? 'Collapse sidebar' : 'Expand sidebar');
         return;
       }
       setOpen(!sb.classList.contains('open'));
