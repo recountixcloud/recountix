@@ -320,6 +320,13 @@ window.showToast = showToast;
       if (btn) {
         e.preventDefault();
         e.stopImmediatePropagation();
+        if (!mobile()) {
+          var expanded = document.body.classList.toggle('rx-sidebar-expanded');
+          btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          btn.setAttribute('aria-label', expanded ? 'Collapse sidebar' : 'Expand sidebar');
+          btn.textContent = expanded ? '✕' : '☰';
+          return;
+        }
         drawer(!document.querySelector('.sidebar').classList.contains('open'));
         return;
       }
