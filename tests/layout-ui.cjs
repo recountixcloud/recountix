@@ -148,7 +148,7 @@ const assert=require('node:assert/strict');
  }
  {
   const {page,context}=await setup('admin',all,{width:1365,height:900});
-  await page.goto(root+'/customers.html');await page.evaluate(()=>window.rxPermissionsReady);
+  await page.goto(root+'/customers.html');await page.evaluate(()=>window.rxPermissionsReady);await expand(page);
   await page.locator('#customerBody tr').first().waitFor();
   const actionButtons=page.locator('#customerBody tr:first-child .rx-customer-actions button');
   assert.equal(await actionButtons.count(),3,'customer action area must contain only Modify, WA Due, and Delete');passed++;
