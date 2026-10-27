@@ -1,5 +1,9 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const fields={},rows=[{textContent:'Alice Cash 600',hidden:false},{textContent:'Bob UPI 100',hidden:false}];
+const utilsSource=fs.readFileSync('frontend/js/utils.js','utf8');
+assert.match(utilsSource,/isWhatsAppLabel\s*&&\s*!isWhatsAppPath/, 'WhatsApp-labelled links must override stale/wrong hrefs');
+assert.match(utilsSource,/new URL\('whatsapp\.html', window\.location\.href\)/, 'WhatsApp route must resolve to whatsapp.html beside the current page');
+assert.match(utilsSource,/rx-sidebar-expanded/, 'Desktop sidebar toggle must have an expanded state');
 const document={getElementById:id=>fields[id]||null,querySelector:()=>null,querySelectorAll:s=>s==='#recoveryBody tr'?rows:[],addEventListener(){},readyState:'loading',documentElement:{},body:{}};
 const ctx={document,console:{log(){},warn(){},error(){}},setTimeout(){},setInterval(){},clearTimeout(){},localStorage:{getItem(){return null},setItem(){}},sessionStorage:{getItem(){return null},setItem(){}},location:{pathname:'/frontend/recovery.html'},navigator:{},MutationObserver:class{observe(){}},addEventListener(){},getSession:()=>({sessionToken:'test-token',shopId:'test-shop'}),rxRequire:()=>true,escapeHtml:s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),crypto:require('node:crypto').webcrypto};
 ctx.window=ctx;vm.createContext(ctx);vm.runInContext(fs.readFileSync('frontend/js/db.js','utf8'),ctx);vm.runInContext(fs.readFileSync('frontend/js/app.js','utf8'),ctx);
@@ -21,6 +25,6 @@ ctx.window=ctx;vm.createContext(ctx);vm.runInContext(fs.readFileSync('frontend/j
  await ctx.loadPtpTable();assert(!fields.ptpTableBody.innerHTML.includes('<script>'));assert(!fields.ptpTableBody.innerHTML.includes('<img'));
  ctx.getSupabase=()=>({rpc:async()=>({data:{error:'verified_recovery_required'},error:null})});
  await assert.rejects(ctx.sbResetPasswordByRecovery('name','email','password'),/verified_recovery_required/);
- console.log('8 frontend regression checks passed: search, edit balance, settings round trip, safe PTP rendering, reset guard.');
+ console.log('Frontend regression checks passed: search, edit balance, settings round trip, safe PTP rendering, reset guard, WhatsApp route guard, and desktop sidebar state.');
 })().catch(e=>{console.error(e);process.exit(1)});
 
