@@ -67,7 +67,7 @@ const assert=require('node:assert/strict');
    console.log('UI_TEST_PAGE',name,viewport.width,page.url(),'toggleVisible=',await toggle.isVisible());
    await toggle.waitFor();
    const initialSidebar=await sidebar.boundingBox();
-   console.log('SIDEBAR_BOX',name,viewport.width,JSON.stringify(initialSidebar));
+   console.log('SIDEBAR_BOX',name,viewport.width,JSON.stringify(initialSidebar),JSON.stringify(await page.evaluate(()=>({htmlClass:document.documentElement.className,bodyClass:document.body.className,hover:document.querySelector('.sidebar').matches(':hover'),focusWithin:document.querySelector('.sidebar').matches(':focus-within'),computedWidth:getComputedStyle(document.querySelector('.sidebar')).width,rail:getComputedStyle(document.documentElement).getPropertyValue('--rx-sidebar-rail')}))));
    if(viewport.width<768) assert(initialSidebar.x+initialSidebar.width<=1,name+' mobile drawer initially hidden');
    else assert(initialSidebar.x>=-1 && initialSidebar.width>=50 && initialSidebar.width<=120,name+' desktop sidebar starts as an icon rail');
    passed++;
