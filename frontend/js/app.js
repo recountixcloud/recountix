@@ -342,21 +342,26 @@ function loadCustomers() {
         rows.push(`
         <tr>
             <td>${rowNum}</td>
-            <td>${appEscape(customer.name)}</td>
+            <td>
+                <span>${appEscape(customer.name)}</span>
+                <details class="rx-customer-tools">
+                    <summary title="More customer tools" aria-label="More customer tools">More ▾</summary>
+                    <div class="rx-customer-tools-menu">
+                        <button type="button" onclick="openCustomerLedger(${index})">📒 Ledger</button>
+                        <button type="button" onclick="setCustomerPortalPin(${index})">🔐 Portal PIN</button>
+                        <button type="button" onclick="openPaymentLinkForCustomer(${index})">₹ Payment link</button>
+                        <button type="button" onclick="openLegalNoticeForCustomer(${index})">📜 Legal notice</button>
+                    </div>
+                </details>
+            </td>
             <td>${appEscape(customer.mobile || "-")}</td>
             <td>${appEscape(customer.village || "")}</td>
             <td>₹${Number(customer.outstanding || 0).toLocaleString("en-IN")}</td>
             <td>${agingBadgeHtml(bucket, getCustomerDaysOverdue(customer))}</td>
             <td>${appEscape(dueShow)}${customer.autoReminder === false ? " 🔕" : ""}</td>
-            <td style="white-space:nowrap;">
-                <button onclick="editCustomer(${index})" title="Edit">✏️</button>
-                <button type="button" onclick="openCustomerLedger(${index})" title="Customer Ledger / Payment History" style="display:inline-flex;align-items:center;gap:4px;background:#0f766e;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">📒 Ledger</button>
+            <td class="rx-customer-actions" style="white-space:nowrap;">
+                <button type="button" onclick="editCustomer(${index})" title="Customer Modify">✏️ Modify</button>
                 ${waBtn}
-                <button type="button" onclick="setCustomerPortalPin(${index})" title="Set Customer Portal PIN" style="display:inline-flex;align-items:center;gap:4px;background:#0B5D4F;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">🔐 PIN</button>
-                <button type="button" onclick="openPaymentLinkForCustomer(${index})" title="UPI / Payment link"
-                  style="display:inline-flex;align-items:center;gap:4px;background:#1A3D63;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">₹ Pay</button>
-                <button type="button" onclick="openLegalNoticeForCustomer(${index})" title="Legal / reminder letter"
-                  style="display:inline-flex;align-items:center;gap:4px;background:#7c3aed;color:#fff;border:none;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;">📜 Notice</button>
                 ${deleteButton}
             </td>
         </tr>`);
