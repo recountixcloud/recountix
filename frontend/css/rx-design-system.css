@@ -1127,3 +1127,36 @@ html body .sidebar .menu > li > a > span {
 .rx-dark-shell .rx-customer-tools-menu { background: #1a2236 !important; border-color: #455670 !important; }
 .rx-dark-shell .rx-customer-tools-menu button { color: #f8fafc !important; }
 .rx-dark-shell .rx-customer-tools-menu button:hover { background: #2a3a52 !important; }
+
+
+/* Global navigation icon-label alignment audit fix — 2026-10-28 */
+:root:root .sidebar .menu a{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:12px !important;
+}
+:root:root .sidebar .menu a > i,
+:root:root .sidebar .menu a > svg,
+:root:root .sidebar .menu a > .icon{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 20px !important;
+  width:20px !important;
+  min-width:20px !important;
+  margin:0 !important;
+  text-align:center !important;
+  line-height:1 !important;
+}
+:root:root .sidebar .menu a > span{
+  min-width:0;
+  flex:1 1 auto;
+  line-height:1.35 !important;
+}
+@media (min-width:641px){
+  :root:root body.rx-collapsed .sidebar .menu a{gap:0 !important;}
+  :root:root body.rx-collapsed .sidebar .menu a > i,
+  :root:root body.rx-collapsed .sidebar .menu a > svg,
+  :root:root body.rx-collapsed .sidebar .menu a > .icon{flex-basis:20px !important;}
+}
