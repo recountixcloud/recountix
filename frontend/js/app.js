@@ -2525,9 +2525,6 @@ function renderAnalyticsOnReports() {
     }
 }
 
-window.saveActivityForm = saveActivityForm;
-window.loadActivityTable = loadActivityTable;
-window.initActivityPage = initActivityPage;
 window.openLegalNoticeForCustomer = openLegalNoticeForCustomer;
 window.computeAnalyticsStats = computeAnalyticsStats;
 window.renderAnalyticsOnReports = renderAnalyticsOnReports;
