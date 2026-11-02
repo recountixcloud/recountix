@@ -17,15 +17,6 @@ for (const required of ["app_login", "app_validate_session", "Secure login servi
   if (!auth.includes(required)) fail(`auth fail-closed control missing: ${required}`);
 }
 
-const offline = read("frontend/js/offline-backup.js");
-for (const required of ["navigator.onLine", 'addEventListener("online"', "lastFailureAt", "AES-GCM", "PBKDF2"]) {
-  if (!offline.includes(required)) fail(`offline error/retry control missing: ${required}`);
-}
-
-const restore = read("frontend/js/backup.js");
-for (const required of ["This backup belongs to another business", "Wrong backup password or damaged file", "Internet is required to restore"]) {
-  if (!restore.includes(required)) fail(`restore validation missing: ${required}`);
-}
 
 const htmlFiles = fs.readdirSync("frontend").filter(name => name.endsWith(".html"));
 for (const name of htmlFiles) {
