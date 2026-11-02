@@ -293,26 +293,12 @@ body .sidebar .menu>li>a:focus-visible{outline:3px solid #7fe0b8!important;outli
   <div class="summary-bar">
     <div>
       <h2>Data Management</h2>
-      <span>Backup & Restore Project Data</span>
+      <span>Export reports and manage customer records</span>
     </div>
   </div>
 
   <div class="dashboard-grid">
-    <div class="card blue">
-      <i class="fa-solid fa-download"></i>
-      <h3>Offline Backup</h3>
-      <p>Create or download an encrypted business backup</p>
-      <br>
-      <button type="button" class="add-btn" onclick="backupData()">Open Offline Backup</button>
-    </div>
-
-    <div class="card blue">
-      <i class="fa-solid fa-upload"></i>
-      <h3>Restore Backup</h3>
-      <p>Restore missing records from an encrypted backup file</p>
-      <br>
-      <a class="add-btn" href="backup.html">Open Backup &amp; Restore</a>
-    </div>
+    
 
     <div class="card green superadmin-only" id="optimizeWebsiteCard" style="display:none;">
       <i class="fa-solid fa-gauge-high"></i>
@@ -349,8 +335,7 @@ body .sidebar .menu>li>a:focus-visible{outline:3px solid #7fe0b8!important;outli
       </div>
     </div>
     <p><strong>Database:</strong> <span id="dbStatusBadge" class="badge badge-warning">Secure Cloud</span></p>
-    <p><strong>Last Device Backup:</strong> <span id="lastBackupDate">-</span></p>
-    <p style="margin-top:10px;color:#9CA6B8;font-size:14px;">
+        <p style="margin-top:10px;color:#9CA6B8;font-size:14px;">
       All data is stored on encrypted cloud servers.
     </p>
   </div>
@@ -405,16 +390,7 @@ body .sidebar .menu>li>a:focus-visible{outline:3px solid #7fe0b8!important;outli
         <option value="off">Disabled</option>
       </select>
     </div>
-    <div>
-      <label for="autoBackup">Auto Backup</label>
-      <select id="autoBackup">
-        <option value="daily" selected>Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-        <option value="off">Disabled</option>
-      </select>
     </div>
-  </div>
 
   <p style="margin-top:15px;color:#94a3b8">Auto Logout applies after inactivity. Session Timeout limits the total sign-in duration.</p>
   <button type="button" id="savePreferencesButton" class="add-btn" onclick="savePreferences()">Save Preferences</button>
