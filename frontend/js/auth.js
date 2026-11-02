@@ -166,7 +166,7 @@ async function login() {
 
         setSession(result.user, result.shop, remember, result.sessionToken || result.token || "");
         if (result.user.role === "super_admin") {
-            window.location.href = "super-dashboard.html";
+            window.location.href = "dashboard.html";
         } else {
             window.location.href = "dashboard.html";
         }
@@ -282,7 +282,7 @@ function checkLogin() {
         return;
     }
 
-    const superAdminOnlyPages = ["super-dashboard.html", "companies.html", "subscription.html", "ad-manager.html"];
+    const superAdminOnlyPages = ["companies.html"];
     if (superAdminOnlyPages.some(p => page.includes(p)) && role !== "super_admin") {
         alert("Access Denied. This section is available to Super Admin only.");
         window.location.href = "dashboard.html";
@@ -302,10 +302,7 @@ function injectSuperAdminNav() {
 
     const page = window.location.pathname;
     const links = [
-        { href: "super-dashboard.html", icon: "fa-chart-pie", label: "Super Dashboard" },
-        { href: "companies.html", icon: "fa-building", label: "Company Management" },
-        { href: "subscription.html", icon: "fa-file-invoice-dollar", label: "Subscription" },
-        { href: "ad-manager.html", icon: "fa-rectangle-ad", label: "Ad Manager" }
+        { href: "companies.html", icon: "fa-building", label: "Company Management" }
     ];
 
     const logoutLi = Array.from(menu.children).find(li => li.querySelector('a[onclick*="logout"]'));
