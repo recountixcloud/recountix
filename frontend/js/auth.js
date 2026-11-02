@@ -271,6 +271,11 @@ function checkLogin() {
     }
 
     const role = session.role;
+    const retiredPages = ["escalations.html", "activity.html", "field-tracking.html", "backup.html", "super-dashboard.html", "subscription.html", "ad-manager.html"];
+    if (retiredPages.some(name => page.toLowerCase().includes(name))) {
+        window.location.replace("dashboard.html");
+        return;
+    }
     const dataPages = ["customers.html", "recovery.html", "ptp.html", "escalations.html", "activity.html", "field-tracking.html", "reports.html"];
     if (role === "super_admin" && dataPages.some(p => page.includes(p)) && !session.shopId) {
         try { sessionStorage.setItem("sa-privacy-customers", "1"); } catch (e) {}
