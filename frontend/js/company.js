@@ -282,6 +282,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById("shopModal");
     if (modal) modal.addEventListener("click", event => { if (event.target === modal) closeShopModal(); });
 });
+document.addEventListener("keydown", function (event) {
+    const modal = document.getElementById("shopModal");
+    if (event.key === "Escape" && modal && modal.getAttribute("aria-hidden") === "false") closeShopModal();
+});
 window.addEventListener("load", function () {
     if (document.getElementById("companiesBody")) loadCompanies();
 });
