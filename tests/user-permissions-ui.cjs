@@ -44,24 +44,14 @@ const assert=require('node:assert/strict');
    if(await button.isVisible() && await button.getAttribute('aria-expanded')==='false')await button.click();
   }
  }
- for(const viewport of [{width:1365,height:900},{width:390,height:844}]){
-  const {page,context}=await setup('admin',all,viewport);
-  await page.goto(root+'/settings.html');await expand(page);await page.getByRole('button',{name:'Modify / Rights'}).waitFor();
-  await page.getByRole('button',{name:'Modify / Rights'}).click();
-  const modal=page.locator('#rxUserAccess');await modal.waitFor();
-  await modal.getByRole('button',{name:'Allow all business rights'}).click();
-  assert.equal(await modal.locator('[data-right]:checked').count(),7);passed++;
-  await modal.locator('[data-right="delete"]').uncheck();
-  await modal.getByRole('button',{name:'Save rights',exact:true}).click();await modal.waitFor({state:'hidden'});
-  const updates=await page.evaluate(()=>window.__updates);assert.equal(updates[0].p_payload.permissions.delete,false);assert.equal(updates[0].p_payload.permissions.modify,true);passed++;
-  await page.getByRole('button',{name:'Modify / Rights'}).click();
-  await modal.getByRole('button',{name:'Allow all business rights'}).click();await modal.locator('[data-right="view"]').uncheck();
-  assert.equal(await modal.locator('[data-right]:checked').count(),0);passed++;
-  const box=await modal.boundingBox();assert(box.x>=0 && box.x+box.width<=viewport.width);passed++;
-  if(process.env.RECOUNTIX_SCREENSHOTS)await page.screenshot({path:require('node:path').join(process.env.RECOUNTIX_SCREENSHOTS,'rights-'+viewport.width+'.png')});
+ const view={...all,add:false,modify:false,delete:false,settings:false,backup:false,restore:false};
+ {
+  const {page,context}=await setup('admin',all,{width:1365,height:900});
+  await page.goto(root+'/settings.html');await page.evaluate(()=>window.rxPermissionsReady);
+  assert.equal(await page.locator('#userManagementSection').count(),0,'Permission management UI is retired');
+  assert.equal(await page.locator('#rxAccessBlocked').count(),0,'Admin retains access to core settings');passed++;
   await context.close();
  }
- const view={...all,add:false,modify:false,delete:false,settings:false,backup:false,restore:false};
  {
   const {page,context}=await setup('user',view,{width:390,height:844});await page.goto(root+'/customers.html');await expand(page);await page.locator('#customerBody').getByText('Test Customer').waitFor();
   assert.equal(await page.locator('[onclick^="editCustomer"]').isVisible(),false);assert.equal(await page.locator('[onclick^="deleteCustomer"]').count(),0);passed++;
