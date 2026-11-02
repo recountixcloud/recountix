@@ -45,12 +45,6 @@
 <style id="rx-mobile-emergency-fix">
 @media(max-width:767px){html body button#menuToggle{display:flex!important;position:fixed!important;left:12px!important;top:12px!important;width:48px!important;height:48px!important;align-items:center!important;justify-content:center!important;z-index:2147483001!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;background:#28344d!important;color:#fff!important;border:1px solid #64748b!important;border-radius:12px!important;font-size:25px!important}html body .sidebar{position:fixed!important;inset:0 auto 0 0!important;width:min(86vw,320px)!important;max-width:calc(100vw - 48px)!important;height:100vh!important;height:100dvh!important;overflow-y:auto!important;z-index:2147483000!important;transform:translateX(-110%)!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}html body .sidebar.rx-force-open{transform:translateX(0)!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}html body #sidebarOverlay{position:fixed!important;inset:0!important;z-index:2147482999!important;background:rgba(4,8,18,.68)!important;display:block!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}html body #sidebarOverlay.rx-force-show{visibility:visible!important;opacity:1!important;pointer-events:auto!important}html body .main-content{margin-left:0!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:72px 12px 24px!important;overflow-x:hidden!important}}
 </style>
-<style id="rx-home-banner-style">
-.rx-home-banner{position:relative;z-index:1;width:100%;margin:0 0 22px;overflow:hidden;border:1px solid rgba(255,255,255,.78);border-radius:20px;background:#f3faf7;box-shadow:0 12px 32px rgba(10,45,38,.12)}
-.rx-home-banner img{display:block;width:100%;height:auto;max-height:330px;object-fit:cover;object-position:center}
-@media(max-width:640px){.rx-home-banner{margin:0 0 16px;border-radius:14px}.rx-home-banner img{max-height:none;object-fit:contain}}
-</style>
-
 <style id="rx-light-green-dashboard-theme">
 /* Recountix light mint theme — dashboard cards and page canvas */
 html:not(.rx-dark-shell) body{background:#effaf4!important;color:#124f40!important}
@@ -60,7 +54,6 @@ html:not(.rx-dark-shell) body .card,
 html:not(.rx-dark-shell) body .rx-mini-card,
 html:not(.rx-dark-shell) body .rx-risk-panel,
 html:not(.rx-dark-shell) body .rx-command-panel,
-html:not(.rx-dark-shell) body .rx-home-banner,
 html:not(.rx-dark-shell) body .dashboard-grid .card,
 html:not(.rx-dark-shell) body .dashboard-grid .card.blue,
 html:not(.rx-dark-shell) body .dashboard-grid .card.red,
@@ -89,7 +82,6 @@ html:not(.rx-dark-shell) body .sidebar .menu a{color:#256b55!important}
 html:not(.rx-dark-shell) body .sidebar .menu a:hover,
 html:not(.rx-dark-shell) body .sidebar .menu a.active{background:#d9f8e8!important;color:#075b46!important}
 html:not(.rx-dark-shell) body .rx-aging-row{border-color:#d8f1e3!important}
-html:not(.rx-dark-shell) body .rx-home-banner{background:#f4fcf7!important}
 @media(max-width:767px){
  html:not(.rx-dark-shell) body{background:#effaf4!important}
  html:not(.rx-dark-shell) body .main-content{background:#effaf4!important}
@@ -138,10 +130,6 @@ html:not(.rx-dark-shell) body .rx-home-banner{background:#f4fcf7!important}
       <div class="rx-clock-time" id="rxClockTime">--:--:--</div>
     </div>
   </header>
-
-  <section class="rx-home-banner" aria-label="Recountix promotion">
-  <img src="assets/ads/Recountix.banner.1.png" alt="Recountix — Beyond What's Due. Simplify accounting and focus on growth." fetchpriority="high" decoding="async">
-</section>
 
   <div class="dashboard-grid">
     <div class="card blue">
@@ -457,7 +445,6 @@ html:not(.rx-dark-shell) body .rx-home-banner{background:#f4fcf7!important}
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 </script>
-<script src="js/ad-banner.js?v=rc005-banner200"></script>
 <script src="js/final-suite.js?v=theme-switch-3"></script>
 
 <script src="js/i18n.js?v=2"></script>
