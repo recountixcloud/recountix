@@ -151,13 +151,13 @@ body .sidebar .menu>li>a:focus-visible{outline:3px solid #7fe0b8!important;outli
     <li><a href="customers.html"><i class="fa-solid fa-users"></i><span>Customers</span></a></li>
     <li><a href="recovery.html"><i class="fa-solid fa-money-bill-wave"></i><span>Recovery</span></a></li>
     <li><a href="ptp.html"><i class="fa-solid fa-handshake"></i><span>Promise to Pay</span></a></li>
-    <li><a href="escalations.html"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Escalations</span></a></li>
-    <li><a href="activity.html"><i class="fa-solid fa-phone-volume"></i><span>Activity Log</span></a></li>
-    <li><a href="field-tracking.html"><i class="fa-solid fa-location-dot"></i><span>Field Tracking</span></a></li>
+    
+    
+    
     <li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Reports</span></a></li>
     <li><a href="whatsapp.html" id="rxSettingsWhatsAppLink"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp Integration</span></a></li>
     <li><a href="settings.html" class="active"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
-    <li><a href="backup.html"><i class="fa-solid fa-database"></i><span>Offline Backup</span></a></li>
+    
     <li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
   </ul>
 </aside>
@@ -287,60 +287,6 @@ body .sidebar .menu>li>a:focus-visible{outline:3px solid #7fe0b8!important;outli
           </tbody>
       </table>
     </div>
-</section>
-
-<section class="table-section fade" id="userManagementSection" data-rc-compact="1" style="margin-top:20px;">
-  <div class="summary-bar">
-    <div>
-      <h2>User Management</h2>
-      <span>Add, modify, delete and set individual user rights</span>
-    </div>
-  </div>
-
-  <div class="form-grid">
-    <div>
-      <label for="newUserUsername">New Username <small>(new users start with View only)</small></label>
-      <input type="text" id="newUserUsername" placeholder="Username" autocomplete="off">
-    </div>
-    <div>
-      <label for="newUserPassword">New Password</label>
-      <input type="password" id="newUserPassword" minlength="8" autocomplete="new-password" placeholder="Minimum 8 characters">
-    </div>
-    <div>
-      <label for="newUserRole">Role</label>
-      <select id="newUserRole">
-        <option value="User">User (Custom Rights)</option>
-        <option value="Admin">Admin (Full Access)</option>
-      </select>
-    </div>
-    <div id="newUserShopWrap" style="display:none;">
-      <label for="newUserShopId">Business</label>
-      <select id="newUserShopId">
-        <option value="">Select Business</option>
-      </select>
-    </div>
-  </div>
-
-  <div style="margin-top:16px;">
-    <button type="button" class="add-btn" onclick="addUser()">
-      <i class="fa-solid fa-user-plus"></i> Add User
-    </button>
-  </div>
-
-  <br>
-  <div class="table-responsive">
-    <table id="userListTable">
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Role</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="userListBody">
-      </tbody>
-    </table>
-  </div>
 </section>
 
 <section class="table-section fade" style="margin-top:20px;">
@@ -543,7 +489,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
 </script>
 
 <script src="js/final-suite.js?v=theme-switch-3"></script>
-<script src="js/offline-backup.js?v=preferences-1"></script>
+
 <script src="js/i18n.js?v=2"></script>
 
 <script>
