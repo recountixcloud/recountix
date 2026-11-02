@@ -406,64 +406,17 @@ async function sbCreatePaymentLinkRow(row){return await __records("payment_link_
 
 async function sbSaveReceiptRow(row){return await __records("receipt_add",row);}
 
-async function sbGetEscalations(shopId,status){return(await __collection("escalation_list",{status:status||"all"}))||[];}
-
-async function sbUpdateEscalation(id,patch){return await __collection("escalation_update",{...patch,id});}
-
-async function sbAssignAgent(customerId,agentId,executiveName){return await __records("assign_agent",{customer_id:customerId,agent_id:agentId||null,executive:executiveName||""});}
-
 window.sbCreatePaymentLinkRow = sbCreatePaymentLinkRow;
 window.sbSaveReceiptRow = sbSaveReceiptRow;
-window.sbGetEscalations = sbGetEscalations;
-window.sbUpdateEscalation = sbUpdateEscalation;
-window.sbAssignAgent = sbAssignAgent;
 
 /* ---------- PHASE 3: Activity log + analytics helpers ---------- */
-async function sbAddActivity(row){return await __records("activity_add",row);}
-
-async function sbGetActivities(shopId,limit){return(await __records("activity_list",{limit:limit||100}))||[];}
-
-async function sbSaveLegalNotice(row){return await __records("legal_add",row);}
-
-window.sbAddActivity = sbAddActivity;
 window.sbGetActivities = sbGetActivities;
 window.sbSaveLegalNotice = sbSaveLegalNotice;
 
 
 
-async function sbGetActivitiesByAgent(shopId,agentId,limit){return(await __records("activity_list",{agent_id:agentId||null,limit:limit||100}))||[];}
-window.sbGetActivitiesByAgent = sbGetActivitiesByAgent;
-
-async function sbSetFieldAgent(userId,isField){return await __records("set_field_agent",{user_id:userId,is_field:!!isField});}
-window.sbSetFieldAgent = sbSetFieldAgent;
 
 
-// Recountix Ad Manager
-async function sbGetActiveAds(){
-    const token=getSession().sessionToken;if(!token)return[];
-    const {data,error}=await getSupabase().rpc('app_active_ads',{p_token:token});
-    if(error){console.warn('Ads unavailable',error.message);return[]}
-    return data||[];
-}
-async function sbGetAds(){
-    const token=getSession().sessionToken;if(!token)throw new Error('Secure session required');
-    const {data,error}=await getSupabase().rpc('app_manage_ads',{p_token:token,p_action:'list',p_payload:{}});
-    if(error)throw error;return data||[];
-}
-async function sbSaveAd(ad){
-    const token=getSession().sessionToken;if(!token)throw new Error('Secure session required');
-    const payload={...ad,target_shop_id:ad.target_type==='shop'?(ad.target_shop_id||null):null};
-    const {data,error}=await getSupabase().rpc('app_manage_ads',{
-      p_token:token,p_action:ad.id?'update':'create',p_payload:payload
-    });if(error)throw error;return data;
-}
-async function sbDeleteAd(id){
-    const token=getSession().sessionToken;if(!token)throw new Error('Secure session required');
-    const {error}=await getSupabase().rpc('app_manage_ads',{p_token:token,p_action:'delete',p_payload:{id}});
-    if(error)throw error;
-}
-async function sbTrackAdClick(id){try{const token=getSession().sessionToken;if(token)await getSupabase().rpc('app_ad_click',{p_token:token,p_ad_id:id});}catch(e){}}
-window.sbGetActiveAds=sbGetActiveAds;window.sbGetAds=sbGetAds;window.sbSaveAd=sbSaveAd;window.sbDeleteAd=sbDeleteAd;window.sbTrackAdClick=sbTrackAdClick;
 
 
 
