@@ -409,7 +409,9 @@ async function sbSaveReceiptRow(row){return await __records("receipt_add",row);}
 window.sbCreatePaymentLinkRow = sbCreatePaymentLinkRow;
 window.sbSaveReceiptRow = sbSaveReceiptRow;
 
-/* ---------- PHASE 3: Activity log + analytics helpers ---------- */
+/* ---------- Shared activity history and legal notice helpers ---------- */
+async function sbGetActivities(shopId,limit){return(await __records("activity_list",{limit:limit||100}))||[];}
+async function sbSaveLegalNotice(row){return await __records("legal_add",row);}
 window.sbGetActivities = sbGetActivities;
 window.sbSaveLegalNotice = sbSaveLegalNotice;
 
