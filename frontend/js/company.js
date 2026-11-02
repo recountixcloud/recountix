@@ -15,10 +15,6 @@ function companyEscape(value) {
         .replace(/'/g, "&#39;");
 }
 
-function fmtMoney(n) {
-    return "₹" + Number(n || 0).toLocaleString("en-IN");
-}
-
 function fmtDate(d) {
     if (!d) return "-";
     const dt = new Date(d);
@@ -26,62 +22,10 @@ function fmtDate(d) {
     return dt.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-/** Single source of truth for license end date */
-function getEffectiveLicenseExpiry(shop, subscription) {
-    const a = shop && shop.license_expiry ? String(shop.license_expiry).slice(0, 10) : "";
-    const b = subscription && (subscription.end_date || subscription.endDate)
-        ? String(subscription.end_date || subscription.endDate).slice(0, 10) : "";
-    if (a && b) return a >= b ? a : b;
-    return b || a || "";
-}
-
-function daysLeft(endDate) {
-    if (!endDate) return null;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const end = new Date(endDate);
-    return Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-}
-
 function statusBadge(status) {
     if (status === "active") return '<span class="badge badge-success">Active</span>';
     if (status === "expiring") return '<span class="badge badge-warning">Expiring Soon</span>';
     return '<span class="badge badge-danger">Expired</span>';
-}
-
-/* ================================
-   SUPER DASHBOARD
-================================ */
-async function loadSuperDashboard() {
-    const body = document.getElementById("shopOverviewBody");
-    if (!body) return;
-
-    try {
-        const stats = await sbGetSuperDashboardStats();
-
-        document.getElementById("statTotalShops").innerText = stats.totalShops;
-        document.getElementById("statActiveShops").innerText = stats.activeShops;
-        document.getElementById("statInactiveShops").innerText = stats.inactiveShops;
-        document.getElementById("statExpiring").innerText = stats.expiringSoon + stats.expired;
-        document.getElementById("statTotalCustomers").innerText = stats.totalCustomers;
-        document.getElementById("statTotalOutstanding").innerText = fmtMoney(stats.totalOutstanding);
-
-        body.innerHTML = stats.shops.map((shop, i) => {
-            const status = computeSubStatus(shop.license_expiry || shop.endDate);
-            return `<tr>
-                <td>${i + 1}</td>
-                <td>${companyEscape(shop.name)}</td>
-                <td><span class="rx-business-type">${companyEscape(shop.business_type || "Other")}</span></td>
-                <td>${companyEscape(shop.code)}</td>
-                <td>${companyEscape(shop.plan_name || "Basic")}</td>
-                <td>${fmtDate(shop.license_expiry)}</td>
-                <td>${shop.is_active ? statusBadge(status) : '<span class="badge badge-danger">Business Inactive</span>'}</td>
-            </tr>`;
-        }).join("") || `<tr><td colspan="7" style="text-align:center;color:#94a3b8;">No businesses found</td></tr>`;
-    } catch (e) {
-        console.error(e);
-        body.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#ef4444;">Failed to load: ${companyEscape(e.message || e)}</td></tr>`;
-    }
 }
 
 /* ================================
@@ -324,102 +268,8 @@ window.deleteShopHandler = deleteShopHandler;
 /* ================================
    SUBSCRIPTION PAGE
 ================================ */
-function openRenewShopById(shopId) {
-    const shop = allShopsCache.find((item) => String(item.id) === String(shopId));
-    if (!shop) return;
-    openRenewModal(shop.id, shop.name || "", shop.plan_name || "Basic");
-}
-window.openRenewShopById = openRenewShopById;
 
-async function loadSubscriptions() {
-    const body = document.getElementById("subscriptionBody");
-    if (!body) return;
-
-    try {
-        const rows = await sbGetSubscriptionsWithShops();
-
-        let active = 0, expiring = 0, expired = 0;
-        rows.forEach(r => {
-            if (r.liveStatus === "active") active++;
-            else if (r.liveStatus === "expiring") expiring++;
-            else expired++;
-        });
-        document.getElementById("subActiveCount").innerText = active;
-        document.getElementById("subExpiringCount").innerText = expiring;
-        document.getElementById("subExpiredCount").innerText = expired;
-
-        body.innerHTML = rows.map((r, i) => {
-            const dl = daysLeft(r.endDate);
-            return `<tr>
-                <td>${i + 1}</td>
-                <td>${companyEscape(r.shop.name)}</td>
-                <td>${companyEscape((r.subscription && r.subscription.plan_name) || r.shop.plan_name || "Basic")}</td>
-                <td>${fmtDate(r.endDate)}</td>
-                <td>${dl === null ? "-" : (dl < 0 ? Math.abs(dl) + " days overdue" : dl + " days")}</td>
-                <td>${statusBadge(r.liveStatus)}</td>
-                <td>${r.shop.is_active
-                    ? '<span class="badge badge-success">Active</span>'
-                    : '<span class="badge badge-danger">Inactive</span>'}</td>
-                <td>
-                    <button class="add-btn" style="padding:8px 14px;font-size:13px;" onclick="openRenewShopById('${companyEscape(r.shop.id)}')">
-                        <i class="fa-solid fa-rotate"></i> Renew
-                    </button>
-                </td>
-            </tr>`;
-        }).join("") || `<tr><td colspan="9" style="text-align:center;color:#94a3b8;">No businesses found</td></tr>`;
-    } catch (e) {
-        console.error(e);
-        body.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#ef4444;">Failed to load: ${companyEscape(e.message || e)}</td></tr>`;
-    }
-}
-
-function openRenewModal(shopId, shopName, currentPlan) {
-    document.getElementById("renewShopId").value = shopId;
-    document.getElementById("renewShopName").innerText = shopName;
-    document.getElementById("renewPlan").value = currentPlan || "Basic";
-    document.getElementById("renewAmount").value = "";
-    document.getElementById("renewRemarks").value = "";
-
-    const nextYear = new Date();
-    nextYear.setFullYear(nextYear.getFullYear() + 1);
-    document.getElementById("renewEndDate").value = nextYear.toISOString().split("T")[0];
-
-    RecountixModal.open("renewModal");
-}
-
-function closeRenewModal() {
-    RecountixModal.close("renewModal");
-}
-
-async function confirmRenewSubscription() {
-    const shopId = document.getElementById("renewShopId").value.trim();
-    const form = {
-        plan: document.getElementById("renewPlan").value,
-        amount: Number(document.getElementById("renewAmount").value || 0),
-        endDate: document.getElementById("renewEndDate").value,
-        remarks: document.getElementById("renewRemarks").value.trim()
-    };
-    if (!form.endDate) {
-        alert("Please choose a new expiry date");
-        return;
-    }
-    try {
-        await sbRenewSubscription(shopId, form);
-        closeRenewModal();
-        await loadSubscriptions();
-        alert("Subscription renewed successfully.");
-    } catch (e) {
-        alert("Renewal failed: " + (e.message || e));
-    }
-}
-
-window.openRenewModal = openRenewModal;
-window.closeRenewModal = closeRenewModal;
-window.confirmRenewSubscription = confirmRenewSubscription;
-
-/* ================================
-   INIT
-================================ */
+/* Initialize only the retained Company Management page. */
 document.addEventListener("DOMContentLoaded", function () {
     const addButton = document.getElementById("addShopButton");
     if (addButton && !addButton.dataset.modalBound) {
@@ -429,26 +279,9 @@ document.addEventListener("DOMContentLoaded", function () {
             openAddShopModal();
         });
     }
-
     const modal = document.getElementById("shopModal");
-    if (modal) {
-        modal.addEventListener("click", function (event) {
-            if (event.target === modal) closeShopModal();
-        });
-    }
+    if (modal) modal.addEventListener("click", event => { if (event.target === modal) closeShopModal(); });
 });
-
-document.addEventListener("keydown", function (event) {
-    const modal = document.getElementById("shopModal");
-    if (event.key === "Escape" && modal && modal.getAttribute("aria-hidden") === "false") {
-        closeShopModal();
-    }
-});
-
-window.addEventListener("load", async function () {
-    setTimeout(async () => {
-        if (document.getElementById("shopOverviewBody")) await loadSuperDashboard();
-        if (document.getElementById("companiesBody")) await loadCompanies();
-        if (document.getElementById("subscriptionBody")) await loadSubscriptions();
-    }, 300);
+window.addEventListener("load", function () {
+    if (document.getElementById("companiesBody")) loadCompanies();
 });
