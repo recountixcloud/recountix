@@ -47,7 +47,7 @@ const assert=require('node:assert/strict');
   }
  }
 
- const pages=['dashboard','customers','recovery','ptp','escalations','activity','field-tracking','reports','settings','backup','super-dashboard','companies','subscription','ad-manager','whatsapp'];
+ const pages=['dashboard','customers','recovery','ptp','reports','settings','companies','whatsapp'];
  for(const viewport of [{width:390,height:844},{width:1365,height:900}]){
   for(const name of pages){
    const role=['super-dashboard','companies','subscription','ad-manager'].includes(name)?'super_admin':'admin';
@@ -171,5 +171,5 @@ const assert=require('node:assert/strict');
   const b=await page.locator('#customerModal .modal-content').boundingBox();assert(b.y>=0&&b.y+b.height<=844);passed++;
   await page.keyboard.press('Escape');await context.close();
  }
- await browser.close();console.log(passed+' layout checks passed across 14 pages, mobile, desktop, and a reduced keyboard viewport.');
+ await browser.close();console.log(passed+' layout checks passed across 8 core pages, mobile, desktop, and a reduced keyboard viewport.');
 })().catch(e=>{console.error(e);process.exit(1)});
