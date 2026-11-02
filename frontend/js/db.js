@@ -158,14 +158,6 @@ async function sbResetPasswordByRecovery(username,recoveryEmail,newPassword) {
 }
 window.sbResetPasswordByRecovery=sbResetPasswordByRecovery;
 
-async function sbUpdateUserPassword() {
-    throw new Error("Use secure profile update");
-}
-
-async function sbUpdateUsername() {
-    throw new Error("Use secure profile update");
-}
-
 /* ---------- SETTINGS ---------- */
 async function sbUpdateOwnProfile(currentPassword,newUsername,newPassword,recoveryEmail) {
     const token=getSession().sessionToken;if(!token)throw new Error("Secure session required");
@@ -255,11 +247,6 @@ window.sbGetRecoveries = sbGetRecoveries;
 window.sbSaveRecovery = sbSaveRecovery;
 window.sbDeleteRecovery = sbDeleteRecovery;
 window.sbUpdateCustomerOutstanding = sbUpdateCustomerOutstanding;
-window.sbGetUsers = sbGetUsers;
-window.sbAddUser = sbAddUser;
-window.sbDeleteUser = sbDeleteUser;
-window.sbUpdateUserPassword = sbUpdateUserPassword;
-window.sbUpdateUsername = sbUpdateUsername;
 window.sbGetSettings = sbGetSettings;
 window.sbSaveSettings = sbSaveSettings;
 window.sbGetMaintenanceStatus = sbGetMaintenanceStatus;
