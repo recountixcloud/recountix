@@ -1296,13 +1296,9 @@ function formatDate(date) {
     return window.rxFormatDate ? window.rxFormatDate(date) : new Date(date).toLocaleDateString("en-IN");
 }
 
-function backupData() { window.location.href="backup.html"; }
-function restoreData() { window.location.href="backup.html"; }
 function clearAllData() {
     alert("Clear All is disabled. Manage data from Supabase Dashboard or delete records individually.");
 }
-function firebaseFullBackup() { backupData(); }
-function firebaseFullRestore() { restoreData(); }
 
 // ================================
 // Settings / Users
